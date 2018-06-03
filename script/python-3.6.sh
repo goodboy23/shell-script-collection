@@ -2,7 +2,7 @@
 
 
 
-script_get {
+script_get() {
 	test_package https://shell-auto-install.oss-cn-zhangjiakou.aliyuncs.com/package/Python-3.6.0.tgz 3f7062ccf8be76491884d0e47ac8b251
 }
 
@@ -44,7 +44,7 @@ script_remove() {
 }
 
 script_info() {
-	print_massage "名字：python3.6" "Name：python3.6"
+	print_massage "名字：python-3.6" "Name：python-3.6"
 	print_massage "版本：3.6" "Version：3.6"
 	print_massage "介绍：Python是一种解释型、面向对象、动态数据类型的高级程序设计语言" "Introduce：Python is an interpretive, object-oriented, dynamic data type high-level programming language"
 	print_massage "作者：速度与激情小组---Linux部" "Author：Speed and Passion Group --- Linux Department"

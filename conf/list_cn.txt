@@ -1,0 +1,38 @@
+ant-1.9             1.9                 Ant，是一个基于JAVA的自动化脚本引擎。
+ 
+batch               1.2                 批量操作跳板机脚本           
+ 
+calibre             3.18.0              Calibre是基于python的电子书制作软件
+ 
+card-life           1.1                 抽卡人生小游戏             
+ 
+chinese-font        0                   安装中文字体              
+ 
+clocks              1.0                 字符的系统时间脚本           
+ 
+glibc-2.14          2.14                glibc是GNU发布的libc库，即c运行库
+ 
+hit-boss            1.0                 打boss小游戏脚本          
+ 
+ip-location         1.0                 查询ip地址所在地脚本         
+ 
+jdk-1.8             1.8.0               JDK是 Java 语言的软件开发工具包
+ 
+jenkins             2.104               Jenkins是持续与集成服务     
+ 
+mindoc-0.9          0.9                 开源wiki              
+ 
+nginx-1.8           1.8                 Nginx是一个高性能的HTTP和反向代理服务器
+ 
+nodejs-8.9          8.9.3               Node.js 就是运行在服务端的 JavaScript。
+ 
+notty               1.2                 禁止密码爆破脚本            
+ 
+python3.6           3.6                 Python是一种解释型、面向对象、动态数据类型的高级程序设计语言
+ 
+clocks              3.23.0              SQLite是一款轻型的关系型数据库管理系统
+ 
+sys-mes             1.0                 安装系统信息查询命令          
+ 
+tetris              1.0                 俄罗斯方块小游戏脚本          
+ 

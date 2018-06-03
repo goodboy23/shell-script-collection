@@ -8,7 +8,6 @@ test_version() {
     local ver
     if [ -f /etc/redhat-release ];then
         ver=`grep -oE "[0-9.]"+ /etc/redhat-release`
-        return $ver
     else
         print_error "当前只支持redhat与centos系列" "Currently only supports redhat and centos series"
     fi
@@ -46,7 +45,7 @@ test_bin() {
 test_port() {
     test_install net-tools
     netstat -unltp | grep :${1}
-    if [[ $? -eq 0 ]]then
+    if [[ $? -eq 0 ]];then
         print_error "${1}端口被占用，请修改脚本" "The ${1} port is occupied. Please modify the script"
     fi
 }

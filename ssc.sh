@@ -102,11 +102,13 @@ update_ssc() {
 
 #根据每个和脚本的info函数形成支持的脚本列表
 list_generate() {
-    [[ -f conf/a.txt ]] && > conf/a.txt #如果生成的时候强制停止，这里则清空一下列表
-    
+    rm -rf conf/a.txt
+    rm -rf conf/b.txt
+    rm -rf conf/list_${language}.txt 
+
     for i in `ls script/` #将每个脚本的信息都输出找出前3行形成列表
     do
-        i=`echo ${i%%.*}`
+        i=`echo ${i%.*}`
         a=`bash ssc.sh info $i | awk  -F'：' '{print $2}' | sed -n '1p'`
         b=`bash ssc.sh info $i | awk  -F'：' '{print $2}' | sed -n '3p'`
         c=`bash ssc.sh info $i | awk  -F'：' '{print $2}' | sed -n '5p'`
@@ -129,8 +131,8 @@ server() {
     test_version
     test_root
 
-    if [[ -f script/${1}.sh ]];then
-        source script/${1}.sh
+    if [[ -f script/${2}.sh ]];then
+        source script/${2}.sh
         if [[ "$1" == "install" ]];then
             print_massage "正在运行${2}脚本，出现错误将会退出，解决后可再次运行。" "The ${2} script is running, an error will exit, and the solution can be run again."
             sleep 3
@@ -142,7 +144,7 @@ server() {
         elif [[ "$1" == "info" ]];then   
             script_info
         elif [[ "$1" == "edit" ]];then
-            $editor script/${1}.sh
+            $editor script/${2}.sh
         else
             [[ "$language" == "cn" ]] && help_cn || help_en
         fi
@@ -160,12 +162,11 @@ do
     source $i
 done
 
-[[ -f conf/list_${language}.txt ]] || list_generate #生成表
-
 if [[ $# -eq 0 ]];then
     [[ "$language" == "cn" ]] && help_cn || help_en
 elif [[ $# -eq 1 ]];then
     if [[ "$1" == "list" ]];then
+        [[ -f conf/list_${language}.txt ]] || list_generate #生成表
         cat conf/list_${language}.txt
     elif [[ "$1" == "update" ]];then
         update_ssc
@@ -174,8 +175,9 @@ elif [[ $# -eq 1 ]];then
     fi
 elif [[ $# -eq 2 ]];then
     if [[ "$1" == "list" ]];then
+        [[ -f conf/list_${language}.txt ]] || print_error "请先./ssc.sh list 来生成表" "Please first ./ssc.sh list to generate the table"
         print_massage "$2相关脚本：" "$2 Related script："
-		grep "^$2" conf/list_${language}.txt
+        grep "^$2" conf/list_${language}.txt
     else
         server $1 $2
     fi
