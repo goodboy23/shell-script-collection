@@ -1,0 +1,16 @@
+#!/bin/bash
+
+
+a=${install_dir}/${jenkins_dir}/jenkins.war
+b=${log_dir}/${jenkins_dir}/jenkins.log
+
+
+if [ "$1" == "start" ];then
+    nohup java -jar $a --httpPort=$port --httpListenAddress=$listen &>> $b &
+elif [ "$1" == "stop" ];then
+    pi=`ps -aux | grep "java -jar $a --httpPort=$port" | head -1`
+    [ ! $pi ] && exit 3 || pid=`echo $pi | awk '{print $2}'`
+    kill -9 $pid
+else
+    echo "start | stop"
+fi

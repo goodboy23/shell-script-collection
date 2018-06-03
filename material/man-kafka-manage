@@ -1,0 +1,16 @@
+#!/bin/bash
+#kafka-manager
+
+
+
+if [ "$1" == "start" ];then
+	nohup ${dir}/bin/kafka-manager -Dconfig.file=${dir}/conf/application.conf >> ${log}/kafka-manager.log  &
+elif [ "$1" == "stop" ];then
+	pid=`netstat -unltp | grep ":${port}" | awk  '{print $7}' | awk -F'/' '{print $1}'`
+	kill -9 pid
+elif [ "$1" == "status" ];then
+    netstat -unltp | grep :${port} &> /dev/null
+    [ $? -eq 0 ] && echo "kafka-manager port:${port} ok" || echo "kafka-manager port:${port} error"
+else
+	echo "start | stop | status"
+fi

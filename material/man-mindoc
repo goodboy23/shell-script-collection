@@ -1,0 +1,20 @@
+#!/bin/bash
+#mindoc控制脚本
+
+
+a=${install_dir}/${mindoc_dir}/mindoc_linux_amd64
+b=${log_dir}/${mindoc_dir}
+
+if [ "$1" == "start" ];then
+	nohup $a &>> $b/mindoc.log &
+elif [ "$1" == "stop" ];then
+    netstat -unltp | grep "mindoc" &> /dev/null
+    if [ $? -eq 0 ];then
+        pid=`netstat -unltp | grep "mindoc" | awk  '{print $7}' | awk -F'/' '{print $1}'`
+	    kill -9 $pid && echo "mindco stop" || echo "mindoc error"
+    else
+        echo "mindoc stop" 
+    fi
+else
+	echo "start | stop"
+fi
