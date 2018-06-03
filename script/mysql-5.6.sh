@@ -44,7 +44,7 @@ script_install() {
     test_port 3306
     
     #清理mariadb的东西
-    for i in `rpm -qa | grep mariadb`; do rpm -e --nodeps $i; don
+    for i in `rpm -qa | grep mariadb`; do rpm -e --nodeps $i; done
 
     #安装
     test_install autoconf libaio bison ncurses-devel
@@ -104,8 +104,9 @@ bind-address = 0.0.0.0" > /etc/my.cnf #这里改需要的配置
 	print_massage "使用：man-mysql start" "Use：man-mysql start"
 }
 
+
 script_remove() {
-	rm -rf /etc/my.cnf
+    rm -rf /etc/my.cnf
     rm -rf ${install_dir}/${mysql_dir}
     rm -rf /usr/local/bin/man-mysql
     
