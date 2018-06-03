@@ -16,7 +16,7 @@ test_version() {
 
 #创建日志目录，并检测服务目录，$1是目录名
 test_dir() {
-	[[ -d ${install_dir}/$1 ]] && print_error "${install_dir}/${1}目录已经存在，请检查安装脚本路径或手动删除目录" "${install_dir}/${1} directory already exists, please check the installation script path or manually delete the directory"
+    [[ -d ${install_dir}/$1 ]] && print_error "${install_dir}/${1}目录已经存在，请检查安装脚本路径或手动删除目录" "${install_dir}/${1} directory already exists, please check the installation script path or manually delete the directory"
     [[ ! -d ${install_dir} ]] && mkdir -p ${install_dir}
     [[ ! -d ${log_dir}/$1 ]] &&  mkdir -p ${log_dir}/$1
 }
@@ -76,7 +76,8 @@ test_package() {
             else
                 rm -rf package/$b #比对失败则下载包不对，将文件删除
                 print_error "md5值比对失败，请检查脚本或安装包" "The md5 value comparison fails, please check the script or installation package"
-        fi
+            fi
+	fi
     fi
     
     if [[ $a -eq 0 ]];then
@@ -90,7 +91,7 @@ test_rely() {
     local i
     for i in `echo $@`
     do
-        bash sai.sh install $i
+        bash ssc.sh install $i
         [[ $? -eq 1 ]] && print_error "依赖${i}安装失败" "Depends on ${i} installation failed"
     done
 }
