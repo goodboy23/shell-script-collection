@@ -35,7 +35,7 @@ test_start() {
         if [[ $? -ne 0 ]];then
             systemctl restart $i
             systemctl status $i | grep 'Active: active (running)'
-            print_error "$i服务启动失败，请检查脚本" "Failed to start the $i service, please check the script"
+            [[ $? -eq 0 ]] || print_error "$i服务启动失败，请检查脚本" "Failed to start the $i service, please check the script"
         fi
         systemctl enable $i
     done
