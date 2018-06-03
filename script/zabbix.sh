@@ -125,6 +125,8 @@ script_install() {
 	cd ..
 	rm -rf zabbix-3.4.1 #清理
 	setenforce 0
+	systemctl stop firewalld
+	systemctl disable firewalld
 	
 
     print_massage "zabbix安装完成" "The zabbix is installed"
