@@ -91,11 +91,11 @@ update_ssc() {
     test_root
     test_install git
     git clone https://github.com/goodboy23/ssc.git #下载文件到当前
-	[[ -f ssc/conf/install-ssc.sh ]] || print_error "下载失败，请重新更新" "Install Error，please Renew Update"
+	[[ -f shell-script-collection/conf/install-ssc.sh ]] || print_error "下载失败，请重新更新" "Install Error，please Renew Update"
     ls | grep -v package | xargs rm -rf #将安装包以外文件删除
-    rm -rf ssc/package #去除新包的package目录
-    mv ssc/* . #将新下载的所有内容复制到当前
-    rm -rf ssc
+    rm -rf shell-script-collection/package #去除新包的package目录
+    mv shell-script-collection/* . #将新下载的所有内容复制到当前
+    rm -rf shell-script-collection
     chmod +x ssc.sh
 	[[ $? -eq 0 ]] && print_massage "升级成功！" "update ok!" || print_error "安装失败，请重新更新" "Install Error，please Renew Update"
 }
@@ -107,9 +107,9 @@ list_generate() {
     for i in `ls script/` #将每个脚本的信息都输出找出前3行形成列表
     do
         i=`echo ${i%%.*}`
-        a=`bash sai.sh info $i | awk  -F'：' '{print $2}' | sed -n '1p'`
-        b=`bash sai.sh info $i | awk  -F'：' '{print $2}' | sed -n '3p'`
-        c=`bash sai.sh info $i | awk  -F'：' '{print $2}' | sed -n '5p'`
+        a=`bash ssc.sh info $i | awk  -F'：' '{print $2}' | sed -n '1p'`
+        b=`bash ssc.sh info $i | awk  -F'：' '{print $2}' | sed -n '3p'`
+        c=`bash ssc.sh info $i | awk  -F'：' '{print $2}' | sed -n '5p'`
         echo "$a:$b:$c" >> conf/a.txt
     done
     
