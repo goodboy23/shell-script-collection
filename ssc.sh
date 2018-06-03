@@ -97,7 +97,7 @@ update_ssc() {
     mv shell-script-collection/* . #将新下载的所有内容复制到当前
     rm -rf shell-script-collection
     chmod +x ssc.sh
-	[[ $? -eq 0 ]] && print_massage "升级成功！" "update ok!" || print_error "安装失败，请重新更新" "Install Error，please Renew Update"
+    [[ $? -eq 0 ]] && print_massage "升级成功！" "update ok!" || print_error "安装失败，请重新更新" "Install Error，please Renew Update"
 }
 
 #根据每个和脚本的info函数形成支持的脚本列表
