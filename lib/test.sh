@@ -27,6 +27,20 @@ test_root(){
     fi
 }
 
+#使用systemctl启动，$1填写服务名
+test_start() {
+    for i in `echo $@`
+    do
+        systemctl status $i | grep 'Active: active (running)'
+        if [[ $? -ne 0 ]];then
+            systemctl restart $i
+            systemctl status $i | grep 'Active: active (running)'
+            print_error "$i服务启动失败，请检查脚本" "Failed to start the $i service, please check the script"
+        fi
+        systemctl enable $i
+    done
+}
+
 #测试是否可以联网
 test_www() {
     local a=`curl -o /dev/null --connect-timeout 3 -s -w "%{http_code}" www.baidu.com`
