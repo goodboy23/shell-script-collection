@@ -32,13 +32,13 @@ script_install() {
     
     rpm -q httpd
     if [[ $? -eq 0 ]];then
-        print_massage "检测到httpd已安装，请手动卸载" "Httpd installed detected, please uninstall manually"
+        print_massage "检测到httpd已安装，请手动卸载httpd mariadb mariadb-server" "Httpd installed detected, please uninstall httpd mariadb mariadb-server manually "
         exit
     fi
     
     rpm -q mariadb-server
     if [[ $? -eq 0 ]];then
-        print_massage "检测到mariadb-server已安装，请手动卸载" "mariadb-server installed detected, please uninstall manually"
+        print_massage "检测到mariadb-server已安装，请手动卸载httpd mariadb mariadb-server" "mariadb-server installed detected, please uninstall httpd mariadb mariadb-server manually"
         exit
     fi
     
