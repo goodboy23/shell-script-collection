@@ -31,7 +31,7 @@ script_install() {
 
     #检测目录
     test_dir $nginx_dir
-	test_install gcc gcc-c++ automake pcre pcre-devel zlip zlib-devel openssl openssl-devel 
+	test_install gcc pcre-devel openssl-devel zlib-devel make
 
 	useradd -s /sbin/nologin nginx
 	script_get
