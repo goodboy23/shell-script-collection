@@ -62,7 +62,7 @@ script_install() {
 	./configure --prefix=${install_dir}/${zabbix_dir}  --enable-server --enable-agent --with-mysql && make install || print_error "zabbix安装失败，请检查脚本" "Zabbix installation failed, please check the script"
 
     rm -rf /var/www/html/*
-	cp -r frontends/php/*    /var/www/html/*
+	cp -rf frontends/php/*    /var/www/html/
 	chmod -R 777  /var/www/html/*
     
     mysql -e "show databases;" | grep test
@@ -124,10 +124,12 @@ script_install() {
 	
 	cd ..
 	rm -rf zabbix-3.4.1 #清理
+	setenforce 0
+	
 
     print_massage "zabbix安装完成" "The zabbix is installed"
-	print_massage "安装目录：${install_dir}/${zabbix_dir}" "Install Dir：${install_dir}/${zabbix_dir}"
-	print_massage "使用：/etc/init.d/zabbix_server start" "Use：/etc/init.d/zabbix_server start"
+    print_massage "安装目录：${install_dir}/${zabbix_dir}" "Install Dir：${install_dir}/${zabbix_dir}"
+    print_massage "使用：/etc/init.d/zabbix_server start" "Use：/etc/init.d/zabbix_server start"
     print_massage "浏览器访问：http://127.0.0.1，请登录填写如下信息" "Browser access: http://127.0.0.1，, Please log in and fill in the following information"
     print_massage "账号：admin" "Account: admin"
     print_massage "密码：zabbix" "Password: zabbix"
