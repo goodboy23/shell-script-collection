@@ -49,9 +49,9 @@ script_install() {
 	${install_dir}/${mindoc_dir}/mindoc_linux_amd64 install
 
     test_bin man-mindoc
-    sed -i "2a install_dir=${install_dir}" $command
-    sed -i "3a log_dir=${log_dir}" $command
-    sed -i "4a mindoc_dir=${mindoc_dir}" $command
+    sed -i "2a install_dir=${install_dir}" /usr/local/bin/man-mindoc
+    sed -i "3a log_dir=${log_dir}" /usr/local/bin/man-mindoc
+    sed -i "4a mindoc_dir=${mindoc_dir}" /usr/local/bin/man-mindoc
 
     print_massage "mindoc-0.9安装完成" "The mindoc-0.9 is installed"
 	print_massage "安装目录：${install_dir}/${mindoc_dir}" "Install Dir：${install_dir}/${mindoc_dir}"
