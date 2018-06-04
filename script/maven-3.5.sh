@@ -16,7 +16,7 @@ script_get() {
 }
 
 script_install() {
-    mvn -v
+    which mvn
     if [[ $? -eq 0 ]];then
         print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
@@ -51,7 +51,7 @@ script_remove() {
     sed -i '/^export PATH=${MAVEN_HOME}/d' /etc/profile
     
     source /etc/profile
-    mvn -v
+    which mvn
     [[ $? -eq 0 ]] && print_error "maven-3.5未成功删除，请检查脚本" "maven-3.5 unsuccessfully deleted, please check the script" || print_massage "maven-3.5卸载完成！" "maven-3.5 Uninstall completed！"
 }
 
