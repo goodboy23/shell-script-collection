@@ -107,6 +107,6 @@ script_remove() {
 script_info() {
     print_massage "名字：redis-browser" "Name：redis-browser"
 	print_massage "版本：0.5.1" "Version：0.5.1"
-	print_massage "介绍：redis的web端管理工具" "Introduce：Tredis的web端管理工具"
+	print_massage "介绍：redis的web端管理工具" "Introduce：redis的web端管理工具"
 	print_massage "作者：速度与激情小组---Linux部" "Author：Speed and Passion Group --- Linux Department"
 }
