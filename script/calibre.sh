@@ -16,7 +16,7 @@ script_install() {
     #安装依赖
     test_www
 	test_rely chinese-font
-	test_install mesa-libGL qt5-qtquickcontrols qt5-qtdeclarative-devel
+	test_install mesa-libGL qt5-qtquickcontrols qt5-qtdeclarative-devel libGL.so.1
 
 	#安装版本
 	wget -nv -O- https://download.calibre-ebook.com/linux-installer.py |python -c "import sys; main=lambda:sys.stderr.write('Download failed\n'); exec(sys.stdin.read()); main()"
@@ -43,5 +43,5 @@ script_info() {
     print_massage "名字：calibre" "Name：calibre"
     print_massage "版本：3.18.0" "Version：3.18.0"
     print_massage "介绍：Calibre是基于python的电子书制作软件" "Introduction: Calibre is a python-based e-book making software"
-	print_massage "作者：速度与激情小组---Linux部" "Author：Speed and Passion Group --- Linux Department"
+    print_massage "作者：速度与激情小组---Linux部" "Author：Speed and Passion Group --- Linux Department"
 }
