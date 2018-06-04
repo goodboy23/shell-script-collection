@@ -91,11 +91,13 @@ update_ssc() {
     test_root
     test_install git
     git clone https://github.com/goodboy23/shell-script-collection.git #下载文件到当前
-	[[ -f shell-script-collection/script/mysql-5.6.sh ]] || print_error "下载失败，请重新更新" "Install Error，please Renew Update"
+    [[ -d shell-script-collection ]] || print_error "下载失败，请重新更新" "Install Error，please Renew Update"
+    rm -rf /tmp//tmp/batch1-batch2
+    mv shell-script-collection /tmp/batch1-batch2
     ls | grep -v package | xargs rm -rf #将安装包以外文件删除
-    rm -rf shell-script-collection/package #去除新包的package目录
-    mv shell-script-collection/* . #将新下载的所有内容复制到当前
-    rm -rf shell-script-collection
+    rm -rf /tmp/batch1-batch2/package #去除新包的package目录
+    mv /tmp/batch1-batch2/* . #将新下载的所有内容复制到当前
+    rm -rf /tmp/batch1-batch2
     chmod +x ssc.sh
     [[ $? -eq 0 ]] && print_massage "升级成功！" "update ok!" || print_error "安装失败，请重新更新" "Install Error，please Renew Update"
 }
