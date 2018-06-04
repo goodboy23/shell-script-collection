@@ -26,10 +26,10 @@ script_install() {
 	[[ $? -eq 0 ]] || print_error "安装失败，请检查脚本" "Installation failed, please check the script"
     
     #效验是否工作正常
-    	
-    ebook-convert /etc/profile batch.pdf
+    echo "a" >> batch.txt
+    ebook-convert  batch.txt  batch.pdf
     [[ -f batch.pdf ]] || print_error "生成pdf失败，请检查脚本" "Failed to generate pdf, please check the script"
-    rm -rf batch.pdf
+    rm -rf batch.pdf batch.txt
     
     #完成
     print_massage "calibre安装完成" "The calibre is installed"
