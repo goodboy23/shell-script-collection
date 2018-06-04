@@ -4,7 +4,7 @@
 
 script_get() {
     test_package https://shell-auto-install.oss-cn-zhangjiakou.aliyuncs.com/package/simhei.ttf 5b4ceb24c33f4fbfecce7bd024007876
-	test_package https://shell-auto-install.oss-cn-zhangjiakou.aliyuncs.com/package/simsun.ttc bc9c5051b849545eaecb9caeed711d79
+    test_package https://shell-auto-install.oss-cn-zhangjiakou.aliyuncs.com/package/simsun.ttc bc9c5051b849545eaecb9caeed711d79
 }
 
 script_install() {
@@ -18,7 +18,7 @@ script_install() {
 	[[ -d /usr/share/fonts/chinese ]] || mkdir -p /usr/share/fonts/chinese
 	
 	#放字体到文件夹
-	get_chinese_font
+	script_get
     rm -rf /usr/share/fonts/chinese/simhei.ttf /usr/share/fonts/chinese/simsun.ttc
 	cp package/simhei.ttf /usr/share/fonts/chinese/
 	cp package/simsun.ttc /usr/share/fonts/chinese/
