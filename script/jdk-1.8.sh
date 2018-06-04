@@ -7,6 +7,12 @@ script_get() {
 }
 
 script_install() {
+    java -version
+    if [[ $? -eq 0 ]];then
+        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
+        exit
+    fi
+
     #卸载yum装的
     yum -y remove java-1.8.0-openjdk
 
@@ -40,13 +46,14 @@ script_install() {
 }
 
 script_remove() {
-	rm -rf ${install_dir}/${jdk_dir}
-	sed -i '/^export JAVA_HOME=/d' /etc/profile
+    rm -rf ${install_dir}/${jdk_dir}
+    sed -i '/^export JAVA_HOME=/d' /etc/profile
     sed -i '/^export JRE_HOME=/d'  /etc/profile
     sed -i '/^export CLASSPATH=/d' /etc/profile
     sed -i '/^export PATH=$JAVA_HOME/d'  /etc/profile
 
-	print_massage "卸载完成" "Uninstall completed"
+    java -version
+    [[ $? -eq 0 ]] && print_error "jdk-1.8卸载失败，请检查脚本" "Jdk-1.8 uninstall failed, please check the script" || print_massage "卸载完成" "Uninstall completed"
 }
 
 script_info() {
