@@ -120,6 +120,6 @@ script_remove() {
 script_info() {
 	print_massage "名字：mysql-5.6" "Name：mysql-5.6"
 	print_massage "版本：5.6.39" "Version：5.6.39"
-	print_massage "介绍："Mysql是一款好用的关系型数据库"Introduce：Mysql is a good relational database"
+	print_massage "介绍："Mysql是一款好用的关系型数据库" "Introduce：Mysql is a good relational database"
 	print_massage "作者：速度与激情小组---Linux部" "Author：Speed and Passion Group --- Linux Department"
 }
