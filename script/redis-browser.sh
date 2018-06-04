@@ -89,7 +89,7 @@ script_install() {
 
     #测试
 
-    print_massage "clocks安装完成" "The clocks is installed"
+    print_massage "redis-browser安装完成" "Theredis-browser is installed"
 	print_massage "安装目录：${install_dir}/${redis_browser_dir}" "Install Dir：${install_dir}/${redis_browser_dir}"
     print_massage "日志目录：${log_dir}/${redis_browser_dir}" "Log directory：${log_dir}/${redis_browser_dir}"
 	print_massage "使用：man-redis-browser start" "Use：man-redis-browser start"
