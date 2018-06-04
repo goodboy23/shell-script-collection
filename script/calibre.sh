@@ -16,7 +16,7 @@ script_install() {
     #安装依赖
     test_www
 	test_rely chinese-font
-	test_install mesa-libGL qt5-qtquickcontrols qt5-qtdeclarative-devel libGL.so.1
+	test_install mesa-libGL qt5-qtquickcontrols qt5-qtdeclarative-devel libXrender libXcomposite
 
 	#安装版本
 	wget -nv -O- https://download.calibre-ebook.com/linux-installer.py |python -c "import sys; main=lambda:sys.stderr.write('Download failed\n'); exec(sys.stdin.read()); main()"
@@ -26,8 +26,9 @@ script_install() {
 	[[ $? -eq 0 ]] || print_error "安装失败，请检查脚本" "Installation failed, please check the script"
     
     #效验是否工作正常
-	ebook-convert script/batch.sh batch.pdf
-	[[ -f batch.pdf ]] || print_error "生成pdf失败，请检查脚本" "Failed to generate pdf, please check the script"
+    	
+    ebook-convert /etc/profile batch.pdf
+    [[ -f batch.pdf ]] || print_error "生成pdf失败，请检查脚本" "Failed to generate pdf, please check the script"
     rm -rf batch.pdf
     
     #完成
