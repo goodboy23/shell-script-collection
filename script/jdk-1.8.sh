@@ -29,7 +29,7 @@ script_install() {
     yum -y remove java-1.8.0-openjdk
 
     #安装服务
-    get_jdk
+    script_get
     tar -xf package/jdk-8u152-linux-x64.tar.gz
     rm -rf ${install_dir}/jdk-1.8
     mv jdk1.8.0_152 ${install_dir}/jdk-1.8
@@ -49,7 +49,7 @@ script_install() {
     
     #测试
     java -version
-    [ $? -eq 0 ] || test_exit "安装失败，请检查脚本" "Installation failed, please check the script"
+    [ $? -eq 0 ] || print_error "安装失败，请检查脚本" "Installation failed, please check the script"
 
 	print_massage "jdk-1.8安装完成" "Jdk-1.8 installation is complete"
 	print_massage "安装目录：${install_dir}/${jdk_dir}" "Install Dir：${install_dir}/${jdk_dir}"
@@ -62,7 +62,7 @@ script_remove() {
     sed -i '/^export JAVA_HOME=/d' /etc/profile
     sed -i '/^export JRE_HOME=/d'  /etc/profile
     sed -i '/^export CLASSPATH=/d' /etc/profile
-    sed -i '/^export PATH=$JAVA_HOME/d'  /etc/profile
+    sed -i '/^export PATH=$JAVA_HOME/d' /etc/profile
 
     java -version
     [[ $? -eq 0 ]] && print_error "jdk-1.8卸载失败，请检查脚本" "Jdk-1.8 uninstall failed, please check the script" || print_massage "卸载完成" "Uninstall completed"
@@ -72,5 +72,5 @@ script_info() {
     print_massage "名字：jdk-1.8" "Name：dk-1.8"
     print_massage "版本：1.8.0" "Version：1.8.0"
     print_massage "介绍：JDK是 Java 语言的软件开发工具包" "Introduction: JDK is a Java language software development kit"
-	print_massage "作者：速度与激情小组---Linux部" "Author：Speed and Passion Group --- Linux Department"
+    print_massage "作者：速度与激情小组---Linux部" "Author：Speed and Passion Group --- Linux Department"
 }
