@@ -36,7 +36,7 @@ script_install() {
 	print_massage "jdk-1.8安装完成" "Jdk-1.8 installation is complete"
 	print_massage "安装目录：${install_dir}/jdk-1.8" "Install Dir：${install_dir}/jdk-1.8"
 	print_massage "使用：java -version" "Use：java -version"
-	print_massage "使用说明：java环境" "Instructions for use: java环境"
+	print_massage "使用说明：java环境" "Instructions for use: Java environment"
 }
 
 script_remove() {
