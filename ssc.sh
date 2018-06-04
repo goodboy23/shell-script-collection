@@ -90,8 +90,8 @@ list    httpd      List httpd related scripts"
 update_ssc() {
     test_root
     test_install git
-    git clone https://github.com/goodboy23/ssc.git #下载文件到当前
-	[[ -f shell-script-collection/conf/install-ssc.sh ]] || print_error "下载失败，请重新更新" "Install Error，please Renew Update"
+    git clone https://github.com/goodboy23/shell-script-collection.git #下载文件到当前
+	[[ -f shell-script-collection/script/mysql-5.6.sh ]] || print_error "下载失败，请重新更新" "Install Error，please Renew Update"
     ls | grep -v package | xargs rm -rf #将安装包以外文件删除
     rm -rf shell-script-collection/package #去除新包的package目录
     mv shell-script-collection/* . #将新下载的所有内容复制到当前
