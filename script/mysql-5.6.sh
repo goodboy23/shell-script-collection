@@ -43,6 +43,8 @@ script_install() {
     
     test_port 3306
     
+    test_dir $mysql_dir
+    
     #清理mariadb的东西
     for i in `rpm -qa | grep mariadb`; do rpm -e --nodeps $i; done
 
@@ -52,7 +54,6 @@ script_install() {
     useradd -g mysql -s /sbin/nologin mysql
     
     #下载解压包
-    test_dir $mysql_dir
     script_get
     tar -xf package/mysql-5.6.39-linux-glibc2.12-x86_64.tar.gz
     mv mysql-5.6.39-linux-glibc2.12-x86_64 ${install_dir}/${mysql_dir}
