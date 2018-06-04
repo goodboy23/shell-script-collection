@@ -51,7 +51,6 @@ test_www() {
 test_bin() {
     local command=/usr/local/bin/$1
     rm -rf $command
-    [[ -f material/$i ]] || print_error "脚本material/${1}不存在，请检查脚本" "Script material/${1} does not exist, please check the script"
     cp material/$1 $command
     [[ -f $command ]] || print_error "脚本 $command不存在，请检查脚本" "Script  $command does not exist, please check the script"
     chmod +x $command
