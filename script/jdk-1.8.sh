@@ -2,6 +2,16 @@
 
 
 
+#[使用设置]
+
+#主目录
+#install_dir=/usr/local
+
+#服务目录
+jdk_dir=jdk-1.8
+
+
+
 script_get() {
     test_package http://shell-auto-install.oss-cn-zhangjiakou.aliyuncs.com/package/jdk-8u152-linux-x64.tar.gz adfb92ae19a18b64d96fcd9a3e7bfb47
 }
@@ -13,6 +23,8 @@ script_install() {
         exit
     fi
 
+    test_dir ${jdk_dir}
+    
     #卸载yum装的
     yum -y remove java-1.8.0-openjdk
 
@@ -40,7 +52,7 @@ script_install() {
     [ $? -eq 0 ] || test_exit "安装失败，请检查脚本" "Installation failed, please check the script"
 
 	print_massage "jdk-1.8安装完成" "Jdk-1.8 installation is complete"
-	print_massage "安装目录：${install_dir}/jdk-1.8" "Install Dir：${install_dir}/jdk-1.8"
+	print_massage "安装目录：${install_dir}/${jdk_dir}" "Install Dir：${install_dir}/${jdk_dir}"
 	print_massage "使用：java -version" "Use：java -version"
 	print_massage "使用说明：java环境" "Instructions for use: Java environment"
 }
