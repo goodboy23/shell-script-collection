@@ -44,6 +44,7 @@ script_install() {
     conf=${install_dir}/${mindoc_dir}/conf/app.conf
     sed -i "s/httpport = 8181/httpport = ${port}/g" $conf
 	
+	rm -rf ${install_dir}/${mindoc_dir}/database
 	chmod +x ${install_dir}/${mindoc_dir}/mindoc_linux_amd64
 	${install_dir}/${mindoc_dir}/mindoc_linux_amd64 install
 
