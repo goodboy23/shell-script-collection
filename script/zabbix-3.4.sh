@@ -11,7 +11,7 @@
 #log_dir=
 
 #服务目录名
-zabbix_dir=zabbix
+zabbix_dir=zabbix-3.4
 
 
 
@@ -145,7 +145,7 @@ script_remove() {
 }
 
 script_info() {
-	print_massage "名字：zabbix" "Name：zabbix"
+	print_massage "名字：zabbix-3.4" "Name：zabbix-3.4"
 	print_massage "版本：3.4.1" "Version：3.4.1"
 	print_massage "介绍：zabbix是一种图形监控软件，只支持纯净安装" "Introduce：Zabbix is a graphics monitoring software that only supports clean installation"
 	print_massage "作者：速度与激情小组---Linux部" "Author：Speed and Passion Group --- Linux Department"
