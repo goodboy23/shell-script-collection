@@ -57,6 +57,7 @@ script_install() {
 	print_massage "安装目录：${install_dir}/${mindoc_dir}" "Install Dir：${install_dir}/${mindoc_dir}"
     print_massage "日志目录：${log_dir}/${mindoc_dir}" "Log directory：${log_dir}/${mindoc_dir}"
 	print_massage "使用：man-mindoc start" "Use：man-mindoc start"
+    print_massage "浏览器访问：http://127.0.0.1:${port}" "Browser access: http://127.0.0.1:${port}"
     print_massage "管理员账号：admin" "Administrator account: admin"
     print_massage "管理员密码：123456" "Administrator password: 123456"
 }
