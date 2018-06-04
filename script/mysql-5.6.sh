@@ -65,7 +65,7 @@ script_install() {
     echo "export MYSQL_HOME=${install_dir}/${mysql_dir}/bin" >> /etc/profile
     echo 'export PATH=$MYSQL_HOME:$PATH' >> /etc/profile
     
-    sourcr /etc/profile
+    source /etc/profile
     mysql -V
     [[ $? -eq 0 ]] || print_error "mysql环境变量设置失败，请检查脚本" "Mysql environment variable setting failed, please check the script"
 
