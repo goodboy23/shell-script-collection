@@ -9,7 +9,7 @@ script_get() {
 script_install() {
     ebook-convert --version
     if [[ $? -eq 0 ]];then
-        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
+        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
         exit
     fi
 
@@ -23,12 +23,12 @@ script_install() {
 	
 	#测试
 	ebook-convert --version
-	[[ $? -eq 0 ]] || print_error "安装失败，请检查脚本" "Installation failed, please check the script"
+	[[ $? -eq 0 ]] || print_error "2.装失败，请检查脚本" "2.Installation failed, please check the script"
     
     #效验是否工作正常
     echo "a" >> batch.txt
     ebook-convert  batch.txt  batch.pdf
-    [[ -f batch.pdf ]] || print_error "生成pdf失败，请检查脚本" "Failed to generate pdf, please check the script"
+    [[ -f batch.pdf ]] || print_error "3.生成pdf失败，请检查脚本" "3.Failed to generate pdf, please check the script"
     rm -rf batch.pdf batch.txt
     
     #完成
@@ -43,6 +43,6 @@ script_remove() {
 script_info() {
     print_massage "名字：calibre" "Name：calibre"
     print_massage "版本：3.18.0" "Version：3.18.0"
-    print_massage "介绍：Calibre是基于python的电子书制作软件" "Introduction: Calibre is a python-based e-book making software"
-    print_massage "作者：速度与激情小组---Linux部" "Author：Speed and Passion Group --- Linux Department"
+    print_massage "安装calibre" "Introduction: 安装calibre"
+    print_massage "作者：日行一善" "do one good deed a day"
 }
