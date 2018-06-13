@@ -8,7 +8,7 @@ script_get() {
 
 script_install() {
     if [[ -f /usr/local/bin/card-life ]];then
-        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
+        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
         exit
     fi
     
@@ -17,14 +17,12 @@ script_install() {
 	print_massage "card-life安装完成" "The card-life is installed"
 	print_massage "安装目录：/usr/local/bin/card-life" "Install Dir：/usr/local/bin/card-life"
 	print_massage "使用：card-life" "Use：card-life"
-	print_massage "使用说明：抽卡人生shell精简版" "Draw Card Life Shell Lite"
-    print_massage "如果玩起来困难，可以修改存档无限法力" "If it is difficult to play, you can modify the archive unlimited magic"
 }
 
 script_remove() {
 	rm -rf /usr/local/bin/card-life
     
-    [ -f /usr/local/bin/card-life ] && print_error "card-life未成功删除，请检查脚本" "card-life unsuccessfully deleted, please check the script" || print_massage "card-life卸载完成！" "card-life Uninstall completed！"
+    [ -f /usr/local/bin/card-life ] && print_error "1.card-life未成功删除，请检查脚本" "1.card-life unsuccessfully deleted, please check the script" || print_massage "card-life卸载完成！" "card-life Uninstall completed！"
 }
 
 script_info() {
