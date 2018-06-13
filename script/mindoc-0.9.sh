@@ -33,7 +33,7 @@ script_install() {
     test_port 8181
 
     #检测目录
-    test_rely glibc-2.14 sqlite3 calibre
+    test_rely glibc-2.14 sqlite-3.23 calibre
     test_dir $mindoc_dir
     
     #安装服务
