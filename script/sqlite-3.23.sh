@@ -16,7 +16,7 @@ script_install() {
     test_install gcc cmake
 
     #安装服务
-    get_sqlite
+    script_get
     tar -xf package/sqlite-snapshot-201803072139.tar.gz
     cd sqlite-snapshot-201803072139
     ./configure
@@ -35,7 +35,7 @@ script_remove() {
 }
 
 script_info() {
-    print_massage "名字：clocks" "Name：clocks"
+    print_massage "名字：sqlite-3.23" "Name：sqlite-3.23"
 	print_massage "版本：3.23.0" "Version：3.23.0"
 	print_massage "介绍：SQLite是一款轻型的关系型数据库管理系统" "Introduce：SQLite is a lightweight relational database management system"
 	print_massage "作者：速度与激情小组---Linux部" "Author：Speed and Passion Group --- Linux Department"
