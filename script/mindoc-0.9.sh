@@ -25,7 +25,7 @@ script_get() {
 }
 
 script_install() {
-    if [[ -f /usr/local/bin/man-mindoc ]];then
+    if [[ -d /usr/local/bin/man-mindoc ]];then
         print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
