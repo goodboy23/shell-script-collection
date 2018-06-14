@@ -10,7 +10,7 @@ script_get() {
 script_install() {
     fc-list  | grep '/usr/share/fonts/chinese/simsun.ttc'
     if [[ $? -eq 0 ]];then
-        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
+        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
         exit
     fi
     
@@ -19,7 +19,7 @@ script_install() {
 	
 	#放字体到文件夹
 	script_get
-    rm -rf /usr/share/fonts/chinese/simhei.ttf /usr/share/fonts/chinese/simsun.ttc
+	rm -rf /usr/share/fonts/chinese/simhei.ttf /usr/share/fonts/chinese/simsun.ttc
 	cp package/simhei.ttf /usr/share/fonts/chinese/
 	cp package/simsun.ttc /usr/share/fonts/chinese/
 	chmod -R 755 /usr/share/fonts/chinese
@@ -33,7 +33,7 @@ script_install() {
     
 	fc-cache
 	fc-list  | grep '/usr/share/fonts/chinese/simsun.ttc'
-    [[ $? -eq 0 ]] || print_error "生成失败，请检查脚本" "Failed to generate, please check the script"
+    [[ $? -eq 0 ]] || print_error "2.生成失败，请检查脚本" "2.Failed to generate, please check the script"
 
     #完成
     print_massage "中文字体安装成功" "Chinese font installed successfully"
@@ -47,5 +47,5 @@ script_info() {
     print_massage "名字：chinese-font" "Name：chinese-font"
     print_massage "版本：0" "Version：0"
     print_massage "介绍：安装中文字体" "Introduce：Install Chinese font"
-	print_massage "作者：速度与激情小组---Linux部" "Author：Speed and Passion Group --- Linux Department"
+    print_massage "作者：日行一善" "do one good deed a day"
 }
