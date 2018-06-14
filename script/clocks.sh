@@ -8,7 +8,7 @@ script_get() {
 
 script_install() {
     if [[ -f /usr/local/bin/clocks ]];then
-        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
+        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
         exit
     fi
     
@@ -30,5 +30,5 @@ script_info() {
 	print_massage "名字：clocks" "Name：clocks"
 	print_massage "版本：1.0" "Version：1.0"
 	print_massage "介绍：字符的系统时间脚本" "Introduce：The system time of the character"
-	print_massage "作者：速度与激情小组---Linux部" "Author：Speed and Passion Group --- Linux Department"
+	print_massage "作者：日行一善" "do one good deed a day"
 }
