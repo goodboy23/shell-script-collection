@@ -27,8 +27,6 @@ script_install() {
         
     source /etc/profile
     echo "ruby_url=https://cache.ruby-china.org/pub/ruby" > ~/.rvm/user/db
-
-    fi
     
     #测试
     which rvm
