@@ -26,7 +26,7 @@ script_get() {
 
 script_install() {
     if [[ -f /usr/local/bin/man-jenkins ]];then
-        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
+        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
         exit
     fi
     
@@ -37,7 +37,7 @@ script_install() {
     test_rely jdk-1.8 maven-3.5 ant-1.9
     get_jenkins
     mkdir ${install_dir}/${jenkins_dir}
-    cp package/jenkins.war ${install_dir}/${jenkins_dir}/
+    cp -p package/jenkins.war ${install_dir}/${jenkins_dir}/
     
     #配置启动脚本
     test_bin man-jenkins
@@ -53,10 +53,10 @@ script_install() {
     print_massage "日志目录：${log_dir}/${jenkins_dir}" "Log directory：${log_dir}/${jenkins_dir}"
 	print_massage "使用：man-jenkins start" "Use：man-jenkins start"
 	print_massage "访问：curl http://127.0.0.1:${port}" "Access：curl http://127.0.0.1:${port}"
-    print_massage "java maven ant环境配置完毕" "Java maven ant environment is configured"
 }
 
 script_remove() {
+    man-jenkins stop
 	rm -rf /usr/local/bin/man-jenkins
 	rm -rf ${install_dir}/${jenkins_dir}
 
@@ -67,5 +67,6 @@ script_info() {
     print_massage "名字：jenkins" "Name：jenkins"
 	print_massage "版本：2.104" "Version：2.104"
 	print_massage "介绍：Jenkins是持续与集成服务" "Introduce：Jenkins is a continuous and integrated service"
-	print_massage "作者：速度与激情小组---Linux部" "Author：Speed and Passion Group --- Linux Department"
+    print_massage "作者：日行一善" "do one good deed a day"
+    print_massage "使用说明：java-1.8 maven-3.5 ant-1.9环境配置" "Instructions for use：java-1.8 maven-3.5 ant-1.9 Configuration"
 }

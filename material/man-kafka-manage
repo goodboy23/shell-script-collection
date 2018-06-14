@@ -4,7 +4,7 @@
 
 
 if [ "$1" == "start" ];then
-	nohup ${dir}/bin/kafka-manager -Dconfig.file=${dir}/conf/application.conf >> ${log}/kafka-manager.log  &
+	nohup ${dir}/bin/kafka-manager -Dconfig.file=${dir}/conf/application.conf &>> ${log}/kafka-manager.log  &
 elif [ "$1" == "stop" ];then
 	pid=`netstat -unltp | grep ":${port}" | awk  '{print $7}' | awk -F'/' '{print $1}'`
 	kill -9 pid

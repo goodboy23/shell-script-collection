@@ -12,8 +12,10 @@
 #服务目录名
 redis_browser_dir=redis-browser
 
-#填写redis的主机名节点，最少2个
-redis_switch=no #填写ok将按如下填写执行脚本
+#填写ok将按如下填写执行脚本
+redis_switch=no
+
+#配置；填写redis的主机名节点，当前最少2个节点
 cluster_name=(service1 service2 service3)
 cluster_ip=(192.168.2.108:7000 192.168.2.108:7002 192.168.2.108:7004) 
 
@@ -32,17 +34,18 @@ script_get() {
 
 script_install() {
     if [[ "$redis_switch" == "no" ]];then
-        print_massage "此脚本需要填写，请./ssc.sh edit 服务名 来设置" "This script needs to be filled in. Set the ./ssc.sh edit service name"
+        print_massage "1.此脚本需要填写，请./ssc.sh edit 服务名 来设置" "1.This script needs to be filled in. Set the ./ssc.sh edit service name"
     fi
 
     if [[ -f /usr/local/bin/man-redis-browser ]];then
-        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
+        print_massage "2.检测到当前系统已安装" "2.Detected that the current system is installed"
         exit
     fi
 
     test_port ${port}
     test_dir $redis_browser_dir
     
+    #依赖
     test_install gem
 	test_rely nodejs-8.9 ruby-2.4
     
@@ -97,10 +100,11 @@ script_install() {
 }
 
 script_remove() {
+    man-redis-browser stop
 	rm -rf ${install_dir}/${redis_browser_dir}
 	rm -rf /usr/local/bin/man-redis-browser
 
-	[ -f /usr/local/bin/clocks ] && print_error "redis-browser卸载失败，请检查脚本" "Redis-browser uninstall failed, please check the script" || print_massage "redis-browser卸载完成！" "redis-browser Uninstall completed！"
+	[ -f /usr/local/bin/clocks ] && print_error "1.redis-browser卸载失败，请检查脚本" "1.Redis-browser uninstall failed, please check the script" || print_massage "redis-browser卸载完成！" "redis-browser Uninstall completed！"
 }
 
 
@@ -108,5 +112,5 @@ script_info() {
     print_massage "名字：redis-browser" "Name：redis-browser"
 	print_massage "版本：0.5.1" "Version：0.5.1"
 	print_massage "介绍：redis的web端管理工具" "Introduce：redis的web端管理工具"
-	print_massage "作者：速度与激情小组---Linux部" "Author：Speed and Passion Group --- Linux Department"
+    print_massage "作者：日行一善" "do one good deed a day"
 }

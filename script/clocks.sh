@@ -17,13 +17,12 @@ script_install() {
 	print_massage "clocks安装完成" "The clocks is installed"
 	print_massage "安装目录：/usr/local/bin/clocks" "Install Dir：/usr/local/bin/clocks"
 	print_massage "使用：clocks" "Use：clocks"
-	print_massage "使用说明：列出系统时间" "Instructions for use: List system timen"
 }
 
 script_remove() {
 	rm -rf /usr/local/bin/clocks
     
-    [ -f /usr/local/bin/clocks ] && print_error "clocks未成功删除，请检查脚本" "clocks unsuccessfully deleted, please check the script" || print_massage "clocks卸载完成！" "clocks Uninstall completed！"
+    [ -f /usr/local/bin/clocks ] && print_error "1.clocks未成功删除，请检查脚本" "1.clocks unsuccessfully deleted, please check the script" || print_massage "clocks卸载完成！" "clocks Uninstall completed！"
 }
 
 script_info() {

@@ -9,7 +9,7 @@ script_get() {
 script_install() {
     node -v
     if [[ $? -eq 0 ]];then
-        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
+        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
         exit
     fi
 
@@ -26,12 +26,11 @@ script_install() {
 
     #对结果进行测试
     node -v
-    [ $? -eq 0 ] || print_error "安装失败，请检查脚本" "Installation failed, please check the installation script"
+    [ $? -eq 0 ] || print_error "2.安装失败，请检查脚本" "2.Installation failed, please check the installation script"
     
 	print_massage "nodejs-8.9安装完成" "The nodejs-8.9 is installed"
 	print_massage "安装目录：/usr/local/nodejs-8.9" "Install Dir：/usr/local/nodejs-8.9"
 	print_massage "使用：node -v" "Use：node -v"
-	print_massage "使用说明：无" "Instructions for use: 无"
 }
 
 script_remove() {
@@ -40,12 +39,12 @@ script_remove() {
 	rm -rf /usr/local/nodejs-8.9
     
     node -v
-	 [[ $? -eq 0 ]] && print_error "卸载失败，请检查脚本" "Uninstall failed, please check the script" ||print_massage "nodejs卸载完成！" "nodejs Uninstall completed！"
+	 [[ $? -eq 0 ]] && print_error "1.卸载失败，请检查脚本" "1.Uninstall failed, please check the script" ||print_massage "nodejs卸载完成！" "nodejs Uninstall completed！"
 }
 
 script_info() {
 	print_massage "名字：nodejs-8.9" "Name：nodejs-8.9"
 	print_massage "版本：8.9.3" "Version：8.9.3"
 	print_massage "介绍：Node.js 就是运行在服务端的 JavaScript。" "Introduce：Node.js is JavaScript that runs on the server."
-	print_massage "作者：速度与激情小组---Linux部" "Author：Speed and Passion Group --- Linux Department"
+    print_massage "作者：日行一善" "do one good deed a day"
 }

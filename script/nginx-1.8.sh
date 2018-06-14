@@ -22,7 +22,7 @@ script_get() {
 script_install() {
     nginx -v
     if [[ $? -eq 0 ]];then
-        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
+        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
         exit
     fi
 
@@ -42,9 +42,10 @@ script_install() {
 	./configure --prefix=${install_dir}/${nginx_dir} --user=nginx --group=nginx --with-http_ssl_module --error-log-path=${log_dir}/${nginx_dir}/error.log --http-log-path=${log_dir}/${nginx_dir}/access.log
 	make && make install
 
+    rm -rf /usr/local/bin/nginx
 	ln -s ${install_dir}/${nginx_dir}/sbin/nginx /usr/local/bin/nginx
 	nginx -v
-	[[ $? -eq 0 ]] || test_exit "安装失败，请检查脚本" "Installation failed, please check the script"
+	[[ $? -eq 0 ]] || test_exit "2.安装失败，请检查脚本" "2.Installation failed, please check the script"
 
     print_massage "nginx-1.8安装完成" "The nginx-1.8 is installed"
 	print_massage "安装目录：${install_dir}/${nginx_dir}" "Install Dir：${install_dir}/${nginx_dir}"
@@ -54,17 +55,18 @@ script_install() {
 }
 
 script_remove() {
+    #需要添加停止nginx
 	userdel -r nginx
 	rm -rf ${install_dir}/${nginx_dir}
     rm -rf /usr/local/bin/nginx
     
     nginx -v
-	[[ $? -eq 0 ]] && print_error "卸载失败，请检查脚本" "Uninstall failed, please check the script" || print_massage "nginx卸载完成！" "nginx Uninstall completed！"
+	[[ $? -eq 0 ]] && print_error "1.卸载失败，请检查脚本" "1.Uninstall failed, please check the script" || print_massage "nginx卸载完成！" "nginx Uninstall completed！"
 }
 
 script_info() {
 	print_massage "名字：nginx-1.8" "Name：nginx-1.8"
 	print_massage "版本：1.8" "Version：1.8"
 	print_massage "介绍：Nginx是一个高性能的HTTP和反向代理服务器" "Introduce：Nginx is a high performance HTTP and reverse proxy server"
-	print_massage "作者：速度与激情小组---Linux部" "Author：Speed and Passion Group --- Linux Department"
+    print_massage "作者：日行一善" "do one good deed a day"
 }

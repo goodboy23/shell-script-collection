@@ -1,39 +1,21 @@
 #!/bin/bash
 
 
+port=6379
 
-a=${install_dir}/${redis_dir}/bin/redis-server
-b=${install_dir}/${redis_dir}/cluster/
-c=${log_dir}/${redis_dir}
-
-
-start() {
-    netstat -unltp | awk -F':' '{print $2}' | grep -w ${port} &> /dev/null
-    if [ $? -ne 0 ];then
-        $a $b/${port}/${port}.conf >> $c/redis_${port}.log &
-    fi
-}
-
-stop() {
-    netstat -unltp | awk -F':' '{print $2}' | grep -w ${port} &> /dev/null
+if [[ "$1" == "start" ]];then
+    netstat -unltp |grep :${port} &> /dev/null
     if [ $? -eq 0 ];then
-        pid=`cat ${install_dir}/${redis_dir}/cluster/${port}/redis_${port}.pid `
-        kill -9 $pid &> /dev/null
+        echo "redis Already started"
+        exit
     fi
-}
-
-status() {
-    netstat -unltp | awk -F':' '{print $2}' | grep -w ${port} &> /dev/null
-    [ $? -eq 0 ] && echo "redis port:${port} ok" || echo "redis port:${port} error"
-}
-
-
-if [ "$1" == "start" ];then
-    start
-elif [ "$1" == "stop" ];then
-    stop
-elif [ "$1" == "status" ];then
-    status
+    nohup ${install_dir}/${redis_dir}/bin/redis-server &> ${log_dir}/${redis_dir}/redis.log &
+elif [[ "$1" == "stop" ]];then
+    netstat -unltp |grep :${port} &> /dev/null
+    if [ $? -eq 0 ];then
+        pid=`netstat -unltp | grep :22 | head -1 |awk '{print $7}' | awk -F'/' '{print $1}'`
+        kill -9 $pid
+    fi
 else
-    echo "start | stop | status"
+    echo "start | stop"
 fi

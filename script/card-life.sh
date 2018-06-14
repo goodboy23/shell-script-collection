@@ -29,5 +29,5 @@ script_info() {
 	print_massage "名字：card-life" "Name：card-life"
 	print_massage "版本：1.1" "Version：1.1"
 	print_massage "介绍：抽卡人生小游戏" "Introduce：抽卡人生小游戏"
-	print_massage "作者：速度与激情小组---Linux部" "Author：Speed and Passion Group --- Linux Department"
+    print_massage "作者：日行一善" "do one good deed a day"
 }

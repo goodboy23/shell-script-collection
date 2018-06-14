@@ -23,22 +23,22 @@ script_install() {
     #检查
     which zabbix_get
     if [[ $? -eq 0 ]];then
-        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
+        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
         exit
     fi
 
     cat /etc/redhat-release | awk '{print $4}' |grep ^7
-    [[ $? -eq 0 ]] || print_error "当前只支持7版本系统" "Currently only supports 7 version systems"
+    [[ $? -eq 0 ]] || print_error "2.当前只支持7版本系统" "2.Currently only supports 7 version systems"
     
     rpm -q httpd
     if [[ $? -eq 0 ]];then
-        print_massage "检测到httpd已安装，请手动卸载httpd mariadb mariadb-server" "Httpd installed detected, please uninstall httpd mariadb mariadb-server manually "
+        print_massage "3.检测到httpd已安装，请yum remove httpd mariadb mariadb-server" "Httpd installed detected, please yum remove httpd mariadb mariadb-server manually "
         exit
     fi
     
     rpm -q mariadb-server
     if [[ $? -eq 0 ]];then
-        print_massage "检测到mariadb-server已安装，请手动卸载httpd mariadb mariadb-server" "mariadb-server installed detected, please uninstall httpd mariadb mariadb-server manually"
+        print_massage "4.检测到mariadb-server已安装，请yum remove httpd mariadb mariadb-server" "4.mariadb-server installed detected, please yum remove httpd mariadb mariadb-server manually"
         exit
     fi
     
@@ -66,7 +66,7 @@ script_install() {
 	chmod -R 777  /var/www/html/*
     
     mysql -e "show databases;" | grep test
-    [[ $? -eq 0 ]] || print_error "数据库无法登录进去，请检查脚本" "Database cannot be logged in, please check the script"
+    [[ $? -eq 0 ]] || print_error "5.数据库无法登录进去，请检查脚本" "5.Database cannot be logged in, please check the script"
     
     #删除旧的
     mysql -e "drop database zabbixdb;"
@@ -76,7 +76,7 @@ script_install() {
 	mysql -e 'grant all on  zabbixdb.*  to  zabbixuser@"localhost" identified by "123456"'
     
     mysql -uzabbixuser -p123456 -e "show databases;" | grep test
-    [[ $? -eq 0 ]] || print_error "zabbix用户无法登录数据库，请检查脚本" "Zabbix users cannot log in to the database, please check the script"
+    [[ $? -eq 0 ]] || print_error "6.zabbix用户无法登录数据库，请检查脚本" "6.Zabbix users cannot log in to the database, please check the script"
 
 	mysql -uzabbixuser -p123456 zabbixdb  < database/mysql/schema.sql
 	mysql -uzabbixuser -p123456 zabbixdb  < database/mysql/images.sql
@@ -109,7 +109,7 @@ script_install() {
     
 	/etc/init.d/zabbix_server start
 	netstat -unltp |grep :10051
-	[ $? -eq 0 ] || test_exit "zabbix服务端安装错误，请检查脚本" "Zabbix server installation error, please check the script"
+	[ $? -eq 0 ] || test_exit "7.zabbix服务端安装错误，请检查脚本" "7.Zabbix server installation error, please check the script"
 	
 	#安装客户端
     rm -rf /etc/init.d/zabbix_agentd
@@ -120,15 +120,13 @@ script_install() {
 	
 	/etc/init.d/zabbix_agentd start
 	netstat -unltp |grep :10050
-    [ $? -eq 0 ] || test_exit "zabbix客户端安装错误，请检查脚本" "Zabbix client installation error, please check the script"
+    [ $? -eq 0 ] || test_exit "8.zabbix客户端安装错误，请检查脚本" "8.Zabbix client installation error, please check the script"
 	
 	cd ..
 	rm -rf zabbix-3.4.1 #清理
-	setenforce 0
-	systemctl stop firewalld
-	systemctl disable firewalld
-	
-
+    
+    #应添加防火墙配置
+    
     print_massage "zabbix安装完成" "The zabbix is installed"
     print_massage "安装目录：${install_dir}/${zabbix_dir}" "Install Dir：${install_dir}/${zabbix_dir}"
     print_massage "使用：/etc/init.d/zabbix_server start" "Use：/etc/init.d/zabbix_server start"
@@ -147,6 +145,7 @@ script_remove() {
 script_info() {
 	print_massage "名字：zabbix-3.4" "Name：zabbix-3.4"
 	print_massage "版本：3.4.1" "Version：3.4.1"
-	print_massage "介绍：zabbix是一种图形监控软件，只支持纯净安装" "Introduce：Zabbix is a graphics monitoring software that only supports clean installation"
-	print_massage "作者：速度与激情小组---Linux部" "Author：Speed and Passion Group --- Linux Department"
+	print_massage "介绍：zabbix是一种图形监控软件" "Introduce：Zabbix is a graphics monitoring software"
+    print_massage "作者：日行一善" "do one good deed a day"
+    print_error "使用说明：当前使用yum安装的http,mariadb,php-fpm等，纯净环境" "Instructions for use: Currently using yum to install http, mariadb, php-fpm, etc., pure environment"
 }

@@ -8,7 +8,7 @@ script_get() {
 
 script_install() {
     if [[ -f /usr/local/bin/ip-location ]];then
-        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
+        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
         exit
     fi
     
@@ -17,7 +17,6 @@ script_install() {
 	print_massage "ip-location安装完成" "The ip-location is installed"
 	print_massage "安装目录：/usr/local/bin/ip-location" "Install Dir：/usr/local/bin/ip-location"
 	print_massage "使用：ip-location" "Use：ip-location"
-	print_massage "使用说明：查询ip地址所在地" "Instructions for use: Query ip address location"
 }
 
 script_remove() {
@@ -30,5 +29,5 @@ script_info() {
 	print_massage "名字：ip-location" "Name：ip-location"
 	print_massage "版本：1.0" "Version：1.0"
 	print_massage "介绍：查询ip地址所在地脚本" "Introduce：Query ip address location script"
-	print_massage "作者：速度与激情小组---Linux部" "Author：Speed and Passion Group --- Linux Department"
+    print_massage "作者：日行一善" "do one good deed a day"
 }

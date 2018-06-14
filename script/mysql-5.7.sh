@@ -11,7 +11,7 @@
 #log_dir=
 
 #服务目录名
-mysql_dir=mysql-5.6
+mysql_dir=mysql-5.7
 
 #启动的端口
 port=3306
@@ -19,7 +19,7 @@ port=3306
 
 
 script_get() {
-     test_package "https://dev.mysql.com/get/Downloads/MySQL-5.6/mysql-5.6.39-linux-glibc2.12-x86_64.tar.gz" "1bc406d2fe18dd877182a0bd603e7bd4"
+     test_package "https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.21-linux-glibc2.12-x86_64.tar.gz" "69b1d94f33c05b73cf72d557e484e2dc"
 }
 
 script_install() {
@@ -71,40 +71,43 @@ script_install() {
     [[ $? -eq 0 ]] || print_error "4.mysql环境变量设置失败，请检查脚本" "4.Mysql environment variable setting failed, please check the script"
 
     #设置配置文件
-    echo "[mysql]
-default-character-set=utf8
-socket=${install_dir}/${mysql_dir}/mysql.sock
-[mysqld]
-skip-name-resolve
+    echo "[client]
 port = ${port}
-socket=${install_dir}/${mysql_dir}/mysql.sock
+socket = ${install_dir}/${mysql_dir}/mysql.sock
+
+[mysqld]
+port = ${port}
+bind-address = 0.0.0.0
+character_set_server=utf8
+init_connect='SET NAMES utf8'
 basedir=${install_dir}/${mysql_dir}
 datadir=${install_dir}/${mysql_dir}/data
-max_connection=200
-character-set-server=utf8
-default-storage-engine=INNODB
-lower_case_table_name=1
-max_allowed_packet=16M
-log-error=${log_dir}/${mysql_dir}/mysql.log
-pid-file=${log_dir}/${mysql_dir}/mysql.pid
-bind-address = 0.0.0.0" > /etc/my.cnf #这里改需要的配置
+socket=${install_dir}/${mysql_dir}/mysql.sock
+log-error=${log_dir}/${mysql_dir}/mysqld.log
+pid-file=${install_dir}/${mysql_dir}/mysqld.pid" > /etc/my.cnf #这里改需要的配置
     chown mysql:mysql /etc/my.cnf
     
     #初始化脚本
     cd ${install_dir}/${mysql_dir}
-    ./scripts/mysql_install_db --user=mysql --basedir=${install_dir}/${mysql_dir} --datadir=${install_dir}/${mysql_dir}/data
+    ./bin/mysqld --initialize --user=mysql --basedir=${install_dir}/${mysql_dir} --datadir=${install_dir}/${mysql_dir}/data --lc_messages_dir=${install_dir}/${mysql_dir}/share --lc_messages=en_US
 
     #设置脚本
     test_bin man-mysql
     sed -i "2a install_dir=${install_dir}" $command
     sed -i "2a mysql_dir=${mysql_dir}" $command
+    
+    tail -n 1 ${log_dir}/${mysql_dir}/mysql.log | grep "root@localhost"
+    [[ $? -eq 0 ]] || print_error "5.初始化数据库失败，请检查脚本" "5. Failed to initialize the database, please check the script"
+    
+    mysql_passwd=`tail -n 1 /var/log/mysql/mysql.log |  awk -F'@' '{print $2}' | cut -b 12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30`
 
-	print_massage "mysql-5.6安装完成" "The mysql-5.6 is installed"
+	print_massage "mysql-5.7安装完成" "The mysql-5.7 is installed"
 	print_massage "安装目录：${install_dir}/${mysql_dir}" "Install Dir：${install_dir}/${mysql_dir}"
     print_massage "日志目录：${log_dir}/${mysql_dir}" "Log directory：${log_dir}/${mysql_dir}"
 	print_massage "使用：man-mysql start" "Use：man-mysql start"
+    print_massage "账号：root" "account number：root"
+    print_massage "密码：${mysql_passwd}" "password：${mysql_passwd}"
 }
-
 
 script_remove() {
     man-mysql stop
@@ -117,12 +120,12 @@ script_remove() {
     sed -i '/^export PATH=$MYSQL_HOME/d' /etc/profile
 
     mysql -V
-    [[ $? -eq 0 ]] && print_error "1.mysql-5.6未成功删除，请检查脚本" "1.mysql-5.6 unsuccessfully deleted, please check the script" || print_massage "mysql-5.6卸载完成！" "mysql-5.6 Uninstall completed！"
+    [[ $? -eq 0 ]] && print_error "1.mysql-5.7未成功删除，请检查脚本" "1.mysql-5.7 unsuccessfully deleted, please check the script" || print_massage "mysql-5.6卸载完成！" "mysql-5.6 Uninstall completed！"
 }
 
 script_info() {
-	print_massage "名字：mysql-5.6" "Name：mysql-5.6"
-	print_massage "版本：5.6.39" "Version：5.6.39"
+	print_massage "名字：mysql-5.7" "Name：mysql-5.7"
+	print_massage "版本：5.7.21" "Version：5.7.21"
 	print_massage "介绍：Mysql是一款好用的关系型数据库" "Introduce：Mysql is a good relational database"
     print_massage "作者：日行一善" "do one good deed a day"
 }

@@ -43,6 +43,6 @@ script_remove() {
 script_info() {
     print_massage "名字：calibre" "Name：calibre"
     print_massage "版本：3.18.0" "Version：3.18.0"
-    print_massage "安装：calibre" "Introduction: 安装calibre"
+    print_massage "安装：专业的电子书制作软件" "Introduction: Professional e-book making software"
     print_massage "作者：日行一善" "do one good deed a day"
 }

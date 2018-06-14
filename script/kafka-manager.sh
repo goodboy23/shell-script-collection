@@ -14,8 +14,10 @@
 #服务目录名
 kafka_manager_dir=kafka-manager
 
-#zookeeper集群地址用,分隔
-kafka_switch=no #yes则根据配置执行脚本
+#yes则根据配置执行脚本
+kafka_switch=no
+
+#配置：zookeeper集群地址用,分隔
 cluster_ip="192.168.2.108:2181,192.168.2.109:2181"
 
 #启动端口
@@ -29,11 +31,11 @@ script_get() {
 
 script_install() {
     if [[ "$kafka_switch" == "no" ]];then
-        print_massage "此脚本需要填写，请./ssc.sh edit 服务名 来设置" "This script needs to be filled in. Set the ./ssc.sh edit service name"
+        print_massage "1.此脚本需要填写，请./ssc.sh edit 服务名 来设置" "1.This script needs to be filled in. Set the ./ssc.sh edit service name"
     fi
     
     if [[ -f /usr/local/bin/man-kafka-manager ]];then
-        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
+        print_massage "2.检测到当前系统已安装" "2.Detected that the current system is installed"
         exit
     fi
     
@@ -59,6 +61,8 @@ script_install() {
     sed -i "3a dir=${install_dir}/${kafka_manager_dir}" $command
     sed -i "4a log=${log_dir}/${kafka_manager_dir}" $command
     
+    #无效验
+
     print_massage "kafka-manager安装完成" "The kafka-manager is installed"
 	print_massage "安装目录：${install_dir}/${kafka_manager_dir}" "Install Dir：${install_dir}/${kafka_manager_dir}"
     print_massage "日志目录：${log_dir}/${kafka_manager_dir}" "Log directory：${log_dir}/${kafka_manager_dir}"
@@ -67,15 +71,15 @@ script_install() {
 }
 
 script_remove() {
+    man-kafka-manager stop
 	rm -rf ${install_dir}/${kafka_manager_dir}
 	rm -rf /usr/local/bin/man-kafka-manager
-	test_remove kafka-manager
-	[ "$language" == "cn" ] && echo "kafka_manager卸载完成！" || echo "kafka_manager Uninstall completed！"
+    print_massage "kafka_manager卸载完成！" "kafka_manager Uninstall completed！"
 }
 
 script_info() {
     print_massage "名字：kafka_manager" "Name：kafka_manager"
 	print_massage "版本：1.3.3.14" "Version：1.3.3.14"
 	print_massage "介绍：kafka的web端管理工具" "Introduce：kafka的web端管理工具"
-	print_massage "作者：速度与激情小组---Linux部" "Author：Speed and Passion Group --- Linux Department"
+    print_massage "作者：日行一善" "do one good deed a day"
 }

@@ -57,6 +57,6 @@ script_remove() {
 script_info() {
 	print_massage "名字：ant-1.9" "Name：ant-1.9"
 	print_massage "版本：1.9" "Version：1.9"
-	print_massage "介绍：配置ant环境" "Introduce：Configure ant environment"
+	print_massage "介绍：Ant是Java的生成工具,是Apache的核心项目" "Introduce：Ant is a Java generation tool and a core Apache project"
 	print_massage "作者：日行一善" "do one good deed a day"
 }
