@@ -106,7 +106,6 @@ update_ssc() {
 list_generate() {
     rm -rf conf/a.txt
     rm -rf conf/b.txt
-    rm -rf conf/list_${language}.txt 
 
     for i in `ls script/` #将每个脚本的信息都输出找出前3行形成列表
     do
