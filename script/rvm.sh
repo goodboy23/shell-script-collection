@@ -50,8 +50,8 @@ script_remove() {
 }
 
 script_info() {
-    print_massage "名字：ruby-2.4" "Name：ruby-2.4"
-    print_massage "版本：2.4.1" "Version：2.4.1"
-    print_massage "介绍：Ruby，一种简单快捷的面向对象脚本语言" "Introduction: Ruby，一种简单快捷的面向对象脚本语言"
+    print_massage "名字：rvm" "Name：rvm"
+    print_massage "版本：0" "Version：0"
+    print_massage "介绍：rvm是ruby管理器" "Introduction: Rvm is a ruby manager"
     print_massage "作者：日行一善" "do one good deed a day"
 }
