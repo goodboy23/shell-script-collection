@@ -31,7 +31,7 @@ script_install() {
         print_massage "1.此脚本需要填写，请./ssc.sh edit 服务名 来设置" "1.This script needs to be filled in. Set the ./ssc.sh edit service name"
     fi
 
-    if [[ ！-f /usr/local/zookeeper/bin/zkServer.sh ]];then
+    if [[ ! -f ${zookeeper_dir}/bin/zkServer.sh ]];then
         print_error "2.未安装zookeeper，请./ssc.sh install zookeeper-3.5" "2. Zookeeper is not installed, please./ssc.sh install zookeeper-3.5"
     fi
     
