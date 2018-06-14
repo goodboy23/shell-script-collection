@@ -16,7 +16,7 @@ script_get() {
 }
 
 script_install() {
-    if [[ -f /usr/local/bin/man-tomcat]];then
+    if [[ -f /usr/local/bin/man-tomcat ]];then
         print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
         exit
     fi
