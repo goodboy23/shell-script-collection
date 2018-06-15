@@ -55,8 +55,8 @@ script_install() {
     
     #下载解压包
     script_get
-    tar -xf package/mysql-5.6.39-linux-glibc2.12-x86_64.tar.gz
-    mv mysql-5.6.39-linux-glibc2.12-x86_64 ${install_dir}/${mysql_dir}
+    tar -xf package/mysql-5.7.21-linux-glibc2.12-x86_64.tar.gz
+    mv mysql-5.7.21-linux-glibc2.12-x86_64 ${install_dir}/${mysql_dir}
     chown -R mysql:mysql ${install_dir}/${mysql_dir}
     chown -R mysql:mysql ${log_dir}/${mysql_dir}
 
