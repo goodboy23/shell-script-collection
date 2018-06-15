@@ -28,7 +28,6 @@ listen=0.0.0.0
 
 
 script_get() {
-    test_package "http://shell-auto-install.oss-cn-zhangjiakou.aliyuncs.com/package/redis-4.0.1.gem" "a4b74c19159531d0aa4c3bf4539b1743"
     test_package "http://shell-auto-install.oss-cn-zhangjiakou.aliyuncs.com/package/redis-browser-0.5.1.gem" "dbe6a5e711dacbca46e68b10466d9da4"
 }
 
@@ -50,10 +49,10 @@ script_install() {
 	test_rely nodejs-8.9 ruby-2.4
     
     script_get
-    gem update —system
+    #gem update —system
     gem sources —add https://gems.ruby-china.org/ —remove https://rubygems.org/
     gem sources -l
-    gem install package/redis-4.0.1.gem
+    gem install redis
     gem install package/redis-browser-0.5.1.gem
     
     rm -rf ${install_dir}/${redis_browser_dir}/config.yml
