@@ -76,6 +76,16 @@ test_install() {
     done
 }
 
+#位置变量软件包名，卸载
+test_remove() {
+    for i in `echo $@`
+    do
+        yum -y remove $i
+        rpm -q $i
+        [ $? -eq 0 ] && print_error "${i}安装包未能用yum卸载，请手动卸载" "The ${i} package failed to remove with yum, please remove it manually"
+    done
+}
+
 #下载,$1写下载地址或者package文件夹中包名，$2写md5值
 test_package() {
     test_install wget
