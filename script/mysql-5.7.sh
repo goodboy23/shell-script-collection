@@ -83,8 +83,8 @@ init_connect='SET NAMES utf8'
 basedir=${install_dir}/${mysql_dir}
 datadir=${install_dir}/${mysql_dir}/data
 socket=${install_dir}/${mysql_dir}/mysql.sock
-log-error=${log_dir}/${mysql_dir}/mysqld.log
-pid-file=${install_dir}/${mysql_dir}/mysqld.pid" > /etc/my.cnf #这里改需要的配置
+log-error=${log_dir}/${mysql_dir}/mysql.log
+pid-file=${install_dir}/${mysql_dir}/mysql.pid" > /etc/my.cnf #这里改需要的配置
     chown mysql:mysql /etc/my.cnf
     
     xianzai=`pwd`
@@ -95,8 +95,8 @@ pid-file=${install_dir}/${mysql_dir}/mysqld.pid" > /etc/my.cnf #这里改需要�
     cd ${xianzai}
     #设置脚本
     test_bin man-mysql
-    sed -i "2a install_dir=${install_dir}" /usr/local/bin/man-mindoc
-    sed -i "2a mysql_dir=${mysql_dir}" /usr/local/bin/man-mindoc
+    sed -i "2a install_dir=${install_dir}" /usr/local/bin/man-mysql
+    sed -i "2a mysql_dir=${mysql_dir}" /usr/local/bin/man-mysql
 
     
     tail -n 1 ${log_dir}/${mysql_dir}/mysql.log | grep "root@localhost"
