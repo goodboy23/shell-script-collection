@@ -132,7 +132,7 @@ server() {
     test_version
     test_root
     source /etc/profile
-    source ~/bashrc
+    source ~/.bashrc
     
     if [[ -f script/${2}.sh ]];then
         source script/${2}.sh
