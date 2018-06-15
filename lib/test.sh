@@ -107,6 +107,6 @@ test_rely() {
     for i in `echo $@`
     do
         bash ssc.sh install $i
-        [[ $? -eq 1 ]] && print_error "依赖${i}安装失败" "Depends on ${i} installation failed"
+        [[ $? -eq 1 ]] && print_error "依赖${i}安装失败" "Depends on ${i} installation failed" || source /etc/profile
     done
 }
