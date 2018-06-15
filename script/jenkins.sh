@@ -43,7 +43,7 @@ script_install() {
     test_bin man-jenkins
 
     sed -i "2a port=$port" /usr/local/bin/man-jenkins
-    sed -i "3a listen=$listen"/usr/local/bin/man-jenkins
+    sed -i "3a listen=$listen" /usr/local/bin/man-jenkins
     sed -i "4a install_dir=$install_dir" /usr/local/bin/man-jenkins
     sed -i "5a log_dir=$log_dir" /usr/local/bin/man-jenkins
     sed -i "6a jenkins_dir=$jenkins_dir" /usr/local/bin/man-jenkins
