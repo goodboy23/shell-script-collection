@@ -10,7 +10,9 @@
 ssc可以对所支持的脚本进行安装，卸载，查看，自定义编辑和离线压缩包
 
 
-## 二.如何下载ssc？
+## 二.如何下载ssc！
+
+当前请勿用于生产环境，还未完全测试完！ QQ交流群：762696893
 
 `yum -y install git  &&  git clone https://github.com/goodboy23/shell-script-collection.git || echo "no no no git no no no"`
 
