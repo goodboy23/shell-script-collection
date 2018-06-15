@@ -35,19 +35,22 @@ script_install() {
     
     #安装依赖和包
     test_rely jdk-1.8 maven-3.5 ant-1.9
-    get_jenkins
+    script_get
     mkdir ${install_dir}/${jenkins_dir}
     cp -p package/jenkins.war ${install_dir}/${jenkins_dir}/
     
     #配置启动脚本
     test_bin man-jenkins
 
-    sed -i "2a port=$port" $command
-    sed -i "3a listen=$listen" $command
-    sed -i "4a install_dir=$install_dir" $command
-    sed -i "5a log_dir=$log_dir" $command
-    sed -i "6a jenkins_dir=$jenkins_dir" $command
-
+    sed -i "2a port=$port" /usr/local/bin/man-jenkins
+    sed -i "3a listen=$listen"/usr/local/bin/man-jenkins
+    sed -i "4a install_dir=$install_dir" /usr/local/bin/man-jenkins
+    sed -i "5a log_dir=$log_dir" /usr/local/bin/man-jenkins
+    sed -i "6a jenkins_dir=$jenkins_dir" /usr/local/bin/man-jenkins
+    
+    #验证
+    [[ -f ${install_dir}/${jenkins_dir}/jenkins.war ]] || print_error "2.jenkins.war不存在，请检查脚本" "2.jenkins.war does not exist, please check the script"
+    
     print_massage "jenkins安装完成" "The jenkins is installed"
 	print_massage "安装目录：${install_dir}/${jenkins_dir}" "Install Dir：${install_dir}/${jenkins_dir}"
     print_massage "日志目录：${log_dir}/${jenkins_dir}" "Log directory：${log_dir}/${jenkins_dir}"
