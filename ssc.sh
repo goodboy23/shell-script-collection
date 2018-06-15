@@ -131,7 +131,9 @@ list_generate() {
 server() {
     test_version
     test_root
-
+    source /etc/profile
+    source ~/bashrc
+    
     if [[ -f script/${2}.sh ]];then
         source script/${2}.sh
         if [[ "$1" == "install" ]];then
