@@ -91,9 +91,11 @@ bind-address = 0.0.0.0" > /etc/my.cnf #这里改需要的配置
     chown mysql:mysql /etc/my.cnf
     
     #初始化脚本
+    dangqian=`pwd`
     cd ${install_dir}/${mysql_dir}
     ./scripts/mysql_install_db --user=mysql --basedir=${install_dir}/${mysql_dir} --datadir=${install_dir}/${mysql_dir}/data
 
+    cd ${dangqian}
     #设置脚本
     test_bin man-mysql
     sed -i "2a install_dir=${install_dir}" $command
