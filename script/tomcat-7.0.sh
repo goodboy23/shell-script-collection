@@ -36,7 +36,7 @@ script_install() {
 	print_massage "tomcat-7.0安装完成" "The tomcat-7.0 is installed"
 	print_massage "安装目录：${install_dir}/${tomcat_dir}" "Install Dir：${install_dir}/${tomcat_dir}"
 	print_massage "使用：man-tomcat" "Use：man-tomcat"
-	print_massage "访问："" ""
+	print_massage "访问：curl http://127.0.0.1:8080" "Visit: curl http://127.0.0.1:8080"
 }
 
 script_remove() {
