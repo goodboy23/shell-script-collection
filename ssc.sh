@@ -150,7 +150,10 @@ server() {
             [[ "$language" == "cn" ]] && help_cn || help_en
         fi
     else
-        print_error "没有这个脚本" "Without this service"
+        echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+	[[ "$language" == "cn" ]] && echo "错误：没有这个脚本" || echo "Error：Without this service"
+	echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+	bash ssc.sh list ${2}
     fi
 }
 
