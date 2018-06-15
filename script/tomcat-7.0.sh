@@ -7,7 +7,7 @@
 #install_dir=
 
 #服务目录名
-tomcat=tomcat-7.0
+tomcat_dir=tomcat-7.0
 
 
 
