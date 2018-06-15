@@ -14,6 +14,7 @@ script_install() {
     fi
     
     test_rely rvm
+    source /etc/profile
 
     #安装
     rvm install 2.4.1
