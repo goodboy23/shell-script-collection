@@ -34,7 +34,7 @@ script_get() {
 
 script_install() {
     if [[ "$redis_switch" == "no" ]];then
-        print_massage "1.此脚本需要填写，请./ssc.sh edit 服务名 来设置" "1.This script needs to be filled in. Set the ./ssc.sh edit service name"
+        print_error "1.此脚本需要填写，请./ssc.sh edit 服务名 来设置" "1.This script needs to be filled in. Set the ./ssc.sh edit service name"
     fi
 
     if [[ -f /usr/local/bin/man-redis-browser ]];then
