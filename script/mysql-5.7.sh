@@ -102,7 +102,7 @@ pid-file=${install_dir}/${mysql_dir}/mysql.pid" > /etc/my.cnf #这里改需要�
     tail -n 1 ${log_dir}/${mysql_dir}/mysql.log | grep "root@localhost"
     [[ $? -eq 0 ]] || print_error "5.初始化数据库失败，请检查脚本" "5. Failed to initialize the database, please check the script"
     
-    mysql_passwd=`tail -n 1 /var/log/mysql/mysql.log |  awk -F'@' '{print $2}' | cut -b 12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30`
+    mysql_passwd=`tail -n 1  ${log_dir}/${mysql_dir}/mysql.log |  awk -F'@' '{print $2}' | cut -b 12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30`
 
 	print_massage "mysql-5.7安装完成" "The mysql-5.7 is installed"
 	print_massage "安装目录：${install_dir}/${mysql_dir}" "Install Dir：${install_dir}/${mysql_dir}"
