@@ -25,7 +25,7 @@ script_install() {
     
     test_dir $ant_dir
     script_get
-    tar -xf package/apache-ant-1.9.11
+    tar -xf package/apache-ant-1.9.11-bin.tar.gz
     mv apache-ant-1.9.11 ${install_dir}/${ant_dir}
 
     sed -i '/^export ANT_HOME=/d' /etc/profile
