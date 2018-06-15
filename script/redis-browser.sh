@@ -46,7 +46,7 @@ script_install() {
     test_dir $redis_browser_dir
     
     #依赖
-    test_install gem
+    test_install rubygems
 	test_rely nodejs-8.9 ruby-2.4
     
     script_get
