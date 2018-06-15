@@ -2,6 +2,13 @@
 
 
 
+#安装目录
+#install_dir=
+
+#服务目录
+nodejs_dir=nodejs-8.9
+
+
 script_get() {
     test_package "http://shell-auto-install.oss-cn-zhangjiakou.aliyuncs.com/package/node-v8.9.3-linux-x64.tar.xz" "32948a8ca5e6a7b69c03ec1a23b16cd2"
 }
@@ -13,13 +20,14 @@ script_install() {
         exit
     fi
 
-    get_nodejs
+    test_dir ${nodejs_dir}
+    script_get
     tar -xf package/node-v8.9.3-linux-x64.tar.xz
     rm -rf /usr/local/nodejs-8.9
-    mv node-v8.9.3-linux-x64 /usr/local/nodejs-8.9
+    mv node-v8.9.3-linux-x64 ${install_dir}/${nodejs_dir}
     
     #链接
-	rm -rf /usr/local/bin/node
+    rm -rf /usr/local/bin/node
     rm -rf /usr/local/bin/npm
     ln -s ${install_dir}/${nodejs_dir}/bin/node /usr/local/bin/node
     ln -s ${install_dir}/${nodejs_dir}/bin/npm /usr/local/bin/npm
@@ -29,14 +37,14 @@ script_install() {
     [ $? -eq 0 ] || print_error "2.安装失败，请检查脚本" "2.Installation failed, please check the installation script"
     
 	print_massage "nodejs-8.9安装完成" "The nodejs-8.9 is installed"
-	print_massage "安装目录：/usr/local/nodejs-8.9" "Install Dir：/usr/local/nodejs-8.9"
+	print_massage "安装目录：${install_dir}/${nodejs_dir}" "Install Dir：${install_dir}/${nodejs_dir}"
 	print_massage "使用：node -v" "Use：node -v"
 }
 
 script_remove() {
     rm -rf /usr/local/bin/node
     rm -rf /usr/local/bin/npm
-	rm -rf /usr/local/nodejs-8.9
+    rm -rf ${install_dir}/${nodejs_dir}
     
     node -v
 	 [[ $? -eq 0 ]] && print_error "1.卸载失败，请检查脚本" "1.Uninstall failed, please check the script" ||print_massage "nodejs卸载完成！" "nodejs Uninstall completed！"
