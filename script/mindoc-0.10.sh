@@ -40,8 +40,8 @@ script_install() {
     #安装服务
     script_get
     mkdir mindoc
+    cp -p package/mindoc_linux_amd64.zip mindoc/
     cd mindoc
-    cp -p package/mindoc_linux_amd64.zip .
     unzip mindoc_linux_amd64.zip
     rm -rf mindoc_linux_amd64.zip
     cd ..
