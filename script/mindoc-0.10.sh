@@ -33,7 +33,7 @@ script_install() {
     test_port 8181
 
     #检测目录和依赖
-    test_rely glibc-2.14 sqlite-3.23 calibre
+    test_rely glibc-2.14 sqlite-3.23 #calibre,导出pdf，当前版本有bug禁止导出
     test_install unzip
     test_dir $mindoc_dir
     
@@ -41,7 +41,7 @@ script_install() {
     script_get
     mkdir mindoc
     cd mindoc
-    cp -p script/mindoc_linux_amd64.zip .
+    cp -p package/mindoc_linux_amd64.zip .
     unzip mindoc_linux_amd64.zip
     rm -rf mindoc_linux_amd64.zip
     cd ..
