@@ -1,21 +1,36 @@
 #!/bin/bash
-#作者：book
-#时间：2017/11/25
-#作用：基于ssh免密登陆和/etc/hosts文件。1支持分组，2支持禁止使用命令，防止误删除
+# 作者：日行一善 <qq：1969679546> <email：1969679546@qq.com>
+# 官网：www.52wiki.cn
+#
+# 日期：2018/4/12
+# 介绍：batch.sh 轻便简洁的跳板机批量操作脚本，适合百台以下规模
+#
+# 注意：基于ssh免密登陆和/etc/hosts文件。
+# 功能：1支持分组，2支持禁止使用命令，防止误删除
+#
+# 适用：centos6+
+# 语言：英文
 
-#分组
+
+
+#[使用设置]
+#分组，这里填写组的变量名
 zu=(app service)
+
+#以下是组变量和组中的机器，组中填写主机名或者ip
 app=(app1 app2 app3)
-service=(service1)
+
+service=(service1 service1)
+
 
 
 #检查参数
 if [ $# -ne 2 ];then
-	echo "At least 2 parameters"
-	echo '-a "ls" Operate all'
-	echo 'app "ls" Operate a single group'
+	echo './batch.sh -a "ls" Operate all'
+	echo './batch,sh service "ls" Operate a single group'
+    echo
 	echo "Currently supported groups： ${zu[*]}"
-	exit
+	exit 1
 fi
 
 
@@ -37,7 +52,7 @@ r=0 #初始，如果都没匹配到则错误
 t=`echo ${#zu[*]}` #总数量
 
 if [ "$1" == "-a" ];then
-	for i in `tail -n +3 /etc/hosts|awk '{print $2}'`
+	for i in `tail -n +${hang} /etc/hosts|awk '{print $2}'`
 	do
 		echo "####################server$i：####################"
 		ssh $i $2

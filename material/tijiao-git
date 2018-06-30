@@ -1,0 +1,79 @@
+#!/bin/bash
+# 作者：日行一善 <qq：1969679546> <email：1969679546@qq.com>
+# 官网：www.52wiki.cn
+#
+# 日期：2018/4/13
+# 介绍：tijiao.sh 自动提交项目到github
+#
+# 注意：需要联网，并设置用户名密码，当前项目必须是github中下载的
+#       如果当前项目提交了一次了，请将当前项目更新到最新再继续提交，否则提交失败
+# 功能：自动提交项目到github
+#
+# 适用：centos6+
+# 语言：中文
+
+
+#[使用设置]
+#需要填写github的账号
+name=xxx
+
+#需要填写github的密码
+mima=xxx
+
+
+if [ "$name" == "xxx" ];then
+	echo "请修改脚本的name变量"
+	exit 1
+fi
+
+if [[ "$mima" == "xxx" ]];then
+	echo "请修改脚本的mima变量"
+	exit
+fi
+
+which expect &> /dev/null
+if [[ $? -ne 0 ]];then
+    echo "缺少expect，请yum -y install expect"
+    exit 1
+fi
+
+if [[ ! -d .git ]];then
+    echo "当前不是项目目录中，请切换到项目的目录"
+    exit 1
+fi
+
+if [[ ! -f .git/config ]];then
+    echo ".got/config文件丢失，请检查"
+    eixt 1
+else
+     grep  '^\[user\]' .git/config
+     if [[ $? -ne 0 ]];then
+        echo "
+[user]
+    name = goodboy23
+    email = 1234567@qq.com" >> .git/config
+    fi
+fi
+
+date +%F/%H/%M/%S >> log.txt
+
+git add -A . * &> /dev/null
+git commit -m "new version" &> /dev/null
+
+
+if [[ ! -f /usr/local/bin/chuan ]];then
+	echo '#!/usr/bin/expect -f
+set name [lindex $argv 0 ]
+set password [lindex $argv 1 ]
+set timeout 10
+spawn git push -u origin master
+expect {
+"*Username for" { send "$name\r"; exp_continue}
+"*Password for" { send "$password\r" }
+}
+expect eof' >> /usr/local/bin/chuan
+    chmod +x /usr/local/bin/chuan
+fi
+
+expect /usr/local/bin/chuan $name $mima | grep "remote: Resolving deltas:" &> /dev/null
+[[ $? -eq 0  ]] && echo "提交成功" || echo "提交失败，请检查脚本！"

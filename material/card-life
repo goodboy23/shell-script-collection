@@ -1,4 +1,17 @@
-#!/usr/bin/env bash
+#!/bin/bash
+# 作者：日行一善 <qq：1969679546> <email：1969679546@qq.com>
+# 官网：www.52wiki.cn
+#
+# 日期：2018/2/11
+# 介绍：card-life.sh 抽卡人生shell精简版本，抽卡小游戏
+#
+# 注意：会在当前生成存档文件
+# 功能：抽卡小游戏
+#
+# 适用：centos6+
+# 语言：中文
+
+
 
 baocun() {
 > wiki_book.ttt
