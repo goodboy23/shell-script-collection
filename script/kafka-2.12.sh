@@ -38,6 +38,7 @@ script_install() {
     test_rely jdk
     
     test_dir $kafka_dir
+    script_get
     tar -xf package/kafka_2.12-0.10.2.1.tgz
     mv kafka_2.12-0.10.2.1 ${install_dir}/${kafka_dir}
     
