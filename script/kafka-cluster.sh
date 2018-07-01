@@ -42,7 +42,7 @@ script_install() {
     test_port ${port}
     
     #修改配置
-    conf=${install_dir}/${kafka_dir}/config/server.properties
+    conf=${kafka_dir}/config/server.properties
     rm -rf $conf
     cp material/server.properties $conf
     
@@ -72,7 +72,7 @@ script_install() {
     #创建脚本
     test_bin man-kafka
     sed -i "2a port=${port}" /usr/local/bin/man-kafka
-    sed -i "3a dir=${install_dir}/${kafka_dir}" /usr/local/bin/man-kafka
+    sed -i "3a dir=${kafka_dir}" /usr/local/bin/man-kafka
 
 	print_massage "kafka-cluster安装完成" "The kafka-cluster is installed"
 	print_massage "使用：man-kafka start" "Use：man-kafka start"
@@ -80,7 +80,7 @@ script_install() {
 
 script_remove() {
     man-kafka start
-    rm -rf ${install_dir}/${kafka_dir}/config/server.properties
+    rm -rf ${kafka_dir}/config/server.properties
 	rm -rf /usr/local/bin/man-kafka
 
     print_massage "kafka-cluster卸载完成！" "kafka-cluster Uninstall completed！"
