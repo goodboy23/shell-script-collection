@@ -10,7 +10,7 @@
 #服务目录名
 zookeeper_dir=zookeeper
 
-
+port=2181
 
 
 script_get() {
@@ -24,7 +24,7 @@ script_install() {
         exit
     fi
     
-    test_port 2181
+    test_port ${port}
     test_rely jdk-1.8
     test_dir ${zookeeper_dir}
     
@@ -36,14 +36,20 @@ script_install() {
     sed -i '/^ZOOKEEPER_HOME=/d' /etc/profile
     sed -i '/^PAHT=ZOOKEEPER_HOME/d'  /etc/profile
     
-    echo "ZOOKEEPER_HOME=${install_dir}/${zookeeper_dir}" >> /etc/profile
-    echo 'PATH=$ZOOKEEPER_HOME:PATH' >> /etc/profile
+    echo "ZOOKEEPER_HOME=${install_dir}/${zookeeper_dir}/bin" >> /etc/profile
+    echo 'PATH=$ZOOKEEPER_HOME:$PATH' >> /etc/profile
     source /etc/profile
     
         #监听ipv4，默认ipv6
     sed -i '150c "-Dzookeeper.log.file=${ZOO_LOG_FILE}" "-Djava.net.preferIPv4Stack=true"  "-Dzookeeper.root.logger=${ZOO_LOG4J_PROP}" \/' ${install_dir}/${zookeeper_dir}/bin/zkServer.sh
     
-    
+    rm -rf ${install_dir}/${zookeeper_dir}/conf/zoo.cfg
+    echo "tickTime=2000  
+dataDir=${install_dir}/${zookeeper_dir}
+clientPort=2181  
+initLimit=5  
+syncLimit=2" >> ${install_dir}/${zookeeper_dir}/conf/zoo.cfg
+
     which zkServer.sh
     [ $? -eq 0 ] || print_error "2.环境变量设置失败，请检查脚本" "2.environment variable settings failed, please check the script"
     
