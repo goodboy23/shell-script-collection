@@ -49,7 +49,7 @@ script_install() {
 
 	print_massage "kafka-2.12安装完成" "The kafka-2.12 is installed"
 	print_massage "安装目录：${install_dir}/${kafka_dir}" "Install Dir：${install_dir}/${kafka_dir}"
-	print_massage "使用：clocks" "Use：clocks"
+	print_massage "使用：man-kafka start" "Use：man-kafka start"
 }
 
 script_remove() {
