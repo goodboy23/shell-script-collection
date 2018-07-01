@@ -72,6 +72,7 @@ script_remove() {
     zkServer stop
     rm -rf ${zookeeper_dir}/conf/zoo.cfg
     rm -rf ${zookeeper_dir}/data
+    rm -rf ${zookeeper_idr}/conf/zoo.cfg.dynamic
 
     print_massage "zk-cluster卸载完成！" "zk-cluster Uninstall completed！"
 }
