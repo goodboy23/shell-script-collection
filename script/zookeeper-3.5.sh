@@ -39,10 +39,8 @@ script_install() {
     echo "ZOOKEEPER_HOME=${install_dir}/${zookeeper_dir}/bin" >> /etc/profile
     echo 'PATH=$ZOOKEEPER_HOME:$PATH' >> /etc/profile
     source /etc/profile
-    
-        #监听ipv4，默认ipv6
-    sed -i '150c "-Dzookeeper.log.file=${ZOO_LOG_FILE}" "-Djava.net.preferIPv4Stack=true"  "-Dzookeeper.root.logger=${ZOO_LOG4J_PROP}" \/' ${install_dir}/${zookeeper_dir}/bin/zkServer.sh
-    
+   
+    #配置文件
     rm -rf ${install_dir}/${zookeeper_dir}/conf/zoo.cfg
     echo "tickTime=2000  
 dataDir=${install_dir}/${zookeeper_dir}
