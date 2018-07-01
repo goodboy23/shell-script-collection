@@ -47,7 +47,7 @@ syncLimit=5
 tickTime=2000
 initLimit=10
 dataLogDir=${zookeeper_dir}
-dynamicConfigFile=${install_dir}/${zookeeper_dir}/conf/zoo.cfg.dynamic" > ${zookeeper_dir}/conf/zoo.cfg
+dynamicConfigFile=${zookeeper_dir}/conf/zoo.cfg.dynamic" > ${zookeeper_dir}/conf/zoo.cfg
 
     #输出配置
     rm -rf  ${zookeeper_dir}/conf/zoo.cfg.dynamic
@@ -64,13 +64,13 @@ dynamicConfigFile=${install_dir}/${zookeeper_dir}/conf/zoo.cfg.dynamic" > ${zook
     id=`process_id`
     echo "$id" > ${zookeeper_dir}/data/myid
 
-	print_massage "zk-cluster配置完成" "zk-cluster configuration completed"
-	print_massage "使用：zkServer start" "Use：zkServer start"
+    print_massage "zk-cluster配置完成" "zk-cluster configuration completed"
+    print_massage "使用：zkServer.sh start" "Use：zkServer.sh start"
 }
 
 script_remove() {
     zkServer stop
-	rm -rf ${zookeeper_dir}/conf/zoo.cfg
+    rm -rf ${zookeeper_dir}/conf/zoo.cfg
     rm -rf ${zookeeper_dir}/data
 
     print_massage "zk-cluster卸载完成！" "zk-cluster Uninstall completed！"
