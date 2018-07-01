@@ -1,0 +1,10 @@
+#!/bin/bash
+
+
+if [[ "$1" == "start" ]];then
+    ${install_dir}/${tomcat_dir}/bin/startup.sh
+elif [[ "$1" == "stop" ]];then
+    ${install_dir}/${tomcat_dir}/bin/shutdown.sh
+else
+    echo "start | stop"
+fi
