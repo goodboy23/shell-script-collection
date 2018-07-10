@@ -59,7 +59,6 @@ test_bin() {
 
 #检查端口是否被占用，$1填写端口
 test_port() {
-    test_install net-tools
     netstat -unltp | grep :${1}
     if [[ $? -eq 0 ]];then
         print_error "${1}端口被占用，请修改脚本" "The ${1} port is occupied. Please modify the script"

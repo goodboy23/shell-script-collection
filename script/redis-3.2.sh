@@ -28,16 +28,15 @@ script_install() {
     test_port 6379
     test_dir $redis_dir
     
-    get_redis
-    test_install net-tools
+    script_get
     tar -xf package/redis-3.2.9.tar.gz
     mv redis ${install_dir}/${redis_dir}
 
     #启动脚本
     test_bin man-redis
-    sed "2a install_dir=${install_dir}" /usr/local/bin/man-redis
-    sed "3a log_dir=${log_dir}" /usr/local/bin/man-redis
-    sed "4a redis_dir=${redis_dir}" /usr/local/bin/man-redis
+    sed -i "2a install_dir=${install_dir}" /usr/local/bin/man-redis
+    sed -i "3a log_dir=${log_dir}" /usr/local/bin/man-redis
+    sed -i "4a redis_dir=${redis_dir}" /usr/local/bin/man-redis
 
     #环境变量
     sed -i '/^REDIS_HOME=/d' /etc/profile

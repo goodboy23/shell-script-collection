@@ -7,21 +7,21 @@ script_get() {
 }
 
 script_install() {
-    ruby -v | grep 2.4.1
+    which ruby
     if [[ $? -eq 0 ]];then
         print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
         exit
     fi
-    
+
     test_rely rvm
     source /etc/profile
 
     #安装
     rvm install 2.4.1
     rvm use 2.4.1 --default
-	
+
 	#测试
-	ruby -v | grep 2.4.1
+	ruby -v | grep 2.4.4
 	[ $? -eq 0 ] || print_error "2.ruby安装失败，请检查脚本" "2.Ruby installation failed, please check the script"
     
     
@@ -37,7 +37,7 @@ script_remove() {
 
 script_info() {
     print_massage "名字：ruby-2.4" "Name：ruby-2.4"
-    print_massage "版本：2.4.1" "Version：2.4.1"
+    print_massage "版本：2.4.4" "Version：2.4.4"
     print_massage "介绍：Ruby，一种简单快捷的面向对象脚本语言" "Introduction: Ruby，一种简单快捷的面向对象脚本语言"
     print_massage "作者：日行一善" "do one good deed a day"
 }

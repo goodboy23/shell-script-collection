@@ -9,7 +9,7 @@
 #[使用设置]
 
 #填写ok将按如下填写执行脚本
-redis_switch=no
+switch=no
 
 #zookeeper安装目录
 zookeeper_dir=/usr/local/zookeeper
@@ -27,7 +27,7 @@ script_get() {
 }
 
 script_install() {
-    if [[ "$redis_switch" == "no" ]];then
+    if [[ "$switch" == "no" ]];then
         print_error "1.此脚本需要填写，请./ssc.sh edit 服务名 来设置" "1.This script needs to be filled in. Set the ./ssc.sh edit service name"
     fi
 

@@ -147,5 +147,5 @@ script_info() {
 	print_massage "版本：3.4.1" "Version：3.4.1"
 	print_massage "介绍：zabbix是一种图形监控软件" "Introduce：Zabbix is a graphics monitoring software"
     print_massage "作者：日行一善" "do one good deed a day"
-    print_error "使用说明：当前使用yum安装的http,mariadb,php-fpm等，纯净环境" "Instructions for use: Currently using yum to install http, mariadb, php-fpm, etc., pure environment"
+    print_massage "使用说明：当前使用yum安装的http,mariadb,php-fpm等，纯净环境" "Instructions for use: Currently using yum to install http, mariadb, php-fpm, etc., pure environment"
 }

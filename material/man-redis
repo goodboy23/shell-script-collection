@@ -13,7 +13,7 @@ if [[ "$1" == "start" ]];then
 elif [[ "$1" == "stop" ]];then
     netstat -unltp |grep :${port} &> /dev/null
     if [ $? -eq 0 ];then
-        pid=`netstat -unltp | grep :22 | head -1 |awk '{print $7}' | awk -F'/' '{print $1}'`
+        pid=`netstat -unltp | grep :${port} | head -1 |awk '{print $7}' | awk -F'/' '{print $1}'`
         kill -9 $pid
     fi
 else

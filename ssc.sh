@@ -5,7 +5,7 @@
 # 功能：shell脚本合集
 # 支持：redhat与centos系列
 #
-# 地址：github https://github.com/goodboy23/ssc
+# 地址：github https://github.com/goodboy23/shell-script-collection
 #       官网   http://www.52wiki.cn/docs/shell/741
 
 
@@ -139,6 +139,7 @@ server() {
         if [[ "$1" == "install" ]];then
             print_massage "正在运行${2}脚本，出现错误将会退出，解决后可再次运行。" "The ${2} script is running, an error will exit, and the solution can be run again."
             sleep 3
+            test_install net-tools &> /dev/null
             script_install
 		elif [[ "$1" == "remove" ]];then
 			script_remove
