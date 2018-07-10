@@ -29,5 +29,5 @@ script_info() {
 	print_massage "名字：clocks" "Name：clocks"
 	print_massage "版本：1.0" "Version：1.0"
 	print_massage "介绍：字符的系统时间脚本" "Introduce：The system time of the character"
-	print_massage "作者：日行一善" "do one good deed a day"
+	print_massage "作者：未知" "unknown"
 }
