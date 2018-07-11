@@ -22,6 +22,10 @@ app=(app1 app2 app3)
 
 service=(service1 service1)
 
+#默认从第几行开始读取/etc/hosts
+hang=3
+
+
 
 
 #检查参数
