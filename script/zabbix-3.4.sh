@@ -50,12 +50,19 @@ script_install() {
     #安装依赖
    
     
-	test_install net-tools httpd php php-mysql php-fpm gcc gcc-c++ mariadb-devel libcurl-devel libevent-devel net-snmp-devel php-bcmath php-mbstring php-gd php-xml  #mariadb mariadb-server
+	test_install net-tools httpd php php-mysql php-fpm gcc gcc-c++ libcurl-devel libevent-devel net-snmp-devel php-bcmath php-mbstring php-gd php-xml  #mariadb mariadb-server
 
-	test_rely mysql-5.6
-	man-mysql start
+	ver_one=`cat /etc/redhat-release  | awk '{print $4}' | awk -F'.' '{print $1}'`
+
+	if [[ $ver_one -eq 6 ]];then
+		test_install mysql-server mysql mysql-devel
+		test_man start mysqld
+	elif [[ $ver_one -eq 7 ]];then
+		test_rely mysql-5.6
+		man-mysql start	
 	netstat -unltp | grep :3306
 	[[ $? -eq 0 ]] || print_error "mysql-5.6启动失败，请手动man-mysql start来启动" "mysql-5.6 failed to start, please manually start by man-mysql start"
+	fi
 	
     test_man start httpd
     #test_man start mariadb
