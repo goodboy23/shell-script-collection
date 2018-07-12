@@ -21,7 +21,7 @@ port=8181
 
 
 script_get() {
-    test_package https://shell-auto-install.oss-cn-zhangjiakou.aliyuncs.com/package/mindoc_linux_amd64.zip 4f0cd0547347c78b6a32faa133c8c35c
+    test_package https://shell-auto-install.oss-cn-zhangjiakou.aliyuncs.com/package/mindoc_linux_amd64.zip a49655660c982026d96eae36c9eb5366
 }
 
 script_install() {
