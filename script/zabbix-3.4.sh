@@ -52,7 +52,10 @@ script_install() {
     
 	test_install net-tools httpd mariadb mariadb-server php php-mysql php-fpm gcc gcc-c++ mariadb-devel libcurl-devel libevent-devel net-snmp-devel php-bcmath php-mbstring php-gd php-xml
 
-    test_start httpd mariadb php-fpm
+    test_man start httpd
+    test_man start mariadb
+    test_man php-fpm
+
 	test_dir $zabbix_dir
     
 	useradd zabbix
@@ -61,7 +64,7 @@ script_install() {
 	cd zabbix-3.4.1
 	./configure --prefix=${install_dir}/${zabbix_dir}  --enable-server --enable-agent --with-mysql && make install || print_error "zabbix安装失败，请检查脚本" "Zabbix installation failed, please check the script"
 
-    rm -rf /var/www/html/*
+    	rm -rf /var/www/html/*
 	cp -rf frontends/php/*    /var/www/html/
 	chmod -R 777  /var/www/html/*
     
@@ -95,9 +98,10 @@ script_install() {
 	sed -i "s/max_input_time = 60/max_input_time = 300/g" /etc/php.ini
 	sed -i "s/max_input_time = 60/max_input_time = 300/g" /etc/php.ini
 	sed -i "s,;date.timezone =,date.timezone = Asia/Shanghai,g" /etc/php.ini
-	systemctl restart php-fpm httpd  #必须的，不然页面不刷新
+	test_man restart php-fpm #必须的，不然页面不刷新
+	test_man restart httpd
 
-    rm -rf /etc/init.d/zabbix_server
+    	rm -rf /etc/init.d/zabbix_server
 	cp misc/init.d/fedora/core/zabbix_server /etc/init.d/
 	chmod +x /etc/init.d/zabbix_server
 	
@@ -112,7 +116,7 @@ script_install() {
 	[ $? -eq 0 ] || test_exit "7.zabbix服务端安装错误，请检查脚本" "7.Zabbix server installation error, please check the script"
 	
 	#安装客户端
-    rm -rf /etc/init.d/zabbix_agentd
+    	rm -rf /etc/init.d/zabbix_agentd
 	cp misc/init.d/fedora/core/zabbix_agentd  /etc/init.d/
 	chmod  +x /etc/init.d/
 	sed -i "s,BASEDIR=/usr/local,BASEDIR=/usr/local/zabbix,g" /etc/init.d/zabbix_agentd
