@@ -13,6 +13,16 @@ test_version() {
     fi
 }
 
+#控制启动关闭，仅限yum安装，$1填写start,stop,restart,status，$2填写服务名
+test_man() {
+	local ver=`cat /etc/redhat-release |awk  '{print $4}' | awk -F'.' '{print $1}'`
+	if [[ $ver -eq 6 ]];then
+		service $2 $1
+	elif [[ $ver -eq 7 ]];then
+		systemctl $1 $2
+	fi
+}
+
 #创建日志目录，并检测服务目录，$1是目录名
 test_dir() {
     [[ -d ${install_dir}/$1 ]] && print_error "${install_dir}/${1}目录已经存在，请检查安装脚本路径或手动删除目录" "${install_dir}/${1} directory already exists, please check the installation script path or manually delete the directory"
