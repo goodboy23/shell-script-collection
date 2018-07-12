@@ -33,7 +33,7 @@ script_install() {
     test_port 8181
 
     #检测目录和依赖
-    test_rely glibc-2.14 sqlite-3.23 #calibre,导出pdf，当前版本有bug禁止导出
+    test_rely glibc-2.14 sqlite-3.23 calibre
     test_install unzip
     test_dir $mindoc_dir
     
@@ -89,8 +89,8 @@ script_remove() {
 }
 
 script_info() {
-    print_massage "名字：mindoc-0.10" "Name：mindoc-0.10"
-	print_massage "版本：0.10.1" "Version：0.10.1"
+    print_massage "名字：mindoc-0.11" "Name：mindoc-0.10"
+	print_massage "版本：0.11" "Version：0.10.1"
 	print_massage "介绍：开源wiki" "Introduce：Open source wiki"
     print_massage "作者：日行一善" "do one good deed a day"
 }
