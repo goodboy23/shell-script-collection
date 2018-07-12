@@ -141,6 +141,7 @@ server() {
             sleep 3
             test_install net-tools &> /dev/null
             script_install
+	    print_massage "请source /etc/profile来加载环境变量" "Please source /etc/profile to load environment variables"
 		elif [[ "$1" == "remove" ]];then
 			script_remove
         elif [[ "$1" == "get" ]];then
