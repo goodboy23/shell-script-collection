@@ -98,8 +98,8 @@ bind-address = 0.0.0.0" > /etc/my.cnf #这里改需要的配置
     cd ${dangqian}
     #设置脚本
     test_bin man-mysql
-    sed -i "2a install_dir=${install_dir}" $command
-    sed -i "2a mysql_dir=${mysql_dir}" $command
+    sed -i "2a install_dir=${install_dir}" /usr/local/bin/man-mysql
+    sed -i "2a mysql_dir=${mysql_dir}" /usr/local/bin/man-mysql
 
 	print_massage "mysql-5.6安装完成" "The mysql-5.6 is installed"
 	print_massage "安装目录：${install_dir}/${mysql_dir}" "Install Dir：${install_dir}/${mysql_dir}"
