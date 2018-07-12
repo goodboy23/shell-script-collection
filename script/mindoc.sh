@@ -65,14 +65,14 @@ script_install() {
 	${install_dir}/${mindoc_dir}/mindoc_linux_amd64 install
 
     #测试
-    [[ -d ${install_dir}/${mindoc_dir}/database ]] || print_error "2.mindoc-0.10安装失败，请检查脚本" "2.mindoc-0.10 installation failed, please check the script"
+    [[ -d ${install_dir}/${mindoc_dir}/database ]] || print_error "2.mindoc安装失败，请检查脚本" "2.mindoc installation failed, please check the script"
 
     test_bin man-mindoc
     sed -i "2a install_dir=${install_dir}" /usr/local/bin/man-mindoc
     sed -i "3a log_dir=${log_dir}" /usr/local/bin/man-mindoc
     sed -i "4a mindoc_dir=${mindoc_dir}" /usr/local/bin/man-mindoc
 
-    print_massage "mindoc-0.10安装完成" "The mindoc-0.10 is installed"
+    print_massage "mindoc安装完成" "The mindoc is installed"
 	print_massage "安装目录：${install_dir}/${mindoc_dir}" "Install Dir：${install_dir}/${mindoc_dir}"
     print_massage "日志目录：${log_dir}/${mindoc_dir}" "Log directory：${log_dir}/${mindoc_dir}"
 	print_massage "使用：man-mindoc start" "Use：man-mindoc start"
@@ -89,8 +89,8 @@ script_remove() {
 }
 
 script_info() {
-    print_massage "名字：mindoc-0.11" "Name：mindoc-0.10"
-	print_massage "版本：0.11" "Version：0.10.1"
+    print_massage "名字：mindoc" "Name：mindoc"
+	print_massage "版本：0.11" "Version：0.11"
 	print_massage "介绍：开源wiki" "Introduce：Open source wiki"
     print_massage "作者：日行一善" "do one good deed a day"
 }
