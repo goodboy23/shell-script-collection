@@ -27,9 +27,9 @@ script_install() {
         exit
     fi
 
-    cat /etc/redhat-release | awk '{print $4}' |grep ^7
-    [[ $? -eq 0 ]] || print_error "2.当前只支持7版本系统" "2.Currently only supports 7 version systems"
-    
+   # cat /etc/redhat-release | awk '{print $4}' |grep ^7
+    #[[ $? -eq 0 ]] || print_error "2.当前只支持7版本系统" "2.Currently only supports 7 version systems"
+   
     rpm -q httpd
     if [[ $? -eq 0 ]];then
         print_massage "3.检测到httpd已安装，请yum remove httpd mariadb mariadb-server" "Httpd installed detected, please yum remove httpd mariadb mariadb-server manually "
