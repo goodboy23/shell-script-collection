@@ -36,11 +36,11 @@ script_install() {
         exit
     fi
     
-    rpm -q mariadb-server
-    if [[ $? -eq 0 ]];then
-        print_massage "4.检测到mariadb-server已安装，请yum remove httpd mariadb mariadb-server" "4.mariadb-server installed detected, please yum remove httpd mariadb mariadb-server manually"
-        exit
-    fi
+ #   rpm -q mariadb-server
+  #  if [[ $? -eq 0 ]];then
+  #      print_massage "4.检测到mariadb-server已安装，请yum remove httpd mariadb mariadb-server" "4.mariadb-server installed detected, please yum remove httpd mariadb mariadb-server manually"
+  #      exit
+  #  fi
     
     test_port 80
     test_port 3306
@@ -50,10 +50,15 @@ script_install() {
     #安装依赖
    
     
-	test_install net-tools httpd mariadb mariadb-server php php-mysql php-fpm gcc gcc-c++ mariadb-devel libcurl-devel libevent-devel net-snmp-devel php-bcmath php-mbstring php-gd php-xml
+	test_install net-tools httpd php php-mysql php-fpm gcc gcc-c++ mariadb-devel libcurl-devel libevent-devel net-snmp-devel php-bcmath php-mbstring php-gd php-xml  #mariadb mariadb-server
 
+	test_rely mysql-5.6
+	man-mysql start
+	netstat -unltp | grep :3306
+	[[ $? -eq 0 ]] || print_error "mysql-5.6启动失败，请手动man-mysql start来启动" "mysql-5.6 failed to start, please manually start by man-mysql start"
+	
     test_man start httpd
-    test_man start mariadb
+    #test_man start mariadb
     test_man php-fpm
 
 	test_dir $zabbix_dir
