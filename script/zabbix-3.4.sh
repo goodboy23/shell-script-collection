@@ -55,7 +55,7 @@ script_install() {
 	ver_one=`cat /etc/redhat-release  | awk '{print $4}' | awk -F'.' '{print $1}'`
 
 	if [[ $ver_one -eq 6 ]];then
-		test_install mysql-server mysql mysql-devel
+		test_install mysql-server mysql mysql-devel libdbi-dbd-mysql net-snmp-devel curl-devel net-snmp libcurl-devel libxml2-devel
 		test_man start mysqld
 	elif [[ $ver_one -eq 7 ]];then
 		test_rely mysql-5.6
