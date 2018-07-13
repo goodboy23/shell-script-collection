@@ -11,7 +11,7 @@
 #log_dir=
 
 #服务目录名
-zabbix_dir=zabbix-3.4
+zabbix_dir=zabbix
 
 
 
@@ -27,8 +27,8 @@ script_install() {
         exit
     fi
 
-   # cat /etc/redhat-release | awk '{print $4}' |grep ^7
-    #[[ $? -eq 0 ]] || print_error "2.当前只支持7版本系统" "2.Currently only supports 7 version systems"
+    cat /etc/redhat-release | awk '{print $4}' |grep ^7
+    [[ $? -eq 0 ]] || print_error "2.当前只支持7版本系统" "2.Currently only supports 7 version systems"
    
     rpm -q httpd
     if [[ $? -eq 0 ]];then
@@ -36,11 +36,11 @@ script_install() {
         exit
     fi
     
- #   rpm -q mariadb-server
-  #  if [[ $? -eq 0 ]];then
-  #      print_massage "4.检测到mariadb-server已安装，请yum remove httpd mariadb mariadb-server" "4.mariadb-server installed detected, please yum remove httpd mariadb mariadb-server manually"
-  #      exit
-  #  fi
+    rpm -q mariadb-server
+    if [[ $? -eq 0 ]];then
+       print_massage "4.检测到mariadb-server已安装，请yum remove httpd mariadb mariadb-server" "4.mariadb-server installed detected, please yum remove httpd mariadb mariadb-server manually"
+       exit
+  fi
     
     test_port 80
     test_port 3306
@@ -52,21 +52,7 @@ script_install() {
     
 	test_install net-tools httpd php php-mysql php-fpm gcc gcc-c++ libcurl-devel libevent-devel net-snmp-devel php-bcmath php-mbstring php-gd php-xml  #mariadb mariadb-server
 
-	ver_one=`cat /etc/redhat-release  | awk '{print $4}' | awk -F'.' '{print $1}'`
-
-	if [[ $ver_one -eq 6 ]];then
-		test_install mysql-server mysql mysql-devel libdbi-dbd-mysql net-snmp-devel curl-devel net-snmp libcurl-devel libxml2-devel
-		test_man start mysqld
-	elif [[ $ver_one -eq 7 ]];then
-		test_rely mysql-5.6
-		man-mysql start	
-	netstat -unltp | grep :3306
-	[[ $? -eq 0 ]] || print_error "mysql-5.6启动失败，请手动man-mysql start来启动" "mysql-5.6 failed to start, please manually start by man-mysql start"
-	fi
-	
-    test_man start httpd
-    #test_man start mariadb
-    test_man php-fpm
+	test_start httpd php-fpm mariadb
 
 	test_dir $zabbix_dir
     
@@ -110,9 +96,8 @@ script_install() {
 	sed -i "s/max_input_time = 60/max_input_time = 300/g" /etc/php.ini
 	sed -i "s/max_input_time = 60/max_input_time = 300/g" /etc/php.ini
 	sed -i "s,;date.timezone =,date.timezone = Asia/Shanghai,g" /etc/php.ini
-	test_man restart php-fpm #必须的，不然页面不刷新
-	test_man restart httpd
-
+	test_start php-fpm httpd
+	
     	rm -rf /etc/init.d/zabbix_server
 	cp misc/init.d/fedora/core/zabbix_server /etc/init.d/
 	chmod +x /etc/init.d/zabbix_server
