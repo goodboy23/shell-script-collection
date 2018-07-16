@@ -110,9 +110,11 @@ list_generate() {
     for i in `ls script/` #将每个脚本的信息都输出找出前3行形成列表
     do
         i=`echo ${i%.*}`
+        print_massage
         a=`bash ssc.sh info $i | awk  -F'：' '{print $2}' | sed -n '1p'`
         b=`bash ssc.sh info $i | awk  -F'：' '{print $2}' | sed -n '3p'`
         c=`bash ssc.sh info $i | awk  -F'：' '{print $2}' | sed -n '5p'`
+        print_massage "$a 信息生成完毕" "$a Information generated"
         echo "$a:$b:$c" >> conf/a.txt
     done
     

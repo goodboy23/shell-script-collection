@@ -50,7 +50,7 @@ script_install() {
     #安装依赖
    
     
-	test_install net-tools httpd php php-mysql php-fpm gcc gcc-c++ libcurl-devel libevent-devel net-snmp-devel php-bcmath php-mbstring php-gd php-xml  #mariadb mariadb-server
+	test_install net-tools httpd php php-mysql php-fpm mariadb-devel gcc gcc-c++ libcurl-devel libevent-devel net-snmp-devel php-bcmath php-mbstring php-gd php-xml  mariadb mariadb-server
 
 	test_start httpd php-fpm mariadb
 
