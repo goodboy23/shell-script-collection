@@ -62,7 +62,7 @@ test_bin() {
     local command=/usr/local/bin/$1
     rm -rf $command
     cp material/$1 $command
-    [[ -f $command ]] || print_error "脚本 $command不存在，请检查脚本" "Script  $command does not exist, please check the script"
+    [[ -f $command ]] || print_error "脚本 $command不存在，请联系作者" "Script  $command does not exist, Please contact the author"
     chmod +x $command
     
 }
@@ -71,7 +71,7 @@ test_bin() {
 test_port() {
     netstat -unltp | grep :${1}
     if [[ $? -eq 0 ]];then
-        print_error "${1}端口被占用，请修改脚本" "The ${1} port is occupied. Please modify the script"
+        print_error "${1}端口被占用，请检查端口或修改脚本" "${1} port is occupied, please check the port or modify the scriptt"
     fi
 }
 
@@ -81,7 +81,7 @@ test_install() {
     do
         yum -y install $i
         rpm -q $i
-        [ $? -eq 0 ] || print_error "${i}安装包未能用yum安装，请手动安装" "The ${i} package failed to install with yum, please install it manually"
+        [ $? -eq 0 ] || print_error "${i}安装包未能用yum安装，请重新执行脚本" "${i} installation package failed to install with yum, please re-execute the script"
     done
 }
 
@@ -93,6 +93,11 @@ test_remove() {
         rpm -q $i
         [ $? -eq 0 ] && print_error "${i}安装包未能用yum卸载，请手动卸载" "The ${i} package failed to remove with yum, please remove it manually"
     done
+}
+
+#初始化做的事情
+test_init() {
+    test_install net-tools
 }
 
 #下载,$1写下载地址或者package文件夹中包名，$2写md5值
@@ -109,13 +114,14 @@ test_package() {
                 a=1
             else
                 rm -rf package/$b #比对失败则下载包不对，将文件删除
-                print_error "md5值比对失败，请检查脚本或安装包" "The md5 value comparison fails, please check the script or installation package"
+                print_error "md5值比对失败，请重新安装" "The md5 value comparison fails, Please reinstall"
             fi
 	fi
     fi
     
     if [[ $a -eq 0 ]];then
         wget -O package/${b} $1
+        [[ -f package/${b} ]] || print_error "${b}安装包下载失败，请重新安装" "${b}Installation package download failed, please reinstall"
         test_package $1 $2
     fi
 }

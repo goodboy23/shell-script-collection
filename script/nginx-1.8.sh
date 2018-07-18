@@ -20,13 +20,18 @@ script_get() {
 }
 
 script_install() {
-    nginx -v
+    nginx -v 2&> conf/log.txt
+    grep "nginx/1.8" conf/log.txt
     if [[ $? -eq 0 ]];then
-        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
+        print_massage "检测到已安装" "Detected installed"
         exit
+    else
+        nginx -v
+        if [[ $? -eq 0 ]];then
+            print_error "当前已有其它版本nginx，请手动卸载" "There are other versions of nginx currently, please uninstall manually"
+        fi
     fi
 
-    yum -y remove nginx
     test_port 80
 
     #检测目录
@@ -45,7 +50,7 @@ script_install() {
     rm -rf /usr/local/bin/nginx
 	ln -s ${install_dir}/${nginx_dir}/sbin/nginx /usr/local/bin/nginx
 	nginx -v
-	[[ $? -eq 0 ]] || test_exit "2.安装失败，请检查脚本" "2.Installation failed, please check the script"
+	[[ $? -eq 0 ]] || test_exit "安装失败，请联系作者" "2.Installation failed,  please contact the author"
 
     print_massage "nginx-1.8安装完成" "The nginx-1.8 is installed"
 	print_massage "安装目录：${install_dir}/${nginx_dir}" "Install Dir：${install_dir}/${nginx_dir}"
@@ -61,7 +66,7 @@ script_remove() {
     rm -rf /usr/local/bin/nginx
     
     nginx -v
-	[[ $? -eq 0 ]] && print_error "1.卸载失败，请检查脚本" "1.Uninstall failed, please check the script" || print_massage "nginx卸载完成！" "nginx Uninstall completed！"
+	[[ $? -eq 0 ]] && print_error "卸载失败，请联系作者" "Uninstall failed,  please contact the author" || print_massage "nginx卸载完成！" "nginx Uninstall completed！"
 }
 
 script_info() {

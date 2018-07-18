@@ -20,7 +20,7 @@ script_get() {
 script_install() {
     which zkServer.sh
     if [[ $? -eq 0 ]];then
-        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
+        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
     
@@ -49,7 +49,7 @@ initLimit=5
 syncLimit=2" >> ${install_dir}/${zookeeper_dir}/conf/zoo.cfg
 
     which zkServer.sh
-    [ $? -eq 0 ] || print_error "2.环境变量设置失败，请检查脚本" "2.environment variable settings failed, please check the script"
+    [ $? -eq 0 ] || print_error "环境变量设置失败，请联系作者" "environment variable settings failed,please contact the author"
     
 	print_massage "zookeeper-3.5安装完成" "The zookeeper-3.5 is installed"
 	print_massage "安装目录：/usr/local/bin/zookeeper-3.5" "Install Dir：/usr/local/bin/zookeeper-3.5"
@@ -64,7 +64,7 @@ script_remove() {
     source /etc/profile
     
 	which zkServer.sh
-    [ $? -eq 0 ] && print_error "1.zookeeper-3.5未成功删除，请检查脚本" "1.zookeeper-3.5 unsuccessfully deleted, please check the script" || print_massage "zookeeper-3.5卸载完成！" "zookeeper-3.5 Uninstall completed！"
+    [ $? -eq 0 ] && print_error "zookeeper-3.5未成功删除，请联系作者" "zookeeper-3.5 unsuccessfully deleted, please contact the author" || print_massage "zookeeper-3.5卸载完成！" "zookeeper-3.5 Uninstall completed！"
 }
 
 script_info() {

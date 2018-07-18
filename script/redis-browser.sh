@@ -15,7 +15,7 @@ redis_browser_dir=redis-browser
 #填写ok将按如下填写执行脚本
 redis_switch=no
 
-#配置；填写redis的主机名节点，当前最少2个节点
+#配置；填写redis的主机名节点，当前最少2个节点，如果是集群，只填写主节点即可
 cluster_name=(service1 service2 service3)
 cluster_ip=(192.168.2.108:7000 192.168.2.108:7002 192.168.2.108:7004) 
 
@@ -28,31 +28,37 @@ listen=0.0.0.0
 
 
 script_get() {
+    test_package "http://shell-auto-install.oss-cn-zhangjiakou.aliyuncs.com/package/redis-4.0.1.gem" "a4b74c19159531d0aa4c3bf4539b1743"
     test_package "http://shell-auto-install.oss-cn-zhangjiakou.aliyuncs.com/package/redis-browser-0.5.1.gem" "dbe6a5e711dacbca46e68b10466d9da4"
 }
 
 script_install() {
     if [[ "$redis_switch" == "no" ]];then
-        print_error "1.此脚本需要填写，请./ssc.sh edit 服务名 来设置" "1.This script needs to be filled in. Set the ./ssc.sh edit service name"
+        print_error "此脚本需要填写，请./ssc.sh edit 服务名 来设置" "This script needs to be filled in. Set the ./ssc.sh edit service name"
     fi
 
     if [[ -f /usr/local/bin/man-redis-browser ]];then
-        print_massage "2.检测到当前系统已安装" "2.Detected that the current system is installed"
+        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
 
     test_port ${port}
     test_dir $redis_browser_dir
+
+    for i in `echo $cluster_ip`
+    do
+        local cl_ip=`echo ${i} | awk -F':' '{print $1}'`
+        local cl_port=`echo ${i} | awk -F':' '{print $2}'`
+        local cl_lian=`(echo info; sleep 1) | telnet $cl_ip $cl_port  2>&1 |grep used_memory|cut -d : -f2 | head -1`
+        [ ! $cl_lian ] && print_error "地址${i}，测试连接失败，请检查填写地址或联系作者" "Address ${i}, test connection failed, please check the address or contact the author"
+   done
+    
     
     #依赖
-    test_install rubygems
 	test_rely nodejs-8.9 ruby-2.4
-    
     script_get
-    #gem update —system
-    gem sources —add https://gems.ruby-china.org/ —remove https://rubygems.org/
-    gem sources -l
-    gem install redis
+
+    gem install package/redis-4.0.1.gem
     gem install package/redis-browser-0.5.1.gem
     
     rm -rf ${install_dir}/${redis_browser_dir}/config.yml
@@ -81,6 +87,7 @@ script_install() {
 
     #启动脚本
     test_bin man-redis-browser
+    local command=/usr/local/bin/man-redis-browser
     
     sed -i "2a port=${port}" $command
     sed -i "3a listen=${listen}" $command
@@ -90,7 +97,6 @@ script_install() {
     sed -i "7a one=${cluster_ip}" $command
 
     #测试
-
     print_massage "redis-browser安装完成" "Theredis-browser is installed"
 	print_massage "安装目录：${install_dir}/${redis_browser_dir}" "Install Dir：${install_dir}/${redis_browser_dir}"
     print_massage "日志目录：${log_dir}/${redis_browser_dir}" "Log directory：${log_dir}/${redis_browser_dir}"
@@ -103,7 +109,7 @@ script_remove() {
 	rm -rf ${install_dir}/${redis_browser_dir}
 	rm -rf /usr/local/bin/man-redis-browser
 
-	[ -f /usr/local/bin/clocks ] && print_error "1.redis-browser卸载失败，请检查脚本" "1.Redis-browser uninstall failed, please check the script" || print_massage "redis-browser卸载完成！" "redis-browser Uninstall completed！"
+	[ -f /usr/local/bin/clocks ] && print_error "redis-browser卸载失败，请联系作者" "Redis-browser uninstall failed, please contact the author" || print_massage "redis-browser卸载完成！" "redis-browser Uninstall completed！"
 }
 
 

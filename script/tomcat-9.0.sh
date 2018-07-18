@@ -7,17 +7,17 @@
 #install_dir=
 
 #服务目录名
-tomcat=tomcat-9.0
+tomcat_dir=tomcat
 
 
 
 script_get() {
-    test_package http://mirrors.tuna.tsinghua.edu.cn/apache/tomcat/tomcat-9/v9.0.8/bin/apache-tomcat-9.0.8.tar.gz 1d081785ff96660ed950478972421d2c
+    test_package https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.8/src/apache-tomcat-9.0.8-src.tar.gz 7682194507d24cd62b626695de6818c2
 }
 
 script_install() {
     if [[ -f /usr/local/bin/man-tomcat ]];then
-        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
+        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
 
@@ -26,8 +26,8 @@ script_install() {
     test_dir ${tomcat_dir}
 
     script_get
-    tar -xf package/apache-tomcat-9.0.8.tar.gz
-    mv apache-tomcat-9.0.8 ${install_dir}/${tomcat_dir}
+    tar -xf package/apache-tomcat-9.0.8-src.tar.gz
+    mv apache-tomcat-9.0.8-src ${install_dir}/${tomcat_dir}
 
     test_bin man-tomcat
     sed "2a install_dir=${install_dir}" /usr/local/bin/man-tomcat

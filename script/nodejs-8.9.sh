@@ -14,12 +14,17 @@ script_get() {
 }
 
 script_install() {
-    node -v
+    node -v |grep ^v8
     if [[ $? -eq 0 ]];then
-        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
+        print_massage "检测到已安装" "Detected installed"
         exit
+    else
+        node -v
+        if [[ $? -eq 0 ]];then
+            print_error "当前已有其它版本nodejs，请手动卸载" "There are other versions of nodejs currently, please uninstall manually"
+        fi
     fi
-
+    
     test_dir ${nodejs_dir}
     script_get
     tar -xf package/node-v8.9.3-linux-x64.tar.xz
@@ -34,7 +39,7 @@ script_install() {
 
     #对结果进行测试
     node -v
-    [ $? -eq 0 ] || print_error "2.安装失败，请检查脚本" "2.Installation failed, please check the installation script"
+    [ $? -eq 0 ] || print_error "安装失败，请联系作者" "2.Installation failed, please contact the author"
     
 	print_massage "nodejs-8.9安装完成" "The nodejs-8.9 is installed"
 	print_massage "安装目录：${install_dir}/${nodejs_dir}" "Install Dir：${install_dir}/${nodejs_dir}"
@@ -47,7 +52,7 @@ script_remove() {
     rm -rf ${install_dir}/${nodejs_dir}
     
     node -v
-	 [[ $? -eq 0 ]] && print_error "1.卸载失败，请检查脚本" "1.Uninstall failed, please check the script" ||print_massage "nodejs卸载完成！" "nodejs Uninstall completed！"
+	 [[ $? -eq 0 ]] && print_error "卸载失败，请联系作者" "1.Uninstall failed,  please contact the author" ||print_massage "nodejs卸载完成！" "nodejs Uninstall completed！"
 }
 
 script_info() {

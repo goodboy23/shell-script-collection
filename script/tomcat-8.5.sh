@@ -7,17 +7,17 @@
 #install_dir=
 
 #服务目录名
-tomcat=tomcat-8.5
+tomcat_dir=tomcat
 
 
 
 script_get() {
-    test_package http://mirror.bit.edu.cn/apache/tomcat/tomcat-8/v8.5.31/bin/apache-tomcat-8.5.31.tar.gz 4f1b8c12c7824111b1d8e41bcf00aac5
+    test_package https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.31/src/apache-tomcat-8.5.31-src.tar.gz fc5294448b52c371b270421193fc7d47
 }
 
 script_install() {
     if [[ -f /usr/local/bin/man-tomcat ]];then
-        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
+        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
 
@@ -26,8 +26,8 @@ script_install() {
     test_dir ${tomcat_dir}
 
     script_get
-    tar -xf package/apache-tomcat-8.5.31.tar.gz
-    mv apache-tomcat-8.5.31 ${install_dir}/${tomcat_dir}
+    tar -xf package/apache-tomcat-8.5.31-src.tar.gz
+    mv apache-tomcat-8.5.31-src ${install_dir}/${tomcat_dir}
 
     test_bin man-tomcat
     sed "2a install_dir=${install_dir}" /usr/local/bin/man-tomcat

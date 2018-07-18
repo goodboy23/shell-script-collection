@@ -16,29 +16,29 @@ zabbix_dir=zabbix
 
 
 script_get() {
+    test_package https://shell-auto-install.oss-cn-zhangjiakou.aliyuncs.com/package/simhei.ttf 5b4ceb24c33f4fbfecce7bd024007876
     test_package "https://shell-auto-install.oss-cn-zhangjiakou.aliyuncs.com/package/zabbix-3.4.1.tar.gz" "cfa5cf5c72723b617352fd049a766ee6"
 }
 
 script_install() {
     #检查
-    which zabbix_get
-    if [[ $? -eq 0 ]];then
-        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
+    if [[ -f /etc/init.d/zabbix_server ]];then
+        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
 
     cat /etc/redhat-release | awk '{print $4}' |grep ^7
-    [[ $? -eq 0 ]] || print_error "2.当前只支持7版本系统" "2.Currently only supports 7 version systems"
+    [[ $? -eq 0 ]] || print_error "当前只支持7版本系统" "Currently only supports 7 version systems"
    
     rpm -q httpd
     if [[ $? -eq 0 ]];then
-        print_massage "3.检测到httpd已安装，请yum remove httpd mariadb mariadb-server" "Httpd installed detected, please yum remove httpd mariadb mariadb-server manually "
+        print_massage "检测到httpd已安装，请yum remove httpd mariadb mariadb-server" "Httpd installed detected, please yum remove httpd mariadb mariadb-server manually "
         exit
     fi
     
     rpm -q mariadb-server
     if [[ $? -eq 0 ]];then
-       print_massage "4.检测到mariadb-server已安装，请yum remove httpd mariadb mariadb-server" "4.mariadb-server installed detected, please yum remove httpd mariadb mariadb-server manually"
+       print_massage "检测到mariadb-server已安装，请yum remove httpd mariadb mariadb-server" "mariadb-server installed detected, please yum remove httpd mariadb mariadb-server manually"
        exit
   fi
     
@@ -62,22 +62,23 @@ script_install() {
 	cd zabbix-3.4.1
 	./configure --prefix=${install_dir}/${zabbix_dir}  --enable-server --enable-agent --with-mysql && make install || print_error "zabbix安装失败，请检查脚本" "Zabbix installation failed, please check the script"
 
-    	rm -rf /var/www/html/*
+    rm -rf /var/www/html/*
 	cp -rf frontends/php/*    /var/www/html/
 	chmod -R 777  /var/www/html/*
     
     mysql -e "show databases;" | grep test
-    [[ $? -eq 0 ]] || print_error "5.数据库无法登录进去，请检查脚本" "5.Database cannot be logged in, please check the script"
+    [[ $? -eq 0 ]] || print_error "数据库无法登录进去，请联系作者" "Database cannot be logged in, please contact the author"
     
     #删除旧的
     mysql -e "drop database zabbixdb;"
     mysql -e "drop user zabbixuser@'localhost';"
 
+    #创建新的
 	mysql -e "create database zabbixdb character set utf8;"
 	mysql -e 'grant all on  zabbixdb.*  to  zabbixuser@"localhost" identified by "123456"'
     
     mysql -uzabbixuser -p123456 -e "show databases;" | grep test
-    [[ $? -eq 0 ]] || print_error "6.zabbix用户无法登录数据库，请检查脚本" "6.Zabbix users cannot log in to the database, please check the script"
+    [[ $? -eq 0 ]] || print_error "zabbix用户无法登录数据库，请联系作者" "Zabbix users cannot log in to the database, please contact the author"
 
 	mysql -uzabbixuser -p123456 zabbixdb  < database/mysql/schema.sql
 	mysql -uzabbixuser -p123456 zabbixdb  < database/mysql/images.sql
@@ -96,9 +97,10 @@ script_install() {
 	sed -i "s/max_input_time = 60/max_input_time = 300/g" /etc/php.ini
 	sed -i "s/max_input_time = 60/max_input_time = 300/g" /etc/php.ini
 	sed -i "s,;date.timezone =,date.timezone = Asia/Shanghai,g" /etc/php.ini
-	test_start php-fpm httpd
+	systemctl restart httpd
+    systemctl restart php-fpm
 	
-    	rm -rf /etc/init.d/zabbix_server
+    rm -rf /etc/init.d/zabbix_server
 	cp misc/init.d/fedora/core/zabbix_server /etc/init.d/
 	chmod +x /etc/init.d/zabbix_server
 	
@@ -110,10 +112,10 @@ script_install() {
     
 	/etc/init.d/zabbix_server start
 	netstat -unltp |grep :10051
-	[ $? -eq 0 ] || test_exit "7.zabbix服务端安装错误，请检查脚本" "7.Zabbix server installation error, please check the script"
+	[ $? -eq 0 ] || test_exit "zabbix服务端安装错误，请联系作者" "Zabbix server installation error,please contact the author"
 	
 	#安装客户端
-    	rm -rf /etc/init.d/zabbix_agentd
+    rm -rf /etc/init.d/zabbix_agentd
 	cp misc/init.d/fedora/core/zabbix_agentd  /etc/init.d/
 	chmod  +x /etc/init.d/
 	sed -i "s,BASEDIR=/usr/local,BASEDIR=/usr/local/zabbix,g" /etc/init.d/zabbix_agentd
@@ -121,10 +123,24 @@ script_install() {
 	
 	/etc/init.d/zabbix_agentd start
 	netstat -unltp |grep :10050
-    [ $? -eq 0 ] || test_exit "8.zabbix客户端安装错误，请检查脚本" "8.Zabbix client installation error, please check the script"
+    [ $? -eq 0 ] || test_exit "zabbix客户端安装错误，请联系作者" "Zabbix client installation error, please contact the author"
 	
 	cd ..
 	rm -rf zabbix-3.4.1 #清理
+    
+    #环境变量
+    sed -i '/^export ZABBIX_HOME=/d' /etc/profile
+    sed -i '/^export PATH=${ZABBIX_HOME}/d' /etc/profile
+    
+    echo "export ZABBIX_HOME=${install_dir}/${zabbix_dir}/bin" >> /etc/profile
+    echo 'export PATH=${ZABBIX_HOME}:${PATH}' >> /etc/profile
+    source /etc/profile
+    
+    which zabbix_get
+    [[ $? -eq 0 ]] || print_error "环境变量生成失败，请联系作者" "Environment variable generation failed, please contact the author"
+    
+    
+    
     
     #应添加防火墙配置
     

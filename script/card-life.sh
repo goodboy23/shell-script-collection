@@ -8,7 +8,7 @@ script_get() {
 
 script_install() {
     if [[ -f /usr/local/bin/card-life ]];then
-        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
+        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
     
@@ -22,7 +22,7 @@ script_install() {
 script_remove() {
 	rm -rf /usr/local/bin/card-life
     
-    [ -f /usr/local/bin/card-life ] && print_error "1.card-life未成功删除，请检查脚本" "1.card-life unsuccessfully deleted, please check the script" || print_massage "card-life卸载完成！" "card-life Uninstall completed！"
+    [ -f /usr/local/bin/card-life ] && print_error "card-life未成功删除，请联系作者" "Card-life has not been successfully deleted, please contact the author" || print_massage "card-life卸载完成！" "card-life Uninstall completed！"
 }
 
 script_info() {

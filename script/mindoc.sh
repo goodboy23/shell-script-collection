@@ -26,7 +26,7 @@ script_get() {
 
 script_install() {
     if [[ -d /usr/local/bin/man-mindoc ]];then
-        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
+        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
     
@@ -65,7 +65,7 @@ script_install() {
 	${install_dir}/${mindoc_dir}/mindoc_linux_amd64 install
 
     #测试
-    [[ -d ${install_dir}/${mindoc_dir}/database ]] || print_error "2.mindoc安装失败，请检查脚本" "2.mindoc installation failed, please check the script"
+    [[ -d ${install_dir}/${mindoc_dir}/database ]] || print_error "mindoc安装失败，请联系作者" "2.mindoc installation failed, Please check the author"
 
     test_bin man-mindoc
     sed -i "2a install_dir=${install_dir}" /usr/local/bin/man-mindoc
@@ -85,7 +85,7 @@ script_remove() {
 	rm -rf /usr/local/bin/man-mindoc
 	rm -rf ${install_dir}/${mindoc_dir}
 
-    [[ -f /usr/local/bin/man-mindoc ]] && print_error "1.卸载失败，请检查脚本" "1.Uninstall failed, please check the script" || "mindoc卸载完成！" "mindoc Uninstall completed！"
+    [[ -f /usr/local/bin/man-mindoc ]] && print_error "卸载失败，请联系作者" "Uninstall failed, Please check the author" || "mindoc卸载完成！" "mindoc Uninstall completed！"
 }
 
 script_info() {

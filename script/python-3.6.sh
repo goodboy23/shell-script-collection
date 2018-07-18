@@ -9,7 +9,7 @@ script_get() {
 script_install() {
     python3.6 --version
     if [[ $? -eq 0 ]];then
-        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
+        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
     
@@ -28,7 +28,7 @@ script_install() {
 	
 	#测试
 	python3.6 --version
-	[ $? -eq 0 ] || print_error "2.安装失败，请查看脚本" "2.Installation failed, please check the script"
+	[ $? -eq 0 ] || print_error "安装失败，请联系作者" "2.Installation failed, please contact the author"
     
  	print_massage "python3.6安装完成" "The python3.6 is installed"
 	print_massage "安装目录：/usr/local/python3.6" "Install Dir：/usr/local/python3.6"
@@ -41,7 +41,7 @@ script_remove() {
     rm -rf /usr/bin/python3
 	
     python3.6 --version
-    [[ $? -eq 0 ]] && print_error "1.卸载失败，请检查脚本" "1.Uninstall failed, please check the script"|| print_massage "python卸载完成！" "Python uninstall complete"
+    [[ $? -eq 0 ]] && print_error "卸载失败，请联系作者" "1.Uninstall failed,  please contact the author"|| print_massage "python卸载完成！" "Python uninstall complete"
 }
 
 script_info() {

@@ -2,6 +2,12 @@
 
 
 
+#[使用设置]
+install_dir=/usr/local
+
+glibc_dir=glibc
+
+
 script_get() {
     test_package http://shell-auto-install.oss-cn-zhangjiakou.aliyuncs.com/package/glibc-2.14.tar.gz 4657de6717293806442f4fdf72be821b
 }
@@ -15,22 +21,22 @@ script_install() {
     fi
 
     test_install gcc cmake
+    test_dir $glibc_dir
     
     #安装服务
     script_get
     tar -xf package/glibc-2.14.tar.gz
     cd glibc-2.14
-    rm -rf usr/local/glibc-2.14
     mkdir build
     cd build
-    ../configure --prefix=/usr/local/glibc-2.14
+    ../configure --prefix=${install_dir}/${glibc_dir}
     make && make install
     cd ..
     cd ..
     rm -rf glibc-2.14
     
     #测试
-    [[ -f /usr/local/glibc-2.14/lib/libc-2.14.so ]] || print_error "glibc-2.14安装失败，请检查脚本" "Glibc-2.14 failed to install, please check the script"
+    [[ -f ${install_dir}/${glibc_dir}/lib/libc-2.14.so ]] || print_error "glibc-2.14安装失败，请联系作者" "Glibc-2.14 installation failed, please contact the author"
     
     #清除软连接
     rm -rf /lib64/libc.so.6

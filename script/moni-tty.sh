@@ -8,7 +8,7 @@ script_get() {
 
 script_install() {
     if [[ -f /usr/local/bin/moni-tty ]];then
-        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
+        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
     
@@ -22,7 +22,7 @@ script_install() {
 script_remove() {
 	rm -rf /usr/local/bin/moni-tty
     
-    [ -f /usr/local/bin/moni-tty ] && print_error "1.moni-tty未成功删除，请检查脚本" "1.moni-tty unsuccessfully deleted, please check the script" || print_massage "moni-tty卸载完成！" "moni-tty Uninstall completed！"
+    [ -f /usr/local/bin/moni-tty ] && print_error "moni-tty未成功删除，请联系作者" "moni-tty unsuccessfully deleted, Please check the author" || print_massage "moni-tty卸载完成！" "moni-tty Uninstall completed！"
 }
 
 script_info() {

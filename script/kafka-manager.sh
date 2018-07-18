@@ -31,15 +31,17 @@ script_get() {
 
 script_install() {
     if [[ "$kafka_switch" == "no" ]];then
-        print_error "1.此脚本需要填写，请./ssc.sh edit 服务名 来设置" "1.This script needs to be filled in. Set the ./ssc.sh edit service name"
+        print_error "此脚本需要填写，请./ssc.sh edit 服务名 来设置" "This script needs to be filled in. Set the ./ssc.sh edit service name"
     fi
     
     if [[ -f /usr/local/bin/man-kafka-manager ]];then
-        print_massage "2.检测到当前系统已安装" "2.Detected that the current system is installed"
+        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
     
     test_port ${port}
+    test_rely jdk-1.8
+    
     
     test_install unzip
     test_dir ${kafka_manager_dir}

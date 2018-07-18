@@ -8,17 +8,17 @@
 #install_dir=/usr/local
 
 #服务目录
-jdk_dir=jdk-1.8
+jdk_dir=jdk-1.7
 
 
 
 script_get() {
-    test_package http://shell-auto-install.oss-cn-zhangjiakou.aliyuncs.com/package/jdk-8u152-linux-x64.tar.gz adfb92ae19a18b64d96fcd9a3e7bfb47
+    test_package http://shell-auto-install.oss-cn-zhangjiakou.aliyuncs.com/package/jdk-1.7.0.tar.gz 99a52cfd9874eb7999a5ea092bb3242d
 }
 
 script_install() {
     java -version 2&> conf/log.txt
-    grep 'version "1.8' conf/log.txt
+    grep 'version "1.7' conf/log.txt
     if [[ $? -eq 0 ]];then
         print_massage "检测到已安装" "Detected installed"
         exit
@@ -33,9 +33,8 @@ script_install() {
 
     #安装服务
     script_get
-    tar -xf package/jdk-8u152-linux-x64.tar.gz
-    rm -rf ${install_dir}/jdk-1.8
-    mv jdk1.8.0_152 ${install_dir}/${jdk_dir}
+    tar -xf package/jdk-1.7.0.tar.gz
+    mv jdk1.7.0 ${install_dir}/${jdk_dir}
     
     #环境变量
     sed -i '/^export JAVA_HOME=/d' /etc/profile
@@ -72,8 +71,8 @@ script_remove() {
 }
 
 script_info() {
-    print_massage "名字：jdk-1.8" "Name：dk-1.8"
-    print_massage "版本：1.8.0" "Version：1.8.0"
+    print_massage "名字：jdk-1.7" "Name：dk-1.7"
+    print_massage "版本：1.7.0" "Version：1.7.0"
     print_massage "介绍：JDK是 Java 语言的软件开发工具包" "Introduction: JDK is a Java language software development kit"
     print_massage "作者：日行一善" "do one good deed a day"
 }

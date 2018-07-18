@@ -8,7 +8,7 @@ script_get() {
 
 script_install() {
     if [[ -f /usr/local/bin/batch ]];then
-        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
+        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
     
@@ -22,7 +22,7 @@ script_install() {
 script_remove() {
 	rm -rf /usr/local/bin/batch
     
-    [ -f /usr/local/bin/batch ] && print_error "1.batch未成功删除，请检查脚本" "1.batch unsuccessfully deleted, please check the script" || print_massage "batch卸载完成！" "batch Uninstall completed！"
+    [ -f /usr/local/bin/batch ] && print_error "batch未成功删除，请联系作者" "Batch was not successfully deleted, please contact the author" || print_massage "batch卸载完成！" "batch Uninstall completed！"
 }
 
 script_info() {

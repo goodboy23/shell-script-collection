@@ -35,7 +35,7 @@ script_install() {
     fi
     
     if [[ "$switch" == "no" ]];then
-        print_error "1.此脚本需要填写，请./ssc.sh edit 服务名 来设置" "1.This script needs to be filled in. Set the ./ssc.sh edit service name"
+        print_error "此脚本需要填写，请./ssc.sh edit 服务名 来设置" "This script needs to be filled in. Set the ./ssc.sh edit service name"
     fi
     
     [[ -d ${install_dir}/${redis_dir} ]] || print_error "${install_dir}/${redis_dir}目录不存在" "${install_dir}/${redis_dir} directory does not exist"
@@ -80,7 +80,7 @@ do
 done' >> /usr/local/bin/man-redis-cluster
     chmod +x /usr/local/bin/man-redis-cluster
     
-	print_massage "redis-port配置完成，端口${port}" "Redis-port configuration is complete, port ${port}"
+	print_massage "redis-port配置完成，端口${port[*]}" "Redis-port configuration is complete, port ${port[*]}"
 	print_massage "安装目录：${install_dir}/${redis_dir}/cluster" "Install Dir：${install_dir}/${redis_dir}/cluster"
     print_massage "日志目录：${install_dir}/${redis_dir}/cluster" "Log directory: ${install_dir}/${redis_dir}/cluster"
 	print_massage "使用：man-redis-cluster start" "Use：man-redis-cluster start"  

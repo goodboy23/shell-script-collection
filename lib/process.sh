@@ -110,9 +110,19 @@ process_passwd(){
 #一排横线，$1可指定长度，默认70
 process_line() {
     local a=70
-    [ ! $1 ] && a=70 || c=$1
+    [ ! $1 ] || a=$1
     
     printf "%-${a}s\n" "-" | sed 's/\s/-/g'
+}
+
+#倒计时，3秒
+process_time() {
+    local i
+    for i in {3..1}
+    do
+        echo $i
+        sleep 1
+    done
 }
 
 #等待，打任意字结束，ctl+c将退出脚本

@@ -17,17 +17,26 @@ script_get() {
 }
 
 script_install() {
-    ant -version
+    ant -version | grep 1.9
     if [[ $? -eq 0 ]];then
-        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
+        print_massage "检测到已安装" "Detected installed"
         exit
+    else
+        ant -version
+        if [[ $? -eq 0 ]];then
+            print_error "当前已有其它版本ant，请手动卸载" "There are other versions of ant currently, please uninstall manually"
+        fi
     fi
-    
+
     test_dir $ant_dir
+    test_rely jdk-1.8
+
     script_get
     tar -xf package/apache-ant-1.9.11-bin.tar.gz
     mv apache-ant-1.9.11 ${install_dir}/${ant_dir}
 
+    
+    #环境变量
     sed -i '/^export ANT_HOME=/d' /etc/profile
     sed -i '/^export PATH=${ANT_HOME}/d' /etc/profile
     
@@ -36,7 +45,7 @@ script_install() {
     source /etc/profile
     
     ant -version
-    [[ $? -eq 0 ]] || print_error "2.ant-1.9安装失败，请检查脚本" "2.ant-1.9 installation failed, please check the script"
+    [[ $? -eq 0 ]] || print_error "ant-1.9安装失败，请联系作者" "ant-1.9 installation failed, please check the script"
 
 	print_massage "ant-1.9安装完成" "The ant-1.9 is installed"
 	print_massage "安装目录：${install_dir}/${ant_dir}" "Install Dir：${install_dir}/${ant_dir}"
@@ -51,7 +60,7 @@ script_remove() {
     source /etc/profile
     
     ant -version
-    [[ $? -eq 0 ]] && print_error "1.ant-1.9未成功删除，请检查脚本" "1.ant-1.9 unsuccessfully deleted, please check the script" || print_massage "ant-1.9卸载完成！" "ant-1.9 Uninstall completed！"
+    [[ $? -eq 0 ]] && print_error "ant-1.9未成功删除，请联系作者" "Ant-1.9 was not successfully deleted, please contact the author" || print_massage "ant-1.9卸载完成！" "ant-1.9 Uninstall completed！"
 }
 
 script_info() {

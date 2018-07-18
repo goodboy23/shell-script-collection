@@ -10,7 +10,7 @@ script_get() {
 script_install() {
     fc-list  | grep '/usr/share/fonts/chinese/simsun.ttc'
     if [[ $? -eq 0 ]];then
-        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
+        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
     
@@ -33,7 +33,7 @@ script_install() {
     
 	fc-cache
 	fc-list  | grep '/usr/share/fonts/chinese/simsun.ttc'
-    [[ $? -eq 0 ]] || print_error "2.生成失败，请检查脚本" "2.Failed to generate, please check the script"
+    [[ $? -eq 0 ]] || print_error "生成失败，请联系作者" "The build failed, please contact the author"
 
     #完成
     print_massage "中文字体安装成功" "Chinese font installed successfully"

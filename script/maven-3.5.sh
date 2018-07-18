@@ -16,12 +16,18 @@ script_get() {
 }
 
 script_install() {
-    which mvn
+    mvn -v | grep 3.5
     if [[ $? -eq 0 ]];then
-        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
+        print_massage "检测到已安装" "Detected installed"
         exit
+    else
+        mvn -v
+        if [[ $? -eq 0 ]];then
+            print_error "当前已有其它版本maven，请手动卸载" "There are other versions of maven currently, please uninstall manually"
+        fi
     fi
     
+    test_rely jdk-1.8
     test_dir ${maven_dir}
     
     script_get
@@ -37,7 +43,7 @@ script_install() {
     source /etc/profile
     
     mvn -v
-    [[ $? -eq 0 ]] || print_error "2.maven-3.5安装失败，请检查脚本" "2.maven-3.5 installation failed, please check the script"
+    [[ $? -eq 0 ]] || print_error "maven-3.5安装失败，请检联系作者" "maven-3.5 installation failed, Please check the author"
     
 	print_massage "maven-3.5安装完成" "The maven-3.5 is installed"
 	print_massage "安装目录：${install_dir}/${maven_dir}" "Install Dir：${install_dir}/${maven_dir}"
@@ -51,7 +57,7 @@ script_remove() {
     
     source /etc/profile
     which mvn
-    [[ $? -eq 0 ]] && print_error "1.maven-3.5未成功删除，请检查脚本" "1.maven-3.5 unsuccessfully deleted, please check the script" || print_massage "maven-3.5卸载完成！" "maven-3.5 Uninstall completed！"
+    [[ $? -eq 0 ]] && print_error "maven-3.5未成功删除，请联系作者" "maven-3.5 unsuccessfully deleted, Please check the author" || print_massage "maven-3.5卸载完成！" "maven-3.5 Uninstall completed！"
 }
 
 script_info() {

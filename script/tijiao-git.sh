@@ -8,7 +8,7 @@ script_get() {
 
 script_install() {
     if [[ -f /usr/local/bin/tijiao-git ]];then
-        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
+        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
     
@@ -22,7 +22,7 @@ script_install() {
 script_remove() {
 	rm -rf /usr/local/bin/tijiao-git
     
-    [ -f /usr/local/bin/tijiao-git ] && print_error "1.tijiao-git未成功删除，请检查脚本" "1.tijiao-git unsuccessfully deleted, please check the script" || print_massage "tijiao-git卸载完成！" "tijiao-git Uninstall completed！"
+    [ -f /usr/local/bin/tijiao-git ] && print_error "tijiao-git未成功删除，请联系作者" "tijiao-git unsuccessfully deleted, please contact the author" || print_massage "tijiao-git卸载完成！" "tijiao-git Uninstall completed！"
 }
 
 script_info() {

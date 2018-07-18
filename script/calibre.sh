@@ -9,12 +9,11 @@ script_get() {
 script_install() {
     ebook-convert --version
     if [[ $? -eq 0 ]];then
-        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
+        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
 
     #安装依赖
-    test_www
 	test_rely chinese-font
 	test_install mesa-libGL qt5-qtquickcontrols qt5-qtdeclarative-devel libXrender libXcomposite
 
@@ -23,13 +22,13 @@ script_install() {
 	
 	#测试
 	ebook-convert --version
-	[[ $? -eq 0 ]] || print_error "2.装失败，请检查脚本" "2.Installation failed, please check the script"
+	[[ $? -eq 0 ]] || print_error "安装失败，请联系作者" "Installation failed, please contact the author"
     
     #效验是否工作正常
     echo "a" >> batch.txt
     ebook-convert  batch.txt  batch.pdf
-    [[ -f batch.pdf ]] || print_error "3.生成pdf失败，请检查脚本" "3.Failed to generate pdf, please check the script"
-    rm -rf batch.pdf batch.txt
+    [[ -f batch.pdf ]] || print_error "生成pdf失败，请联系作者" "Failed to generate pdf, please contact author"
+    rm -rf batch.pdf batch.txt index-1.html
     
     #完成
     print_massage "calibre安装完成" "The calibre is installed"

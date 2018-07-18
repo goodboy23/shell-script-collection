@@ -23,21 +23,15 @@ script_get() {
 }
 
 script_install() {
-    rpm -q mariadb
+    rpm -q mariadb-server
     if [[ $? -eq 0 ]];then
-        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
+        print_error "当前已有其它版本mariadb-server，请手动卸载" "There are other versions of mariadb-server currently, please uninstall manually"
         exit
     fi
 
-    rpm -q mysql
+    rpm -q mysql-server
     if [[ $? -eq 0 ]];then
-        print_massage "2.检测到当前系统已安装" "2.Detected that the current system is installed"
-        exit
-    fi
-    
-    mysql -V
-    if [[ $? -eq 0 ]];then
-        print_massage "3.检测到当前系统已安装" "3.Detected that the current system is installed"
+        print_error "当前已有其它版本mysql-server，请手动卸载" "There are other versions of mysql-server currently, please uninstall manually"
         exit
     fi
     
@@ -65,10 +59,7 @@ script_install() {
     
     echo "export MYSQL_HOME=${install_dir}/${mysql_dir}/bin" >> /etc/profile
     echo 'export PATH=$MYSQL_HOME:$PATH' >> /etc/profile
-    
     source /etc/profile
-    mysql -V
-    [[ $? -eq 0 ]] || print_error "4.mysql环境变量设置失败，请检查脚本" "4.Mysql environment variable setting failed, please check the script"
 
     #设置配置文件
     echo "[client]
@@ -91,7 +82,7 @@ pid-file=${install_dir}/${mysql_dir}/mysql.pid" > /etc/my.cnf #这里改需要�
     #初始化脚本
     cd ${install_dir}/${mysql_dir}
     ./bin/mysqld --initialize --user=mysql --basedir=${install_dir}/${mysql_dir} --datadir=${install_dir}/${mysql_dir}/data --lc_messages_dir=${install_dir}/${mysql_dir}/share --lc_messages=en_US
-
+    
     cd ${xianzai}
     #设置脚本
     test_bin man-mysql
@@ -100,7 +91,7 @@ pid-file=${install_dir}/${mysql_dir}/mysql.pid" > /etc/my.cnf #这里改需要�
 
     
     tail -n 1 ${log_dir}/${mysql_dir}/mysql.log | grep "root@localhost"
-    [[ $? -eq 0 ]] || print_error "5.初始化数据库失败，请检查脚本" "5. Failed to initialize the database, please check the script"
+    [[ $? -eq 0 ]] || print_error "数据库初始化失败，请联系作者" "Database initialization failed, please contact the author"
     
     mysql_passwd=`tail -n 1  ${log_dir}/${mysql_dir}/mysql.log |  awk -F'@' '{print $2}' | cut -b 12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30`
 
@@ -123,7 +114,7 @@ script_remove() {
     sed -i '/^export PATH=$MYSQL_HOME/d' /etc/profile
 
     mysql -V
-    [[ $? -eq 0 ]] && print_error "1.mysql-5.7未成功删除，请检查脚本" "1.mysql-5.7 unsuccessfully deleted, please check the script" || print_massage "mysql-5.6卸载完成！" "mysql-5.6 Uninstall completed！"
+    [[ $? -eq 0 ]] && print_error "mysql-5.7未成功删除，请联系作者" "1.mysql-5.7 unsuccessfully deleted,please contact the author" || print_massage "mysql-5.6卸载完成！" "mysql-5.6 Uninstall completed！"
 }
 
 script_info() {

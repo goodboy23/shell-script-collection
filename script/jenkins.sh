@@ -26,7 +26,7 @@ script_get() {
 
 script_install() {
     if [[ -f /usr/local/bin/man-jenkins ]];then
-        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
+        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
     
@@ -34,7 +34,8 @@ script_install() {
     test_dir $jenkins_dir
     
     #安装依赖和包
-    test_rely jdk-1.8 maven-3.5 ant-1.9
+   test_rely jdk-1.8 maven-3.5 ant-1.9
+    
     script_get
     mkdir ${install_dir}/${jenkins_dir}
     cp -p package/jenkins.war ${install_dir}/${jenkins_dir}/
@@ -49,7 +50,7 @@ script_install() {
     sed -i "6a jenkins_dir=$jenkins_dir" /usr/local/bin/man-jenkins
     
     #验证
-    [[ -f ${install_dir}/${jenkins_dir}/jenkins.war ]] || print_error "2.jenkins.war不存在，请检查脚本" "2.jenkins.war does not exist, please check the script"
+    [[ -f ${install_dir}/${jenkins_dir}/jenkins.war ]] || print_error "安装失败，请联系作者" "Installation failed, please contact the author"
     
     print_massage "jenkins安装完成" "The jenkins is installed"
 	print_massage "安装目录：${install_dir}/${jenkins_dir}" "Install Dir：${install_dir}/${jenkins_dir}"

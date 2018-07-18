@@ -24,6 +24,7 @@ log_dir=/var/log
 #edit选项的编辑器，可选择vim或其他
 editor=vi
 
+ssc_dir=`pwd`
 
 
 #########消息函数#########
@@ -35,17 +36,31 @@ print_error() {
     [[ "$language" == "cn" ]] && echo "错误：$1" || echo "Error：$2"
     echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     echo
+    
+    echo >> $ssc_dir/ssc-operating.log
+    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" >> $ssc_dir/ssc-operating.log
+    [[ "$language" == "cn" ]] && echo "错误：$1" >> $ssc_dir/ssc-operating.log || echo "Error：$2" >> $ssc_dir/ssc-operating.log
+    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" >> $ssc_dir/ssc-operating.log
+    echo >> $ssc_dir/ssc-operating.log
+    
     exit 1
 }
 
 #消息输出，$1中文，$2英文
 print_massage() {
 	if [[ "$language" == "cn" ]];then
-		echo "$1"
+		echo "$1" 
 	else
 		echo "$2"
 	fi
 	echo
+    
+    if [[ "$language" == "cn" ]];then
+		echo "$1" >> $ssc_dir/ssc-operating.log
+	else
+		echo "$2" >> $ssc_dir/ssc-operating.log
+	fi
+	echo >> $ssc_dir/ssc-operating.log
 }
 
 
@@ -86,6 +101,14 @@ list               List supported scripts
 list    httpd      List httpd related scripts"
 }
 
+p_exit() {    #退出恢复
+    print_massage "异常中断退出，请重新安装或联系作者" "Abnormal interrupt exit, please reinstall or contact the author"
+    exit 1
+}
+
+trap "p_exit;" INT TERM    #当强制退出则执行p_exit函数内容
+
+
 #更新
 update_ssc() {
     test_root
@@ -104,17 +127,18 @@ update_ssc() {
 
 #根据每个和脚本的info函数形成支持的脚本列表
 list_generate() {
+    local z=0
     rm -rf conf/a.txt
     rm -rf conf/b.txt
 
     for i in `ls script/` #将每个脚本的信息都输出找出前3行形成列表
     do
         i=`echo ${i%.*}`
-        print_massage
         a=`bash ssc.sh info $i | awk  -F'：' '{print $2}' | sed -n '1p'`
         b=`bash ssc.sh info $i | awk  -F'：' '{print $2}' | sed -n '3p'`
         c=`bash ssc.sh info $i | awk  -F'：' '{print $2}' | sed -n '5p'`
         print_massage "$a 信息生成完毕" "$a Information generated"
+        let z++
         echo "$a:$b:$c" >> conf/a.txt
     done
     
@@ -126,6 +150,8 @@ list_generate() {
         awk 'BEGIN{printf "%-20s%-20s%-20s\n","'"$name"'","'"$version"'","'"$intr"'";}' >> conf/list_${language}.txt
         echo " " >> conf/list_${language}.txt
     done < conf/a.txt
+    echo "total : ${z}" >> conf/list_${language}.txt
+    
     rm -rf conf/a.txt
 }
 
@@ -139,11 +165,13 @@ server() {
     if [[ -f script/${2}.sh ]];then
         source script/${2}.sh
         if [[ "$1" == "install" ]];then
-            print_massage "正在运行${2}脚本，出现错误将会退出，解决后可再次运行。" "The ${2} script is running, an error will exit, and the solution can be run again."
-            sleep 3
-            test_install net-tools &> /dev/null
+            print_massage "正在安装${2}" "Installing ${2}"
+            print_massage "若中途报错，请按照提示操作，解决后再次安装即可。" "If you report an error in the middle, please follow the prompts, and then install it again."
+            print_massage "ssc脚本合集只进行部署，并不修改防火墙等操作。" "The ssc script collection is only deployed, and does not modify the firewall and other operations."
+            process_time
+            test_init
             script_install
-	    print_massage "请source /etc/profile来加载环境变量" "Please source /etc/profile to load environment variables"
+            print_massage "请source /etc/profile来加载环境变量" "Please source /etc/profile to load environment variables"
 		elif [[ "$1" == "remove" ]];then
 			script_remove
         elif [[ "$1" == "get" ]];then

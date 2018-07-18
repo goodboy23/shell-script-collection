@@ -8,7 +8,7 @@ script_get() {
 
 script_install() {
     if [[ -f /usr/local/bin/hit-boss ]];then
-        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
+        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
     
@@ -22,7 +22,7 @@ script_install() {
 script_remove() {
 	rm -rf /usr/local/bin/hit-boss
     
-    [ -f /usr/local/bin/hit-boss ] && print_error "hit-boss未成功删除，请检查脚本" "hit-boss unsuccessfully deleted, please check the script" || print_massage "hit-boss卸载完成！" "hit-boss Uninstall completed！"
+    [ -f /usr/local/bin/hit-boss ] && print_error "hit-boss未成功删除，请联系作者" "Hit-boss was not successfully deleted, please contact the author" || print_massage "hit-boss卸载完成！" "hit-boss Uninstall completed！"
 }
 
 script_info() {

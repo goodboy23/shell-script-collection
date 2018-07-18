@@ -23,30 +23,21 @@ script_get() {
 }
 
 script_install() {
-    rpm -q mariadb
+    rpm -q mariadb-server 
     if [[ $? -eq 0 ]];then
-        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
+        print_error "当前已有其它版本mariadb-server，请手动卸载" "There are other versions of mariadb-server currently, please uninstall manually"
         exit
     fi
 
-    rpm -q mysql
+    rpm -q mysql-server
     if [[ $? -eq 0 ]];then
-        print_massage "2.检测到当前系统已安装" "2.Detected that the current system is installed"
+        print_error "当前已有其它版本mysql-server，请手动卸载" "There are other versions of mysql-server currently, please uninstall manually"
         exit
     fi
-    
-    mysql -V
-    if [[ $? -eq 0 ]];then
-        print_massage "3.检测到当前系统已安装" "3.Detected that the current system is installed"
-        exit
-    fi
-    
+   
     test_port 3306
     
     test_dir $mysql_dir
-    
-    #清理mariadb的东西
-    for i in `rpm -qa | grep mariadb`; do rpm -e --nodeps $i; done
 
     #安装
     test_install autoconf libaio bison ncurses-devel
@@ -64,11 +55,9 @@ script_install() {
     sed -i '/^export PATH=$MYSQL_HOME/d' /etc/profile
     
     echo "export MYSQL_HOME=${install_dir}/${mysql_dir}/bin" >> /etc/profile
-    echo 'export PATH=$MYSQL_HOME:$PATH' >> /etc/profile
-    
+    echo 'export PATH=$MYSQL_HOME:$PATH' >> /etc/profile  
     source /etc/profile
-    mysql -V
-    [[ $? -eq 0 ]] || print_error "4.mysql环境变量设置失败，请检查脚本" "4.Mysql environment variable setting failed, please check the script"
+
 
     #设置配置文件
     echo "[mysql]
@@ -94,7 +83,8 @@ bind-address = 0.0.0.0" > /etc/my.cnf #这里改需要的配置
     dangqian=`pwd`
     cd ${install_dir}/${mysql_dir}
     ./scripts/mysql_install_db --user=mysql --basedir=${install_dir}/${mysql_dir} --datadir=${install_dir}/${mysql_dir}/data
-
+    [[ $? -eq 0 ]] || print_error "数据库初始化失败，请联系作者" "Database initialization failed, please contact the author"
+    
     cd ${dangqian}
     #设置脚本
     test_bin man-mysql
@@ -118,8 +108,7 @@ script_remove() {
     sed -i '/^export MYSQL_HOME=/d' /etc/profile
     sed -i '/^export PATH=$MYSQL_HOME/d' /etc/profile
 
-    mysql -V
-    [[ $? -eq 0 ]] && print_error "1.mysql-5.6未成功删除，请检查脚本" "1.mysql-5.6 unsuccessfully deleted, please check the script" || print_massage "mysql-5.6卸载完成！" "mysql-5.6 Uninstall completed！"
+    print_massage "mysql-5.6卸载完成！" "mysql-5.6 Uninstall completed！"
 }
 
 script_info() {

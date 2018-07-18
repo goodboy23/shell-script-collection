@@ -26,16 +26,15 @@ script_get() {
 
 script_install() {
     if [[ "$redis_switch" == "no" ]];then
-        print_error "1.此脚本需要填写，请./ssc.sh edit 服务名 来设置" "1.This script needs to be filled in. Set the ./ssc.sh edit service name"
+        print_error "此脚本需要填写，请./ssc.sh edit 服务名 来设置" "This script needs to be filled in. Set the ./ssc.sh edit service name"
     fi
 
     if [[ -f ${install_dir}/${kafka_dir}/config/server.properties ]];then
-        print_massage "2.检测到当前系统已安装" "2.Detected that the current system is installed"
+        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
 
-    test_port ${port}
-    test_rely jdk
+    test_rely jdk-1.8
     
     test_dir $kafka_dir
     script_get

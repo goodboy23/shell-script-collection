@@ -9,7 +9,7 @@ script_get() {
 script_install() {
     which rvm
     if [[ $? -eq 0 ]];then
-        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
+        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
 
@@ -18,7 +18,7 @@ script_install() {
     gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
     \curl -sSL https://get.rvm.io | bash -s stable
     
-    [ -f /etc/profile.d/rvm.sh ] || print_error "2.rvm下载失败，请检查脚本" "2.rvm download failed, please check the script"
+    [ -f /etc/profile.d/rvm.sh ] || print_error "rvm下载失败，请联系作者" "Rvm download failed, please contact the author"
     
     #设置环境变量
     sed -i '/^source RVM_HOME=/d' /etc/profile
@@ -32,7 +32,7 @@ script_install() {
     
     #测试
     which rvm
-    [ $? -eq 0 ] || print_error "3.rmv环境变量设置失败，请检查脚本" "3. The rmv environment variable setting failed, please check the script"
+    [ $? -eq 0 ] || print_error "rmv环境变量设置失败，请联系作者" "3. The rmv environment variable setting failed,  please contact the author"
 
 	print_massage "rvm安装完成" "rvm installation is complete"
     print_massage "安装目录： /usr/local/rvm" "Installation directory: /usr/local/rvm"
@@ -48,7 +48,7 @@ script_remove() {
     source /etc/profile
     
     which rvm
-    [ $? -eq 0 ] &&  print_error "1.rvm卸载失败" "1.Rvm uninstall failed" || print_massage "rvm卸载成功" "Rvm uninstallation succeeded"
+    [ $? -eq 0 ] &&  print_error "rvm卸载失败，请联系作者" "Rvm uninstall failed， please contact the author" || print_massage "rvm卸载成功" "Rvm uninstallation succeeded"
 }
 
 script_info() {

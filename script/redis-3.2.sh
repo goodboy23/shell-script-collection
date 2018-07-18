@@ -21,7 +21,7 @@ script_get() {
 
 script_install() {
     if [[ -f /usr/local/bin/man-redis ]];then
-        print_massage "1.检测到当前系统已安装" "1.Detected that the current system is installed"
+        print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
     
@@ -48,7 +48,7 @@ script_install() {
 
     #检测
     which redis-cli
-    [[ $? -eq 0 ]] || print_error "2.redis-3.2安装失败，请检查脚本" "2.redis-3.2 installation failed, please check the script"
+    [[ $? -eq 0 ]] || print_error "redis-3.2安装失败，请联系作者" "redis-3.2 installation failed,  please contact the author"
     
     
 	print_massage "batch安装完成" "The batch is installed"
@@ -67,7 +67,7 @@ script_remove() {
     source /etc/profile
     
     which redis-cli
-    [ $? -eq 0 ] && print_error "1.redis-3.2未成功删除，请检查脚本" "1.redis-3.2 unsuccessfully deleted, please check the script" || print_massage "redis-3.2卸载完成！" "redis-3.2 Uninstall completed！"
+    [ $? -eq 0 ] && print_error "redis-3.2未成功删除，请联系作者" "redis-3.2 unsuccessfully deleted,  please contact the author" || print_massage "redis-3.2卸载完成！" "redis-3.2 Uninstall completed！"
 }
 
 script_info() {

@@ -22,7 +22,7 @@ script_install() {
 script_remove() {
 	rm -rf /usr/local/bin/ip-location
     
-    [ -f /usr/local/bin/ip-location ] && print_error "ip-location未成功删除，请检查脚本" "ip-location unsuccessfully deleted, please check the script" || print_massage "ip-location卸载完成！" "ip-location Uninstall completed！"
+    [ -f /usr/local/bin/ip-location ] && print_error "ip-location未成功删除，请联系作者" "Ip-location was not successfully deleted, please contact the author" || print_massage "ip-location卸载完成！" "ip-location Uninstall completed！"
 }
 
 script_info() {

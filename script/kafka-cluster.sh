@@ -27,16 +27,16 @@ script_get() {
 
 script_install() {
     if [[ "$redis_switch" == "no" ]];then
-        print_error "1.此脚本需要填写，请./ssc.sh edit 服务名 来设置" "1.This script needs to be filled in. Set the ./ssc.sh edit service name"
+        print_error "此脚本需要填写，请./ssc.sh edit 服务名 来设置" "1.This script needs to be filled in. Set the ./ssc.sh edit service name"
     fi
 
     if [[ ! -f ${kafka_dir}/config/server.properties ]];then
-        print_error "2.未安装kafka，请./ssc.sh install kafka-2.12" "2. kafka is not installed, please./ssc.sh install kafka-2.12"
+        print_error "未安装kafka，请./ssc.sh install kafka-2.12" "kafka is not installed, please./ssc.sh install kafka-2.12"
     fi
 
     grep "zookeeper.connect=${cluster_dizhi}" /config/server.properties
     if [[ $? -eq 0 ]];then
-        print_error "3.当前以配置集群，请修改脚本cluster_dizhi" "3.to configure the cluster, please modify the script cluster_dizhi"
+        print_error "当前以配置集群，请修改脚本cluster_dizhi" "to configure the cluster, please modify the script cluster_dizhi"
     fi
     
     test_port ${port}

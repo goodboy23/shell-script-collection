@@ -28,16 +28,16 @@ script_get() {
 
 script_install() {
     if [[ "$switch" == "no" ]];then
-        print_error "1.此脚本需要填写，请./ssc.sh edit 服务名 来设置" "1.This script needs to be filled in. Set the ./ssc.sh edit service name"
+        print_error "此脚本需要填写，请./ssc.sh edit 服务名 来设置" "This script needs to be filled in. Set the ./ssc.sh edit service name"
     fi
 
     if [[ ! -f ${zookeeper_dir}/bin/zkServer.sh ]];then
-        print_error "2.未安装zookeeper，请./ssc.sh install zookeeper-3.5" "2. Zookeeper is not installed, please./ssc.sh install zookeeper-3.5"
+        print_error "未安装zookeeper，请./ssc.sh install zookeeper-3.5" "Zookeeper is not installed, please./ssc.sh install zookeeper-3.5"
     fi
     
     grep "2888:3888" ${zookeeper_dir}/conf/zoo.cfg.dynamic
     if [[ $? -eq 0 ]];then
-        print_error "3.当前已将安装集群，请先卸载" "3. The cluster is currently installed. Please uninstall it first."
+        print_error "当前已将安装集群，请先卸载" "The cluster is currently installed. Please uninstall it first."
     fi
     
     #配置文件

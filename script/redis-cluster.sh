@@ -8,15 +8,15 @@
 switch=no
 
 #安装主目录
-install_dir=
+install_dir=/usr/local
 
 #redis所在脚本
-redis_dir=
+redis_dir=redis
 
 #所有要加入集群的节点，前一半节点皆为主
 cluster_ip="127.0.0.1:7000 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005"
 
-#默认1主1从，设置2就是1主2从
+#默认1主1从，设置2就是1主2从，最前头的均为主
 node=1
 
 
@@ -26,7 +26,7 @@ script_get() {
 
 script_install() {
     if [[ "$switch" == "no" ]];then
-        print_error "1.此脚本需要填写，请./ssc.sh edit 服务名 来设置" "1.This script needs to be filled in. Set the ./ssc.sh edit service name"
+        print_error "此脚本需要填写，请./ssc.sh edit 服务名 来设置" "This script needs to be filled in. Set the ./ssc.sh edit service name"
     fi
 
     which redis-server
@@ -37,8 +37,27 @@ script_install() {
 
     [[ -d ${install_dir}/${redis_dir} ]] || print_error "${install_dir}/${redis_dir}目录不存在" "${install_dir}/${redis_dir} directory does not exist"
     
+    test_install telnet
+    
+    #检测端口是否可以连接成功
+    for i in `echo $cluster_ip`
+    do
+        local cl_ip=`echo ${i} | awk -F':' '{print $1}'`
+        local cl_port=`echo ${i} | awk -F':' '{print $2}'`
+        local cl_lian=`(echo info; sleep 1) | telnet $cl_ip $cl_port  2>&1 |grep used_memory|cut -d : -f2 | head -1`
+        [ ! $cl_lian ] && print_error "地址${i}，测试连接失败，请检查填写地址或联系作者" "Address ${i}, test connection failed, please check the address or contact the author"
+        
+        local cl_lian=`(echo cluster info; sleep 1) | telnet $cl_ip $cl_port  2>&1 |grep cluster_state|cut -d : -f2 | head -1`
+        if [[ ! $cl_lian ]];then
+            print_massage "${i}通过测试，连接正常" "${I} passed the test and the connection is normal"
+        elif [[ "$cl_lian" == "ok" ]];then
+            print_error "${i}已经在集群中，请勿重复添加。" "${i} is already in the cluster and should not be added repeatedly."
+        fi
+   done
+
+    script_get
     test_rely ruby-2.4
-    gem install redis
+    gem install package/redis-4.0.1.gem
     
     #启动
     ${install_dir}/${redis_dir}/src/redis-trib.rb create --replicas ${node} ${cluster_ip}
