@@ -33,7 +33,16 @@ script_install() {
     cd ruby-2.4.4/
     ./configure --prefix=${install_dir}/${ruby_dir}
     make && make install || print_error "编译失败，请检查脚本" "Compile failed, please check the script"
-    
+
+   #环境变量
+    sed -i '/^RUBY_HOME=/d' /etc/profile
+    sed -i '/^PATH=$RUBY_HOME/d' /etc/profile
+
+    echo "RUBY_HOME=${install_dir}/${ruby_dir}/bin"  >> /etc/profile
+    echo 'PATH=$RUBY_HOME:$PATH' >> /etc/profile
+
+    source /etc/profile
+
     cd ext/zlib
     ruby extconf.rb 
     [[ -f Makefile ]] || print_error "生成Makefile失败，请联系作者" "Failed to generate Makefile, please contact author"
@@ -50,15 +59,6 @@ script_install() {
     cd ..
     cd ..
     rm -rf ruby-2.4.4/
-    
-   #环境变量
-    sed -i '/^RUBY_HOME=/d' /etc/profile
-    sed -i '/^PATH=$RUBY_HOME/d' /etc/profile
-
-    echo "RUBY_HOME=${install_dir}/${ruby_dir}/bin"  >> /etc/profile
-    echo 'PATH=$RUBY_HOME:$PATH' >> /etc/profile
-
-    source /etc/profile
 
 	#测试
 	ruby -v | grep 2.4
