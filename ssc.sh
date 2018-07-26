@@ -99,7 +99,7 @@ print_remove_ok() {
 #中文帮助
 help_cn() {
 	echo "速度与激情小组---Linnux部旗下项目，如有使用问题，请加qq群762696893
-当前版本：1.0
+当前版本：1.1
 
 install httpd        安装 httpd
 remove  httpd        卸载 httpd
@@ -117,7 +117,7 @@ list    httpd        列出 httpd 相关脚本"
 #英文帮助
 help_en() {
     echo "Speed and passion team---Projects of Linnux Department, if there are any questions, please add qq group 762696893
-current version：1.0
+current version：1.1
 
 install httpd      installation httpd
 remove  httpd      Uninstall    httpd
