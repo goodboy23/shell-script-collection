@@ -14,15 +14,13 @@ script_install() {
     
     test_bin batch
 
-	print_massage "batch安装完成" "The batch is installed"
-	print_massage "安装目录：/usr/local/bin/batch" "Install Dir：/usr/local/bin/batch"
-	print_massage "使用：batch" "Use：batch"
+	print_install_bin $1
 }
 
 script_remove() {
 	rm -rf /usr/local/bin/batch
     
-    [ -f /usr/local/bin/batch ] && print_error "batch未成功删除，请联系作者" "Batch was not successfully deleted, please contact the author" || print_massage "batch卸载完成！" "batch Uninstall completed！"
+    print_remove_ok $1
 }
 
 script_info() {
@@ -30,6 +28,7 @@ script_info() {
 	print_massage "版本：1.2" "Version：1.2"
 	print_massage "介绍：批量操作跳板机脚本" "Introduction: Batch operation springboard script"
 	print_massage "作者：日行一善" "do one good deed a day"
+    
 	print_massage "使用说明：根据/etc/hosts文件和免密登陆来进行批量ssh操作" "Instructions for use: batch ssh operations based on the /etc/hosts file and free login"
 	print_massage "支持对/etc/hosts中的主机分组，需要修改batch" "Support for grouping hosts in /etc/hosts, need to modify the batch"
 	print_massage "支持对rm等命令进行禁用，防止批量操作产生影响，需要batch" "Supports the disabling of commands such as rm to prevent batch operation and requires batch"

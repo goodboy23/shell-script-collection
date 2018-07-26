@@ -10,16 +10,16 @@ switch=no
 #安装主目录
 install_dir=/usr/local
 
+log_dir=/var/log
+
 #redis目录
-redis_dir=redis
+server_dir=redis
 
 #将安装如下端口实例
 port=(6379)
 
 #监听ip
 listen=0.0.0.0
-
-
 
 
 
@@ -38,7 +38,7 @@ script_install() {
         print_error "此脚本需要填写，请./ssc.sh edit 服务名 来设置" "This script needs to be filled in. Set the ./ssc.sh edit service name"
     fi
     
-    [[ -d ${install_dir}/${redis_dir} ]] || print_error "${install_dir}/${redis_dir}目录不存在" "${install_dir}/${redis_dir} directory does not exist"
+    [[ -d ${install_dir}/${server_dir} ]] || print_error "${install_dir}/${server_dir}目录不存在" "${install_dir}/${server_dir} directory does not exist"
 
 	for i in `echo ${port[*]}`
     do
@@ -51,7 +51,7 @@ script_install() {
             sed -i "2a port=${i}" $command
             sed -i "3a install_dir=${install_dir}" $command
             sed -i "4a log_dir=${log_dir}" $command
-            sed -i "5a redis_dir=${redis_dir}" $command
+            sed -i "5a server_dir=${server_dir}" $command
         
             chmod +x $command
         else
@@ -59,16 +59,16 @@ script_install() {
             continue #如果管理脚本存在，则跳过这个端口
         fi
 
-        conf=${install_dir}/${redis_dir}/cluster/${i}/${i}.conf
+        conf=${install_dir}/${server_dir}/cluster/${i}/${i}.conf
         
-        mkdir -p ${install_dir}/${redis_dir}/cluster/${i}
+        mkdir -p ${install_dir}/${server_dir}/cluster/${i}
         cp material/redis_7000.conf $conf
         
         sed -i "s/^bind 127.0.0.1/bind ${listen}/g" $conf
         sed -i "/^port/cport ${i}" $conf
         sed -i "/^cluster-config-file/ccluster-config-file nodes_${i}.conf" $conf
         sed -i "/^pidfile/cpidfile redis_${i}.pid" $conf
-        sed -i "/^dir/cdir ${install_dir}/${redis_dir}/cluster/${i}" $conf 
+        sed -i "/^dir/cdir ${install_dir}/${server_dir}/cluster/${i}" $conf 
     done
 
     #创建总管理脚本
@@ -81,18 +81,19 @@ done' >> /usr/local/bin/man-redis-cluster
     chmod +x /usr/local/bin/man-redis-cluster
     
 	print_massage "redis-port配置完成，端口${port[*]}" "Redis-port configuration is complete, port ${port[*]}"
-	print_massage "安装目录：${install_dir}/${redis_dir}/cluster" "Install Dir：${install_dir}/${redis_dir}/cluster"
-    print_massage "日志目录：${install_dir}/${redis_dir}/cluster" "Log directory: ${install_dir}/${redis_dir}/cluster"
+	print_massage "安装目录：${install_dir}/${server_dir}/cluster" "Install Dir：${install_dir}/${server_dir}/cluster"
+    print_massage "日志目录：${install_dir}/${server_dir}/cluster" "Log directory: ${install_dir}/${server_dir}/cluster"
 	print_massage "使用：man-redis-cluster start" "Use：man-redis-cluster start"  
 }
 
 script_remove() {
+    clear
 	rm -rf /usr/local/bin/man-redis-cluster
 	for i in `echo ${port[*]}`
     do
         man-redis-${i} stop
 		rm -rf /usr/local/bin/man-redis-${i}
-		rm -rf ${install_dir}/${redis_dir}/cluster/${i}
+		rm -rf ${install_dir}/${server_dir}/cluster/${i}
 		print_massage "节点${i}卸载完成！" "node${i} Uninstall completed！"
 	done
 }

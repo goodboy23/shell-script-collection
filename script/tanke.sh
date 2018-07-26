@@ -14,15 +14,13 @@ script_install() {
     
     test_bin tanke
 
-	print_massage "tanke安装完成" "The tanke is installed"
-	print_massage "安装目录：/usr/local/bin/tanke" "Install Dir：/usr/local/bin/tanke"
-	print_massage "使用：tanke" "Use：tanke"
+    print_install_bin $1
 }
 
 script_remove() {
 	rm -rf /usr/local/bin/tank
-    
-    [ -f /usr/local/bin/tank ] && print_error "tank未成功删除，请联系作者" "tank unsuccessfully deleted, please contact the author" || print_massage "tank卸载完成！" "tank Uninstall completed！"
+
+    print_remove_ok $1
 }
 
 script_info() {

@@ -10,7 +10,7 @@
 #log_dir=
 
 #服务目录名
-redis_browser_dir=redis-browser
+server_dir=redis-browser
 
 #填写ok将按如下填写执行脚本
 redis_switch=no
@@ -24,6 +24,11 @@ port=1212
 
 #redis_browser监听
 listen=0.0.0.0
+
+server_rely="nodejs-8.9 ruby-2.4"
+
+
+
 
 
 
@@ -42,9 +47,6 @@ script_install() {
         exit
     fi
 
-    test_port ${port}
-    test_dir $redis_browser_dir
-
     for i in `echo $cluster_ip`
     do
         local cl_ip=`echo ${i} | awk -F':' '{print $1}'`
@@ -55,16 +57,14 @@ script_install() {
     
     
     #依赖
-	test_rely nodejs-8.9 ruby-2.4
     script_get
-
     gem install package/redis-4.0.1.gem
     gem install package/redis-browser-0.5.1.gem
     
-    rm -rf ${install_dir}/${redis_browser_dir}/config.yml
+    rm -rf ${install_dir}/${server_dir}/config.yml
     
     d=1 #名字，从第2个起
-    echo "connections:" >> ${install_dir}/${redis_browser_dir}/config.yml
+    echo "connections:" >> ${install_dir}/${server_dir}/config.yml
     
     for i in `echo ${cluster_ip[*]}`
     do
@@ -80,36 +80,30 @@ script_install() {
         sed -i "2s/host: 192.168.1.3/host: $b/g" one
         sed -i "3s/port: 7004/port: $c/g" one
         sed -i "5s,url_db_0: redis://192.168.1.3:7004/0,url_db_0: redis://${i}/0,g" one
-        cat one >> ${install_dir}/${redis_browser_dir}/config.yml
+        cat one >> ${install_dir}/${server_dir}/config.yml
         let d++
         rm -rf one
     done
 
     #启动脚本
     test_bin man-redis-browser
-    local command=/usr/local/bin/man-redis-browser
     
     sed -i "2a port=${port}" $command
     sed -i "3a listen=${listen}" $command
-    sed -i "4a install_dir=$install_dir" $command
-    sed -i "5a log_dir=$log_dir" $command
-    sed -i "6a redis_browser_dir=$redis_browser_dir" $command
-    sed -i "7a one=${cluster_ip}" $command
+    sed -i "7a one=${cluster_ip[0]}" $command
 
     #测试
-    print_massage "redis-browser安装完成" "Theredis-browser is installed"
-	print_massage "安装目录：${install_dir}/${redis_browser_dir}" "Install Dir：${install_dir}/${redis_browser_dir}"
-    print_massage "日志目录：${log_dir}/${redis_browser_dir}" "Log directory：${log_dir}/${redis_browser_dir}"
+    print_instll_ok $1
 	print_massage "使用：man-redis-browser start" "Use：man-redis-browser start"
-	print_massage "访问：curl http://127.0.0.1:${port}" "Access：curl http://127.0.0.1:${port}"
+	print_massage "访问：http://xx.xx.xx.xx:${port}" "Access：http://xx.xx.xx.xx:${port}"
 }
 
 script_remove() {
     man-redis-browser stop
-	rm -rf ${install_dir}/${redis_browser_dir}
+	rm -rf ${install_dir}/${server_dir}
 	rm -rf /usr/local/bin/man-redis-browser
 
-	[ -f /usr/local/bin/clocks ] && print_error "redis-browser卸载失败，请联系作者" "Redis-browser uninstall failed, please contact the author" || print_massage "redis-browser卸载完成！" "redis-browser Uninstall completed！"
+    test_remove_ok $1
 }
 
 

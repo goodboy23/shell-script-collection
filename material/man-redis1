@@ -2,9 +2,9 @@
 
 
 
-a=${install_dir}/${redis_dir}/bin/redis-server
-b=${install_dir}/${redis_dir}/cluster/
-c=${log_dir}/${redis_dir}
+a=${install_dir}/${server_dir}/bin/redis-server
+b=${install_dir}/${server_dir}/cluster/
+c=${log_dir}/${server_dir}
 
 
 start() {
@@ -17,7 +17,7 @@ start() {
 stop() {
     netstat -unltp | awk -F':' '{print $2}' | grep -w ${port} &> /dev/null
     if [ $? -eq 0 ];then
-        pid=`cat ${install_dir}/${redis_dir}/cluster/${port}/redis_${port}.pid `
+        pid=`cat ${install_dir}/${server_dir}/cluster/${port}/redis_${port}.pid `
         kill -9 $pid &> /dev/null
     fi
 }

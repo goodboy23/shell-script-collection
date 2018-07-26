@@ -8,7 +8,7 @@
 #install_dir=/usr/local
 
 #服务目录
-jdk_dir=jdk-1.7
+server_dir=jdk
 
 
 
@@ -29,12 +29,12 @@ script_install() {
         fi
     fi
 
-    test_dir ${jdk_dir}
+    test_detection
 
     #安装服务
     script_get
     tar -xf package/jdk-1.7.0.tar.gz
-    mv jdk1.7.0 ${install_dir}/${jdk_dir}
+    mv jdk1.7.0 ${install_dir}/${server_dir}
     
     #环境变量
     sed -i '/^export JAVA_HOME=/d' /etc/profile
@@ -42,8 +42,8 @@ script_install() {
     sed -i '/^export CLASSPATH=/d' /etc/profile
     sed -i '/^export PATH=$JAVA_HOME/d'  /etc/profile
     
-    echo "export JAVA_HOME=${install_dir}/${jdk_dir}" >> /etc/profile
-    echo "export JRE_HOME=${install_dir}/${jdk_dir}/jre" >> /etc/profile
+    echo "export JAVA_HOME=${install_dir}/${server_dir}" >> /etc/profile
+    echo "export JRE_HOME=${install_dir}/${server_dir}/jre" >> /etc/profile
     echo 'export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib' >> /etc/profile
     echo 'export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH' >> /etc/profile
     
@@ -51,23 +51,21 @@ script_install() {
     
     #测试
     java -version
-    [ $? -eq 0 ] || print_error "安装失败，请联系作者" "Installation failed, please contact the author"
+    [ $? -eq 0 ] || print_error "${1}安装失败" "${1} Installation failed"
 
-	print_massage "jdk-1.8安装完成" "Jdk-1.8 installation is complete"
-	print_massage "安装目录：${install_dir}/${jdk_dir}" "Install Dir：${install_dir}/${jdk_dir}"
+    print_install_ok $1
 	print_massage "使用：java -version" "Use：java -version"
 }
 
 script_remove() {
-    rm -rf ${install_dir}/${jdk_dir}
+    rm -rf ${install_dir}/${server_dir}
     sed -i '/^export JAVA_HOME=/d' /etc/profile
     sed -i '/^export JRE_HOME=/d'  /etc/profile
     sed -i '/^export CLASSPATH=/d' /etc/profile
     sed -i '/^export PATH=$JAVA_HOME/d' /etc/profile
     source /etc/profile
     
-    java -version
-    [[ $? -eq 0 ]] && print_error "jdk-1.8卸载失败，请联系作者" "Jdk-1.8 uninstall failed, please contact the author" || print_massage "卸载完成" "Uninstall completed"
+    print_remove_ok $1
 }
 
 script_info() {

@@ -9,7 +9,7 @@ if [[ "$1" == "start" ]];then
         echo "redis Already started"
         exit
     fi
-    nohup ${install_dir}/${redis_dir}/bin/redis-server &> ${log_dir}/${redis_dir}/redis.log &
+    nohup ${install_dir}/${server_dir}/bin/redis-server &> ${log_dir}/${server_dir}/redis.log &
 elif [[ "$1" == "stop" ]];then
     netstat -unltp |grep :${port} &> /dev/null
     if [ $? -eq 0 ];then

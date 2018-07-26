@@ -7,7 +7,11 @@
 #install_dir=
 
 #服务目录名
-tomcat_dir=tomcat
+server_dir=tomcat
+
+server_rely="jdk-1.7"
+
+port=8080
 
 
 
@@ -20,31 +24,34 @@ script_install() {
         print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
-    
-    test_port 8080
-    test_rely jdk-1.7
-    
-    test_dir ${tomcat_dir}
+
+    test_detection
 
     script_get
     tar -xf package/apache-tomcat-7.0.8-src.tar.gz
-    mv apache-tomcat-7.0.8-src ${install_dir}/${tomcat_dir}
+    mv apache-tomcat-7.0.8-src ${install_dir}/${server_dir}
+    chmod +x ${install_dir}/${server_dir}/bin/*
+    
+    #环境变量
+    sed -i '/^TOMCAT_HOME=/d' /etc/profile
+    sed -i '/^PATH=$TOMCAT_HOME/d' /etc/profile
 
+    echo "TOMCAT_HOME=${install_dir}/${server_dir}/bin"  >> /etc/profile
+    echo 'PATH=$TOMCAT_HOME:$PATH' >> /etc/profile
+    source /etc/profile
+    
     test_bin man-tomcat
-    sed "2a install_dir=${install_dir}" /usr/local/bin/man-tomcat
-    sed "3a tomcat_dir=${tomcat_dir}" /usr/local/bin/man-tomcat
-    
-    
-	print_massage "tomcat-7.0安装完成" "The tomcat-7.0 is installed"
-	print_massage "安装目录：${install_dir}/${tomcat_dir}" "Install Dir：${install_dir}/${tomcat_dir}"
+    sed -i "2a prot=${port}" $command
+
+    print_install_ok $1
 	print_massage "使用：man-tomcat" "Use：man-tomcat"
-	print_massage "访问：curl http://127.0.0.1:8080" "Visit: curl http://127.0.0.1:8080"
+	print_massage "访问：http://xx.xx.xx.xx:8080" "Visit: http://xx.xx.xx.xx:8080"
 }
 
 script_remove() {
     rm -rf /usr/local/bin/man-tomcat
-    rm -rf ${install_dir}/${tomcat_dir}
-    print_massage "tomcat-7.0卸载完成！" "tomcat-7.0 Uninstall completed！"
+    rm -rf ${install_dir}/${server_dir}
+    print_remove_ok $1
 }
 
 script_info() {

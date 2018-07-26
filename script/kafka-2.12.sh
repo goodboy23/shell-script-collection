@@ -7,7 +7,7 @@
 #install_dir=
 
 #服务目录名
-kafka_dir=kafka
+server_dir=kafka
 
 #kafka端口
 port=9092
@@ -17,6 +17,8 @@ redis_switch=no
 
 #配置：zookeeper的地址
 zk_ip=192.168.2.108:2181
+
+server_rely="jdk-1.8"
 
 
 
@@ -29,34 +31,31 @@ script_install() {
         print_error "此脚本需要填写，请./ssc.sh edit 服务名 来设置" "This script needs to be filled in. Set the ./ssc.sh edit service name"
     fi
 
-    if [[ -f ${install_dir}/${kafka_dir}/config/server.properties ]];then
+    if [[ -f ${install_dir}/${server_dir}/config/server.properties ]];then
         print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
 
-    test_rely jdk-1.8
+    test_detection
     
-    test_dir $kafka_dir
     script_get
     tar -xf package/kafka_2.12-0.10.2.1.tgz
-    mv kafka_2.12-0.10.2.1 ${install_dir}/${kafka_dir}
+    mv kafka_2.12-0.10.2.1 ${install_dir}/${server_dir}
     
     test_bin man-kafka
 
-    sed -i "2a port=${port}" /usr/local/bin/man-kafka
-    sed -i "3a dir=${install_dir}/${kafka_dir}" /usr/local/bin/man-kafka
+    sed -i "2a port=${port}" $command
 
-	print_massage "kafka-2.12安装完成" "The kafka-2.12 is installed"
-	print_massage "安装目录：${install_dir}/${kafka_dir}" "Install Dir：${install_dir}/${kafka_dir}"
+    print_install_ok $1
 	print_massage "使用：man-kafka start" "Use：man-kafka start"
 }
 
 script_remove() {
     man-kafka stop
 	rm -rf /usr/local/bin/man-kafka
-    rm -rf ${install_dir}/${kafka_dir}
+    rm -rf ${install_dir}/${server_dir}
     
-    print_massage "kafka-2.12卸载完成！" "kafka-2.12 Uninstall completed！"
+    print_remove_ok $1
 }
 
 script_info() {

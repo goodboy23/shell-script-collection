@@ -8,9 +8,12 @@
 #install_dir=
 
 #服务目录名
-zookeeper_dir=zookeeper
+server_dir=zookeeper
 
 port=2181
+
+server_rely="jdk-1.8"
+
 
 
 script_get() {
@@ -24,47 +27,43 @@ script_install() {
         exit
     fi
     
-    test_port ${port}
-    test_rely jdk-1.8
-    test_dir ${zookeeper_dir}
-    
+    test_detection
+
     script_get
     tar -xf   package/zookeeper-3.5.2-alpha.tar.gz
-    mv zookeeper-3.5.2-alpha ${install_dir}/${zookeeper_dir}
+    mv zookeeper-3.5.2-alpha ${install_dir}/${server_dir}
     
     #环境变量
     sed -i '/^ZOOKEEPER_HOME=/d' /etc/profile
     sed -i '/^PAHT=ZOOKEEPER_HOME/d'  /etc/profile
     
-    echo "ZOOKEEPER_HOME=${install_dir}/${zookeeper_dir}/bin" >> /etc/profile
+    echo "ZOOKEEPER_HOME=${install_dir}/${server_dir}/bin" >> /etc/profile
     echo 'PATH=$ZOOKEEPER_HOME:$PATH' >> /etc/profile
     source /etc/profile
    
     #配置文件
-    rm -rf ${install_dir}/${zookeeper_dir}/conf/zoo.cfg
+    rm -rf ${install_dir}/${server_dir}/conf/zoo.cfg
     echo "tickTime=2000  
-dataDir=${install_dir}/${zookeeper_dir}
+dataDir=${install_dir}/${server_dir}
 clientPort=2181  
 initLimit=5  
-syncLimit=2" >> ${install_dir}/${zookeeper_dir}/conf/zoo.cfg
+syncLimit=2" >> ${install_dir}/${server_dir}/conf/zoo.cfg
 
     which zkServer.sh
-    [ $? -eq 0 ] || print_error "环境变量设置失败，请联系作者" "environment variable settings failed,please contact the author"
+    [ $? -eq 0 ] || print_error "环境变量设置失败" "environment variable settings failed"
     
-	print_massage "zookeeper-3.5安装完成" "The zookeeper-3.5 is installed"
-	print_massage "安装目录：/usr/local/bin/zookeeper-3.5" "Install Dir：/usr/local/bin/zookeeper-3.5"
+    print_install_ok $1
 	print_massage "使用：zkServer.sh start" "Use：zkServer.sh start"
 }
 
 script_remove() {
-    rm -rf ${install_dir}/${zookeeper_dir}
+    rm -rf ${install_dir}/${server_dir}
     
     sed -i '/^ZOOKEEPER_HOME=/d' /etc/profile
     sed -i '/^PAHT=ZOOKEEPER_HOME/d'  /etc/profile
     source /etc/profile
     
-	which zkServer.sh
-    [ $? -eq 0 ] && print_error "zookeeper-3.5未成功删除，请联系作者" "zookeeper-3.5 unsuccessfully deleted, please contact the author" || print_massage "zookeeper-3.5卸载完成！" "zookeeper-3.5 Uninstall completed！"
+    print_remove_ok $1
 }
 
 script_info() {

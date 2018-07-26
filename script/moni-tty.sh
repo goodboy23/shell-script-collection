@@ -14,15 +14,13 @@ script_install() {
     
     test_bin moni-tty
 
-	print_massage "moni-tty安装完成" "The moni-tty is installed"
-	print_massage "安装目录：/usr/local/bin/moni-tty" "Install Dir：/usr/local/bin/moni-tty"
-	print_massage "使用：moni-tty" "Use：moni-tty"
+    print_install_bin $1
 }
 
 script_remove() {
 	rm -rf /usr/local/bin/moni-tty
     
-    [ -f /usr/local/bin/moni-tty ] && print_error "moni-tty未成功删除，请联系作者" "moni-tty unsuccessfully deleted, Please check the author" || print_massage "moni-tty卸载完成！" "moni-tty Uninstall completed！"
+    print_remove_ok $1
 }
 
 script_info() {

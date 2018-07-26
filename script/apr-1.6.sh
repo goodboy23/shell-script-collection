@@ -8,7 +8,10 @@
 #install_dir=
 
 #服务目录名
-apr_dir=apr
+server_dir=apr
+
+#依赖
+server_yum="gcc make expat-devel"
 
 
 
@@ -17,8 +20,6 @@ script_get() {
 }
 
 script_install() {
-    yum -y remove apr
-
     apr-1-config --version | grep 1.6
     if [[ $? -eq 0 ]];then
         print_massage "检测到已安装" "Detected installed"
@@ -30,14 +31,13 @@ script_install() {
         fi
     fi
 
-    test_install gcc make expat-devel
-    test_dir $apr_dir
+    test_detection
 
     script_get
     tar -xf package/apr-1.6.3.tar.gz
     cd  apr-1.6.3
-    ./configure -prefix=/usr/local/apr
-    [[ -f Makefile ]] || print_error "Makefile生成失败，请联系作者" "Makefile failed to generate, please contact the author"
+    ./configure -prefix=${install_dir}/${server_dir}
+    [[ -f Makefile ]] || print_error "Makefile生成失败" "Makefile failed to generate"
     make && make install
     
     cd ..
@@ -47,27 +47,25 @@ script_install() {
     sed -i '/^export APR_HOME=/d' /etc/profile
     sed -i '/^export PATH=${APR_HOME}/d' /etc/profile
     
-    echo "export APR_HOME=${install_dir}/${apr_dir}" >> /etc/profile
+    echo "export APR_HOME=${install_dir}/${server_dir}" >> /etc/profile
     echo 'export PATH=${APR_HOME}/bin:${PATH}' >> /etc/profile
     source /etc/profile
     
     apr-1-config --version
-    [[ $? -eq 0 ]] || print_error "apr-1.6安装失败，请联系作者" "apr-1.6 installation failed, please check the script"
+    [[ $? -eq 0 ]] || print_error "${1}安装失败" "${1} installation failed"
 
-	print_massage "apr-1.6安装完成" "The apr-1.6 is installed"
-	print_massage "安装目录：${install_dir}/${apr_dir}" "Install Dir：${install_dir}/${apr_dir}"
+	print_install_ok $1
 	print_massage "验证：apr-1-config" "verification：apr-1-config"
 }
 
 script_remove() {
-	rm -rf ${install_dir}/${apr_dir}
+	rm -rf ${install_dir}/${server_dir}
     
     sed -i '/^export APR_HOME=/d' /etc/profile
     sed -i '/^export PATH=${APR_HOME}/d' /etc/profile
     source /etc/profile
     
-    apr-1-config --version
-    [[ $? -eq 0 ]] && print_error "apr-1.6未成功删除，请联系作者" "apr-1.6 was not successfully deleted, please contact the author" || print_massage "apr-1.6卸载完成！" "apr-1.6 Uninstall completed！"
+    print_remove_ok $1
 }
 
 script_info() {

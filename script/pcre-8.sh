@@ -8,7 +8,10 @@
 #install_dir=
 
 #服务目录名
-pcre_dir=pcre
+server_dir=pcre
+
+#yum依赖
+server_yum="gcc make expat-devel gcc-c++"
 
 
 
@@ -17,8 +20,6 @@ script_get() {
 }
 
 script_install() {
-    yum -y remove pcre
-
     pcre-config --version | grep 8
     if [[ $? -eq 0 ]];then
         print_massage "检测到已安装" "Detected installed"
@@ -30,14 +31,13 @@ script_install() {
         fi
     fi
 
-    test_install gcc make expat-devel gcc-c++
-    test_dir $pcre_dir
-
+    test_detection
+    
     script_get
     tar -xf package/pcre-8.42.tar.gz
     cd  pcre-8.42
-    ./configure -prefix=/usr/local/pcre
-    [[ -f Makefile ]] || print_error "Makefile生成失败，请联系作者" "Makefile failed to generate, please contact the author"
+    ./configure -prefix=${install_dir}/${server_dir}
+    [[ -f Makefile ]] || print_error "Makefile生成失败" "Makefile failed to generate"
     make && make install
     
     cd ..
@@ -47,27 +47,25 @@ script_install() {
     sed -i '/^export PCRE_HOME=/d' /etc/profile
     sed -i '/^export PATH=${PCRE_HOME}/d' /etc/profile
     
-    echo "export APR_HOME=${install_dir}/${pcre_dir}" >> /etc/profile
+    echo "export APR_HOME=${install_dir}/${server_dir}" >> /etc/profile
     echo 'export PATH=${PCRE_HOME}/bin:${PATH}' >> /etc/profile
     source /etc/profile
     
     apr-1-config --version
-    [[ $? -eq 0 ]] || print_error "pcre-8安装失败，请联系作者" "pcre-8 installation failed, please check the script"
+    [[ $? -eq 0 ]] || print_error "${1}安装失败" "${1} installation failed"
 
-	print_massage "pcre-8安装完成" "The pcre-8 is installed"
-	print_massage "安装目录：${install_dir}/${pcre_dir}" "Install Dir：${install_dir}/${pcre_dir}"
+    print_install_ok
 	print_massage "验证：pcre-config" "verification：pcre-config"
 }
 
 script_remove() {
-	rm -rf ${install_dir}/${pcre_dir}
+	rm -rf ${install_dir}/${server_dir}
     
     sed -i '/^export PCRE_HOME=/d' /etc/profile
     sed -i '/^export PATH=${PCRE_HOME}/d' /etc/profile
     source /etc/profile
-    
-    pcre-config --version
-    [[ $? -eq 0 ]] && print_error "pcre-8未成功删除，请联系作者" "pcre-8 was not successfully deleted, please contact the author" || print_massage "pcre-8卸载完成！" "pcre-8 Uninstall completed！"
+
+    print_remove_ok $1
 }
 
 script_info() {

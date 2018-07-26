@@ -14,15 +14,13 @@ script_install() {
     
     test_bin card-life
 
-	print_massage "card-life安装完成" "The card-life is installed"
-	print_massage "安装目录：/usr/local/bin/card-life" "Install Dir：/usr/local/bin/card-life"
-	print_massage "使用：card-life" "Use：card-life"
+    print_install_bin $1
 }
 
 script_remove() {
 	rm -rf /usr/local/bin/card-life
     
-    [ -f /usr/local/bin/card-life ] && print_error "card-life未成功删除，请联系作者" "Card-life has not been successfully deleted, please contact the author" || print_massage "card-life卸载完成！" "card-life Uninstall completed！"
+    print_remove_ok $1
 }
 
 script_info() {

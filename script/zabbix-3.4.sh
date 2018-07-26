@@ -11,7 +11,12 @@
 #log_dir=
 
 #服务目录名
-zabbix_dir=zabbix
+server_dir=zabbix
+
+port="80 3306 10050 10051"
+
+server_yum="net-tools httpd php php-mysql php-fpm mariadb-devel gcc gcc-c++ libcurl-devel libevent-devel net-snmp-devel php-bcmath php-mbstring php-gd php-xml  mariadb mariadb-server"
+
 
 
 
@@ -42,33 +47,25 @@ script_install() {
        exit
   fi
     
-    test_port 80
-    test_port 3306
-    test_port 10050
-    test_port 10051
+
     
     #安装依赖
-   
-    
-	test_install net-tools httpd php php-mysql php-fpm mariadb-devel gcc gcc-c++ libcurl-devel libevent-devel net-snmp-devel php-bcmath php-mbstring php-gd php-xml  mariadb mariadb-server
-
+    test_detection
 	test_start httpd php-fpm mariadb
 
-	test_dir $zabbix_dir
-    
 	useradd zabbix
 	script_get
 	tar -xf package/zabbix-3.4.1.tar.gz
 	cd zabbix-3.4.1
-	./configure --prefix=${install_dir}/${zabbix_dir}  --enable-server --enable-agent --with-mysql && make install || print_error "zabbix安装失败，请检查脚本" "Zabbix installation failed, please check the script"
+	./configure --prefix=${install_dir}/${server_dir}  --enable-server --enable-agent --with-mysql && make install || print_error "zabbix安装失败" "Zabbix installation failed"
 
     rm -rf /var/www/html/*
 	cp -rf frontends/php/*    /var/www/html/
 	chmod -R 777  /var/www/html/*
     
     mysql -e "show databases;" | grep test
-    [[ $? -eq 0 ]] || print_error "数据库无法登录进去，请联系作者" "Database cannot be logged in, please contact the author"
-    
+    [[ $? -eq 0 ]] || print_error "数据库无法登录进去" "Database cannot be logged in"
+
     #删除旧的
     mysql -e "drop database zabbixdb;"
     mysql -e "drop user zabbixuser@'localhost';"
@@ -78,7 +75,7 @@ script_install() {
 	mysql -e 'grant all on  zabbixdb.*  to  zabbixuser@"localhost" identified by "123456"'
     
     mysql -uzabbixuser -p123456 -e "show databases;" | grep test
-    [[ $? -eq 0 ]] || print_error "zabbix用户无法登录数据库，请联系作者" "Zabbix users cannot log in to the database, please contact the author"
+    [[ $? -eq 0 ]] || print_error "zabbix用户无法登录数据库" "Zabbix users cannot log in to the database"
 
 	mysql -uzabbixuser -p123456 zabbixdb  < database/mysql/schema.sql
 	mysql -uzabbixuser -p123456 zabbixdb  < database/mysql/images.sql
@@ -132,20 +129,19 @@ script_install() {
     sed -i '/^export ZABBIX_HOME=/d' /etc/profile
     sed -i '/^export PATH=${ZABBIX_HOME}/d' /etc/profile
     
-    echo "export ZABBIX_HOME=${install_dir}/${zabbix_dir}/bin" >> /etc/profile
+    echo "export ZABBIX_HOME=${install_dir}/${server_dir}/bin" >> /etc/profile
     echo 'export PATH=${ZABBIX_HOME}:${PATH}' >> /etc/profile
     source /etc/profile
     
     which zabbix_get
-    [[ $? -eq 0 ]] || print_error "环境变量生成失败，请联系作者" "Environment variable generation failed, please contact the author"
+    [[ $? -eq 0 ]] || print_error "环境变量生成失败" "Environment variable generation failed"
     
     
     
     
     #应添加防火墙配置
     
-    print_massage "zabbix安装完成" "The zabbix is installed"
-    print_massage "安装目录：${install_dir}/${zabbix_dir}" "Install Dir：${install_dir}/${zabbix_dir}"
+    print_install_ok $1
     print_massage "使用：/etc/init.d/zabbix_server start" "Use：/etc/init.d/zabbix_server start"
     print_massage "浏览器访问：http://127.0.0.1，请登录填写如下信息" "Browser access: http://127.0.0.1，, Please log in and fill in the following information"
     print_massage "账号：admin" "Account: admin"
@@ -164,5 +160,6 @@ script_info() {
 	print_massage "版本：3.4.1" "Version：3.4.1"
 	print_massage "介绍：zabbix是一种图形监控软件" "Introduce：Zabbix is a graphics monitoring software"
     print_massage "作者：日行一善" "do one good deed a day"
+    
     print_massage "使用说明：当前使用yum安装的http,mariadb,php-fpm等，纯净环境" "Instructions for use: Currently using yum to install http, mariadb, php-fpm, etc., pure environment"
 }

@@ -7,7 +7,9 @@
 #install_dir=
 
 #服务目录名
-maven_dir=maven-3.5
+server_dir=maven-3.5
+
+server_rely="jdk-1.8"
 
 
 
@@ -27,37 +29,34 @@ script_install() {
         fi
     fi
     
-    test_rely jdk-1.8
-    test_dir ${maven_dir}
+    test_detection
     
     script_get
     tar -xf package/apache-maven-3.5.2-bin.tar.gz
-    mv apache-maven-3.5.2 ${install_dir}/${maven_dir}
+    mv apache-maven-3.5.2 ${install_dir}/${server_dir}
     
     #清理环境变量
     sed -i '/^export MAVEN_HOME=/d' /etc/profile
     sed -i '/^export PATH=${MAVEN_HOME}/d' /etc/profile
     
-    echo "export MAVEN_HOME=${install_dir}/${maven_dir}" >> /etc/profile
+    echo "export MAVEN_HOME=${install_dir}/${server_dir}" >> /etc/profile
     echo 'export PATH=${MAVEN_HOME}/bin:${PATH}' >> /etc/profile
     source /etc/profile
     
     mvn -v
-    [[ $? -eq 0 ]] || print_error "maven-3.5安装失败，请检联系作者" "maven-3.5 installation failed, Please check the author"
+    [[ $? -eq 0 ]] || print_error "${1}安装失败" "${1} installation failed"
     
-	print_massage "maven-3.5安装完成" "The maven-3.5 is installed"
-	print_massage "安装目录：${install_dir}/${maven_dir}" "Install Dir：${install_dir}/${maven_dir}"
+    print_install_ok $1
 	print_massage "使用：mvn -v" "Use：mvn -v"
 }
 
 script_remove() {
-    rm -rf /usr/local/maven-3.5
+    rm -rf ${install_dir}/${server_dir}
     sed -i '/^export MAVEN_HOME=/d' /etc/profile
     sed -i '/^export PATH=${MAVEN_HOME}/d' /etc/profile
-    
     source /etc/profile
-    which mvn
-    [[ $? -eq 0 ]] && print_error "maven-3.5未成功删除，请联系作者" "maven-3.5 unsuccessfully deleted, Please check the author" || print_massage "maven-3.5卸载完成！" "maven-3.5 Uninstall completed！"
+    
+    print_remove_ok $1
 }
 
 script_info() {

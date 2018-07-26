@@ -14,15 +14,13 @@ script_install() {
     
     test_bin dos2
 
-	print_massage "dos2安装完成" "The dos2 is installed"
-	print_massage "安装目录：/usr/local/bin/dos2" "Install Dir：/usr/local/bin/dos2"
-	print_massage "使用：dos2" "Use：dos2"
+    print_install_bin $1
 }
 
 script_remove() {
 	rm -rf /usr/local/bin/dos2
     
-    [ -f /usr/local/bin/dos2 ] && print_error "dos2未成功删除，请联系作者" "Dos2 was not successfully deleted, please contact the author" || print_massage "dos2卸载完成！" "dos2 Uninstall completed！"
+    print_remove_ok $1
 }
 
 script_info() {

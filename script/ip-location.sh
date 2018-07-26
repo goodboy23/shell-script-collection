@@ -14,15 +14,13 @@ script_install() {
     
     test_bin ip-location
 
-	print_massage "ip-location安装完成" "The ip-location is installed"
-	print_massage "安装目录：/usr/local/bin/ip-location" "Install Dir：/usr/local/bin/ip-location"
-	print_massage "使用：ip-location" "Use：ip-location"
+    print_install_bin $1
 }
 
 script_remove() {
 	rm -rf /usr/local/bin/ip-location
     
-    [ -f /usr/local/bin/ip-location ] && print_error "ip-location未成功删除，请联系作者" "Ip-location was not successfully deleted, please contact the author" || print_massage "ip-location卸载完成！" "ip-location Uninstall completed！"
+    print_remove_ok $1
 }
 
 script_info() {

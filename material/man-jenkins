@@ -1,16 +1,85 @@
 #!/bin/bash
 
 
-a=${install_dir}/${jenkins_dir}/jenkins.war
-b=${log_dir}/${jenkins_dir}/jenkins.log
+server_bin=${install_dir}/${server_dir}/jenkins.war
+server_log=${log_dir}/${server_dir}/jenkins.log
+cha=":${port}"
+server=jenkins
 
 
+
+#[函数部分]
+server_test() {
+    netstat -unltp | grep $cha &> /dev/null
+    [[ $? -eq 0 ]] && return 0 || return 1
+}
+
+server_start() {
+    if server_test ;then
+        echo "$server start ok..."
+    else
+        nohup java -jar $server_bin --httpPort=$port --httpListenAddress=$listen &>> $server_log &
+        sleep 15
+        server_test && echo "$server start ok..." || echo "$server start error..."
+    fi
+}
+
+server_stop() {
+    if server_test ;then
+        pid=`netstat -unltp | grep $cha | awk '{print $7}' | awk -F'/' '{print $1}'`
+	    kill -9 $pid && echo "$server stop ok..." || echo "$server stop error..."
+    else
+        echo "$server stop ok..." 
+    fi
+}
+
+server_status() {
+    if server_test ;then
+        echo "$server start..."
+    else
+        echo "$server stop..."
+    fi
+}
+
+server_update() {
+    if [[ -f $2 ]];then
+        echo "please 'man-jenkins update new_package_file'"
+        exit 1
+    else
+        echo $2 | grep .war &> /dev/null
+        if [[ $? -eq 0 ]];then
+            echo "Not a war installation package"
+            exit 1
+        fi
+
+        server_stop
+        
+        
+        rm -rf $server_bin
+        cp -p $2 $server_bin
+
+        server_start
+
+        sleep 60
+        netstat -unltp | grep $cha &> /dev/null
+        [ $? -eq 0 ] && echo "$server update ok..." || echo "$server update error..."
+    fi
+}
+
+
+
+#主体
 if [ "$1" == "start" ];then
-    nohup java -jar $a --httpPort=$port --httpListenAddress=$listen &>> $b &
+    server_start
 elif [ "$1" == "stop" ];then
-    pi=`ps -aux | grep "java -jar $a --httpPort=$port" | head -1`
-    [ ! $pi ] && exit 3 || pid=`echo $pi | awk '{print $2}'`
-    kill -9 $pid
+    server_stop
+elif [ "$1" == "status" ];then
+    server_status
+elif [ "$1" == "restart" ];then
+    server_stop
+    server_start
+elif [ "$1" == "update" ];then
+    server_update $2
 else
-    echo "start | stop"
+	echo "start | stop | restart | status | update new_package_file"
 fi

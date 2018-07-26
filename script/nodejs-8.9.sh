@@ -6,7 +6,8 @@
 #install_dir=
 
 #服务目录
-nodejs_dir=nodejs-8.9
+server_dir=nodejs
+
 
 
 script_get() {
@@ -25,34 +26,34 @@ script_install() {
         fi
     fi
     
-    test_dir ${nodejs_dir}
+    test_detection
+    
+    
     script_get
     tar -xf package/node-v8.9.3-linux-x64.tar.xz
     rm -rf /usr/local/nodejs-8.9
-    mv node-v8.9.3-linux-x64 ${install_dir}/${nodejs_dir}
+    mv node-v8.9.3-linux-x64 ${install_dir}/${server_dir}
     
     #链接
     rm -rf /usr/local/bin/node
     rm -rf /usr/local/bin/npm
-    ln -s ${install_dir}/${nodejs_dir}/bin/node /usr/local/bin/node
-    ln -s ${install_dir}/${nodejs_dir}/bin/npm /usr/local/bin/npm
+    ln -s ${install_dir}/${server_dir}/bin/node /usr/local/bin/node
+    ln -s ${install_dir}/${server_dir}/bin/npm /usr/local/bin/npm
 
     #对结果进行测试
     node -v
-    [ $? -eq 0 ] || print_error "安装失败，请联系作者" "2.Installation failed, please contact the author"
+    [ $? -eq 0 ] || print_error "安装失败" "2.Installation failed"
     
-	print_massage "nodejs-8.9安装完成" "The nodejs-8.9 is installed"
-	print_massage "安装目录：${install_dir}/${nodejs_dir}" "Install Dir：${install_dir}/${nodejs_dir}"
+    print_install_ok $1
 	print_massage "使用：node -v" "Use：node -v"
 }
 
 script_remove() {
     rm -rf /usr/local/bin/node
     rm -rf /usr/local/bin/npm
-    rm -rf ${install_dir}/${nodejs_dir}
+    rm -rf ${install_dir}/${server_dir}
     
-    node -v
-	 [[ $? -eq 0 ]] && print_error "卸载失败，请联系作者" "1.Uninstall failed,  please contact the author" ||print_massage "nodejs卸载完成！" "nodejs Uninstall completed！"
+    print_remove_ok $1
 }
 
 script_info() {

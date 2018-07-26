@@ -8,8 +8,9 @@
 #install_dir=
 
 #服务目录名
-openssl_dir=openssl
+server_dir=openssl
 
+server_yum="gcc make perl perl-devel"
 
 
 script_get() {
@@ -28,14 +29,13 @@ script_install() {
         fi
     fi
 
-    test_dir $openssl_dir
-    test_install gcc make perl perl-devel
+    test_detection
     
     script_get
     tar -xf package/openssl-1.0.2o.tar.gz
     cd openssl-1.0.2o
-    ./config -fPIC --prefix=${install_dir}/${openssl_dir} enable-shared && make && make install
-    [[ -f ${install_dir}/${openssl_dir}/bin/openssl ]] || print_error "编译失败，请联系作者" "Compilation failed, please contact the author"
+    ./config -fPIC --prefix=${install_dir}/${server_dir} enable-shared && make && make install
+    [[ -f ${install_dir}/${server_dir}/bin/openssl ]] || print_error "编译失败" "Compilation failed"
     cd ..
     rm -rf openssl-1.0.2o
  
@@ -43,27 +43,25 @@ script_install() {
     sed -i '/^export OPENSSL_HOME=/d' /etc/profile
     sed -i '/^export PATH=${OPENSSL_HOME}/d' /etc/profile
     
-    echo "export OPENSSL_HOME=${install_dir}/${openssl_dir}/bin" >> /etc/profile
+    echo "export OPENSSL_HOME=${install_dir}/${server_dir}/bin" >> /etc/profile
     echo 'export PATH=${OPENSSL_HOME}:${PATH}' >> /etc/profile
     source /etc/profile
     
     openssl version -a
-    [[ $? -eq 0 ]] || print_error "openssl安装失败，请联系作者" "openssl installation failed, please check the script"
+    [[ $? -eq 0 ]] || print_error "${1}安装失败" "${1} installation failed"
 
-	print_massage "openssl安装完成" "The openssl is installed"
-	print_massage "安装目录：${install_dir}/${openssl_dir}" "Install Dir：${install_dir}/${openssl_dir}"
+	print_install_ok $1
 	print_massage "验证：openssl" "verification：openssl"
 }
 
 script_remove() {
-	rm -rf ${install_dir}/${openssl_dir}
+	rm -rf ${install_dir}/${server_dir}
     
     sed -i '/^export OPENSSL_HOME=/d' /etc/profile
     sed -i '/^export PATH=${OPENSSL_HOME}/d' /etc/profile
     source /etc/profile
     
-    ant -version
-    [[ $? -eq 0 ]] && print_error "openssl未成功删除，请联系作者" "openssl was not successfully deleted, please contact the author" || print_massage "openssl卸载完成！" "openssl Uninstall completed！"
+    print_remove_ok $1
 }
 
 script_info() {

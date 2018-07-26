@@ -14,15 +14,13 @@ script_install() {
     
     test_bin tetris
 
-	print_massage "tetris安装完成" "The tetris is installed"
-	print_massage "安装目录：/usr/local/bin/tetris" "Install Dir：/usr/local/bin/tetris"
-	print_massage "使用：tetris" "Use：tetris"
+    print_install_bin $1
 }
 
 script_remove() {
 	rm -rf /usr/local/bin/tetris
     
-    [ -f /usr/local/bin/tetris ] && print_error "tetris未成功删除，请联系作者" "tetris unsuccessfully deleted, please contact the author" || print_massage "tetris卸载完成！" "tetris Uninstall completed！"
+    print_remove_ok $1
 }
 
 script_info() {

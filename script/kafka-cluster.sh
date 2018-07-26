@@ -30,7 +30,7 @@ script_install() {
         print_error "此脚本需要填写，请./ssc.sh edit 服务名 来设置" "1.This script needs to be filled in. Set the ./ssc.sh edit service name"
     fi
 
-    if [[ ! -f ${kafka_dir}/config/server.properties ]];then
+    if [[ ! -f ${server_dir}/config/server.properties ]];then
         print_error "未安装kafka，请./ssc.sh install kafka-2.12" "kafka is not installed, please./ssc.sh install kafka-2.12"
     fi
 
@@ -39,10 +39,10 @@ script_install() {
         print_error "当前以配置集群，请修改脚本cluster_dizhi" "to configure the cluster, please modify the script cluster_dizhi"
     fi
     
-    test_port ${port}
+    test_detection
     
     #修改配置
-    conf=${kafka_dir}/config/server.properties
+    conf=${server_dir}/config/server.properties
     rm -rf $conf
     cp material/server.properties $conf
     
@@ -66,24 +66,23 @@ script_install() {
     else
         sed -i "s/advertised.host.name=192.168.100.11/advertised.host.name=${listen}/g" $conf
     fi
-    sed -i "s,log.dirs=/ops/log/kafka,log.dirs=${log_dir}/${kafka_dir},g" $conf
+    sed -i "s,log.dirs=/ops/log/kafka,log.dirs=${log_dir}/${server_dir},g" $conf
     sed -i "s/zookeeper.connect=B-S-01:2181/zookeeper.connect=${cluster_dizhi}/g" $conf
 
     #创建脚本
     test_bin man-kafka
-    sed -i "2a port=${port}" /usr/local/bin/man-kafka
-    sed -i "3a dir=${kafka_dir}" /usr/local/bin/man-kafka
+    sed -i "2a port=${port}" $command
 
-	print_massage "kafka-cluster安装完成" "The kafka-cluster is installed"
+    print_install_ok $1
 	print_massage "使用：man-kafka start" "Use：man-kafka start"
 }
 
 script_remove() {
     man-kafka start
-    rm -rf ${kafka_dir}/config/server.properties
+    rm -rf ${server_dir}/config/server.properties
 	rm -rf /usr/local/bin/man-kafka
 
-    print_massage "kafka-cluster卸载完成！" "kafka-cluster Uninstall completed！"
+    print_remove_ok $1
 }
 
 script_info() {

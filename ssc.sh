@@ -34,8 +34,9 @@ print_error() {
     echo
     echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     [[ "$language" == "cn" ]] && echo "错误：$1" || echo "Error：$2"
-    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     echo
+    [[ "$language" == "cn" ]] && echo "查看日志ssc-operating.log或联系作者" || echo "View the log ssc-operating.log or contact the author"
+    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     
     echo >> $ssc_dir/ssc-operating.log
     echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" >> $ssc_dir/ssc-operating.log
@@ -63,6 +64,34 @@ print_massage() {
 	echo >> $ssc_dir/ssc-operating.log
 }
 
+#$1填写服务名
+print_install_ok() {
+    clear
+    print_massage "${1}安装完成" "The ${1} is installed"
+    
+    if [[ ! $server_dir ]];then
+        print_massage "部署目录：未知" "Deployment directory: Unknown"
+    else
+        print_massage "安装目录：${install_dir}/${server_dir}" "Install Dir：${install_dir}/${server_dir}"
+        print_massage "日志目录：${log_dir}/${server_dir}" "Log directory：${log_dir}/${server_dir}"
+    fi
+}
+
+print_install_bin() {
+    clear
+    
+    print_massage "${1}安装完成" "The ${1} is installed"
+	print_massage "安装目录：/usr/local/bin/${1}" "Install Dir：/usr/local/bin/${1}"
+	print_massage "使用：${1}" "Use：${1}"
+}
+
+#$1填写服务名
+print_remove_ok() {
+    clear
+    print_massage "$1卸载完成！" "${1} Uninstall completed！"
+    print_massage "依赖均不卸载，可用 './ssc.sh rely 服务名' 来查询有哪些依赖" "Dependencies are not uninstalled, use './ssc.sh rely service name' to query which dependencies"
+}
+
 
 
 #########基础函数#########
@@ -70,11 +99,12 @@ print_massage() {
 #中文帮助
 help_cn() {
 	echo "速度与激情小组---Linnux部旗下项目，如有使用问题，请加qq群762696893
-当前版本：1.0.1
+当前版本：1.0
 
 install httpd        安装 httpd
 remove  httpd        卸载 httpd
 get     httpd        离线 httpd 所需要的包
+rely    httpd        查询 httpd 有哪些依赖
 info    httpd        查询 httpd 详细信息
 edit	httpd        编辑 httpd 进行自定义设置
 
@@ -87,11 +117,12 @@ list    httpd        列出 httpd 相关脚本"
 #英文帮助
 help_en() {
     echo "Speed and passion team---Projects of Linnux Department, if there are any questions, please add qq group 762696893
-current version：1.0.1
+current version：1.0
 
 install httpd      installation httpd
 remove  httpd      Uninstall    httpd
 get     httpd      Required     httpd packages for offline
+rely    httpd      Rely         httpd query httpd What are the dependencies?
 info    httpd      Query        httpd details
 edit	httpd      Edit         httpd for custom settings
 
@@ -155,7 +186,7 @@ list_generate() {
     rm -rf conf/a.txt
 }
 
-#对于合集中脚本的操作，安装，卸载，离线包，信息查询，编辑
+#对于合集中脚本的操作，安装，卸载，离线包，信息查询，编辑，依赖查询
 server() {
     test_version
     test_root
@@ -170,24 +201,26 @@ server() {
             print_massage "ssc脚本合集只进行部署，并不修改防火墙等操作。" "The ssc script collection is only deployed, and does not modify the firewall and other operations."
             process_time
             test_init
-            script_install
+            script_install ${2}
             print_massage "请source /etc/profile来加载环境变量" "Please source /etc/profile to load environment variables"
 		elif [[ "$1" == "remove" ]];then
-			script_remove
+			script_remove ${2}
         elif [[ "$1" == "get" ]];then
             script_get
-        elif [[ "$1" == "info" ]];then   
+        elif [[ "$1" == "rely" ]];then
+            print_massage "yum依赖：$server_yum" "Yum dependency: $server_yum"
+            print_massage "内部依赖：$server_rely" "Internal dependencies: $server_rely"
+        elif [[ "$1" == "info" ]];then
             script_info
+            print_massage "警告：当前一切配置默认，若有其他需求，请 './ssc.sh edit 服务' 来修改脚本" "Warning: All current configuration defaults, if there are other requirements, please './ssc.sh edit server' to modify the script"
         elif [[ "$1" == "edit" ]];then
             $editor script/${2}.sh
         else
             [[ "$language" == "cn" ]] && help_cn || help_en
         fi
     else
-        echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-	[[ "$language" == "cn" ]] && echo "错误：没有这个脚本" || echo "Error：Without this service"
-	echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-	bash ssc.sh list ${2}
+        print_massage "没有这个脚本" "Without this service"
+        bash ssc.sh list ${2}
     fi
 }
 
@@ -210,6 +243,8 @@ elif [[ $# -eq 1 ]];then
         update_ssc
 	elif [[ "$1" == "installed" ]];then
 		cat conf/installed.txt
+    else
+        [[ "$language" == "cn" ]] && help_cn || help_en
     fi
 elif [[ $# -eq 2 ]];then
     if [[ "$1" == "list" ]];then
@@ -219,4 +254,6 @@ elif [[ $# -eq 2 ]];then
     else
         server $1 $2
     fi
+else
+    [[ "$language" == "cn" ]] && help_cn || help_en
 fi

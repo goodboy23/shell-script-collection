@@ -5,7 +5,9 @@
 #[使用设置]
 install_dir=/usr/local
 
-php_dir=php
+server_dir=php
+
+server_yum="libmcrypt libmcrypt-devel autoconf freetype gd jpegsrc libmcrypt libpng libpng-devel libjpeg libxml2 libxml2-devel zlib curl curl-devel"
 
 
 
@@ -25,14 +27,13 @@ script_install() {
         fi
     fi
 
-    test_dir $php_dir
-    test_install php-mcrypt libmcrypt libmcrypt-devel autoconf freetype gd jpegsrc libmcrypt libpng libpng-devel libjpeg libxml2 libxml2-devel zlib curl curl-devel
-    script_get
+    test_detection
 
+    script_get
     tar -xvf package/php-5.6.36.tar.gz
     cd php-5.6.36/
     #模块
-    ./configure --prefix=${install_dir}/${php_dir} --enable-mbstring --with-curl --with-gd --enable-fpm --enable-mysqlnd --with-pdo-mysql
+    ./configure --prefix=${install_dir}/${server_dir} --enable-mbstring --with-curl --with-gd --enable-fpm --enable-mysqlnd --with-pdo-mysql
     make && make install
 
    #环境变量
@@ -41,32 +42,30 @@ script_install() {
     sed -i '/^PATH=$PHP_HOME/d' /etc/profile
     sed -i '/^PATH=$FPM_HOME/d' /etc/profile
     
-    echo "PHP_HOME=${install_dir}/${php_dir}/bin"  >> /etc/profile
+    echo "PHP_HOME=${install_dir}/${server_dir}/bin"  >> /etc/profile
     echo 'PATH=$PHP_HOME:$PATH' >> /etc/profile
-    echo "FPM_HOME=${install_dir}/${php_dir}/sbin"  >> /etc/profile
+    echo "FPM_HOME=${install_dir}/${server_dir}/sbin"  >> /etc/profile
     echo 'PATH=$FPM_HOME:$PATH' >> /etc/profile
     source /etc/profile
 
 	#测试
 	php -v | grep 5.6
-	[ $? -eq 0 ] || print_error "php-5.6安装失败，请联系作者" "Php-5.6 installation failed, please contact the author"
+	[ $? -eq 0 ] || print_error "${1}安装失败" "${1} installation failed"
     
     
-	print_massage "php-5.6安装完成" "php-5.6 installation is complete"
-	print_massage "部署目录：${install_dir}/${php_dir}" "Deployment directory: ${install_dir}/${php_dir}"
+    print_install_ok $1
     print_massage "启动：php-fpm" "Start：php-fpm"
 }
 
 script_remove() {
-    rm -rf ${install_dir}/${php_dir}
+    rm -rf ${install_dir}/${server_dir}
     sed -i '/^PHP_HOME=/d' /etc/profile
     sed -i '/^FPM_HOME=/d' /etc/profile
     sed -i '/^PATH=$PHP_HOME/d' /etc/profile
     sed -i '/^PATH=$FPM_HOME/d' /etc/profile
     source /etc/profile
-    
-    php -v | grep 5.6
-    [ $? -eq 0 ] && print_error "php-5.6卸载失败，请联系作者" "1.php-5.6 uninstall failed, please contact the author" || print_massage "rvm-2.4卸载成功" "rvm-2.4 uninstall successfully"
+
+    print_remove_ok $1
 }
 
 script_info() {

@@ -5,7 +5,10 @@
 #[使用设置]
 install_dir=/usr/local
 
-glibc_dir=glibc
+server_dir=glibc
+
+server_yum="gcc cmake"
+
 
 
 script_get() {
@@ -19,9 +22,8 @@ script_install() {
         print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
-
-    test_install gcc cmake
-    test_dir $glibc_dir
+    
+    test_detection
     
     #安装服务
     script_get
@@ -29,22 +31,21 @@ script_install() {
     cd glibc-2.14
     mkdir build
     cd build
-    ../configure --prefix=${install_dir}/${glibc_dir}
+    ../configure --prefix=${install_dir}/${server_dir}
     make && make install
     cd ..
     cd ..
     rm -rf glibc-2.14
     
     #测试
-    [[ -f ${install_dir}/${glibc_dir}/lib/libc-2.14.so ]] || print_error "glibc-2.14安装失败，请联系作者" "Glibc-2.14 installation failed, please contact the author"
+    [[ -f ${install_dir}/${server_dir}/lib/libc-2.14.so ]] || print_error "glibc-2.14安装失败" "Glibc-2.14 installation failed"
     
     #清除软连接
     rm -rf /lib64/libc.so.6
     ln -s /usr/local/glibc-2.14/lib/libc-2.14.so /lib64/libc.so.6
 
     #完成
-    print_massage "glibc-2.14安装完成" "The glibc-2.14 is installed"
-    print_massage "安装目录：/usr/local/glibc-2.14" "Install Dir：/usr/local/glibc-2.14"
+    print_install_ok $1
 }
 
 script_remove() {

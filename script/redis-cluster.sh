@@ -7,17 +7,18 @@
 #填写ok将按如下填写执行脚本
 switch=no
 
-#安装主目录
-install_dir=/usr/local
-
-#redis所在脚本
-redis_dir=redis
+redis_dir=/usr/local/redis
 
 #所有要加入集群的节点，前一半节点皆为主
 cluster_ip="127.0.0.1:7000 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005"
 
 #默认1主1从，设置2就是1主2从，最前头的均为主
 node=1
+
+server_rely="ruby-2.4"
+
+server_yum="telnet"
+
 
 
 script_get() {
@@ -35,9 +36,9 @@ script_install() {
         exit
     fi
 
-    [[ -d ${install_dir}/${redis_dir} ]] || print_error "${install_dir}/${redis_dir}目录不存在" "${install_dir}/${redis_dir} directory does not exist"
+    [[ -d ${redis_dir} ]] || print_error "${redis_dir}目录不存在" "${redis_dir} directory does not exist"
     
-    test_install telnet
+    test_detection
     
     #检测端口是否可以连接成功
     for i in `echo $cluster_ip`
@@ -55,12 +56,12 @@ script_install() {
         fi
    done
 
+   
     script_get
-    test_rely ruby-2.4
     gem install package/redis-4.0.1.gem
     
     #启动
-    ${install_dir}/${redis_dir}/src/redis-trib.rb create --replicas ${node} ${cluster_ip}
+    ${redis_dir}/src/redis-trib.rb create --replicas ${node} ${cluster_ip}
 }
 
 script_remove() {

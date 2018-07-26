@@ -14,15 +14,13 @@ script_install() {
     
     test_bin sys-mes
 
-	print_massage "sys-mes命令安装完成" "The sys-mes command is installed"
-	print_massage "安装目录：/usr/local/bin/sys-mes" "Install Dir：/usr/local/bin/sys-mes"
-	print_massage "使用：sys-mes" "Use：sys-mes"
+    print_install_bin $1
 }
 
 script_remove() {
 	rm -rf /usr/local/bin/sys-mes
     
-    [ -f /usr/local/bin/sys-mes ] && print_error "sys-mes未成功删除，请联系作者" "sys-mes unsuccessfully deleted, please contact the author" || print_massage "sys-mes卸载完成！" "sys-mes Uninstall completed！"
+    print_remove_ok $1
 }
 
 script_info() {

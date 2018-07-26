@@ -5,7 +5,10 @@
 #[使用设置]
 install_dir=/usr/local
 
-sqlite_dir=sqlite
+server_dir=sqlite
+
+server_yum="gcc make"
+
 
 
 script_get() {
@@ -24,15 +27,13 @@ script_install() {
         fi
     fi
 
-    #检测目录
-    test_install gcc make
-    test_dir $sqlite_dir
+    test_detection
 
     #安装服务
     script_get
     tar -xf package/sqlite-snapshot-201803072139.tar.gz
     cd sqlite-snapshot-201803072139
-    ./configure --prefix=${install_dir}/${sqlite_dir}
+    ./configure --prefix=${install_dir}/${server_dir}
     make && make install
     cd ..
     rm -rf sqlite-snapshot-201803072139
@@ -41,26 +42,25 @@ script_install() {
     sed -i '/^export SQLITE=/d' /etc/profile
     sed -i '/^export PATH=$SQLITE_HOME/d'  /etc/profile
     
-    echo "export SQLITE_HOME=${install_dir}/${sqlite_dir}/bin" >> /etc/profile
+    echo "export SQLITE_HOME=${install_dir}/${server_dir}/bin" >> /etc/profile
     echo 'export PATH=$SQLITE_HOME:$PATH' >> /etc/profile
     source /etc/profile
     
     #测试
     sqlite3 -version
-    [ $? -eq 0 ] || print_error "安装错误，请联系作者" "Installation error, please contact the author"
+    [ $? -eq 0 ] || print_error "安装错误" "Installation error"
 
-    print_massage "sqlite-3.23安装完成" "The sqlite-3.23 is installed"
+    print_install_ok $1
 	print_massage "使用：sqlite3 -version" "Use：sqlite3 -version"
 }
 
 script_remove() {
-    rm -rf ${install_dir}/${sqlite_dir}
+    rm -rf ${install_dir}/${server_dir}
     sed -i '/^export SQLITE=/d' /etc/profile
     sed -i '/^export PATH=$SQLITE_HOME/d'  /etc/profile
     source /etc/profile
     
-    sqlite3 -version
-    [[ $? -eq 0 ]] && print_error "卸载失败，请联系作者" "Uninstall failed, please contact the author" || print_massage "sqlite-3.23卸载成功" "Sqlite-3.23 uninstalled successfully"
+    print_remove_ok $1
 }
 
 script_info() {

@@ -18,7 +18,7 @@ script_install() {
     gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
     \curl -sSL https://get.rvm.io | bash -s stable
     
-    [ -f /etc/profile.d/rvm.sh ] || print_error "rvm下载失败，请联系作者" "Rvm download failed, please contact the author"
+    [ -f /etc/profile.d/rvm.sh ] || print_error "rvm下载失败" "Rvm download failed"
     
     #设置环境变量
     sed -i '/^source RVM_HOME=/d' /etc/profile
@@ -32,10 +32,9 @@ script_install() {
     
     #测试
     which rvm
-    [ $? -eq 0 ] || print_error "rmv环境变量设置失败，请联系作者" "3. The rmv environment variable setting failed,  please contact the author"
+    [ $? -eq 0 ] || print_error "rmv环境变量设置失败" "3The rmv environment variable setting failed"
 
-	print_massage "rvm安装完成" "rvm installation is complete"
-    print_massage "安装目录： /usr/local/rvm" "Installation directory: /usr/local/rvm"
+    print_install_ok $1
 	print_massage "使用：rvm list known " "Use：rvm list known"
 }
 
@@ -47,8 +46,7 @@ script_remove() {
     sed -i '/^source $RVM_HOME/d' /etc/profile
     source /etc/profile
     
-    which rvm
-    [ $? -eq 0 ] &&  print_error "rvm卸载失败，请联系作者" "Rvm uninstall failed， please contact the author" || print_massage "rvm卸载成功" "Rvm uninstallation succeeded"
+    print_remove_ok $1
 }
 
 script_info() {

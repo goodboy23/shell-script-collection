@@ -8,7 +8,12 @@
 #install_dir=
 
 #服务目录名
-httpd_dir=httpd2
+server_dir=httpd2
+
+server_rely="apr-1.6 apr-util-1.6 pcre-8"
+
+server_yum="gcc make expat-devel gcc-c++"
+
 
 
 
@@ -17,8 +22,6 @@ script_get() {
 }
 
 script_install() {
-    yum -y remove httpd
-
     httpd -v | grep 2.4
     if [[ $? -eq 0 ]];then
         print_massage "检测到已安装" "Detected installed"
@@ -30,15 +33,13 @@ script_install() {
         fi
     fi
 
-    test_install gcc make expat-devel gcc-c++
-    test_dir $httpd_dir
-    test_rely apr-1.6 apr-util-1.6 pcre-8
+    test_detection
     
     script_get
     tar -xf package/httpd-2.4.33.tar.gz
     cd  httpd-2.4.33
-    ./configure -prefix=${install_dir}/${httpd_dir} -enable-so -enable-rewrite -with-apr=/usr/local/apr -with-apr-util=/usr/local/apr-util -with-pcre=/usr/local/pcre
-    [[ -f Makefile ]] || print_error "Makefile生成失败，请联系作者" "Makefile failed to generate, please contact the author"
+    ./configure -prefix=${install_dir}/${server_dir} -enable-so -enable-rewrite -with-apr=/usr/local/apr -with-apr-util=/usr/local/apr-util -with-pcre=/usr/local/pcre
+    [[ -f Makefile ]] || print_error "Makefile生成失败" "Makefile failed to generate"
     make && make install
     
     cd ..
@@ -47,28 +48,27 @@ script_install() {
     #环境变量
     sed -i '/^export HTTPD_HOME=/d' /etc/profile
     sed -i '/^export PATH=${HTTPD_HOME}/d' /etc/profile
-    
-    echo "export HTTPD_HOME=${install_dir}/${httpd_dir}" >> /etc/profile
+
+    echo "export HTTPD_HOME=${install_dir}/${server_dir}" >> /etc/profile
     echo 'export PATH=${HTTPD_HOME}/bin:${PATH}' >> /etc/profile
     source /etc/profile
     
     httpd -v
-    [[ $? -eq 0 ]] || print_error "httpd-2.4安装失败，请联系作者" "httpd-2.4 installation failed, please check the script"
+    [[ $? -eq 0 ]] || print_error "${1}安装失败" "${1} installation failed"
 
-	print_massage "httpd-2.4安装完成" "The httpd-2.4 is installed"
-	print_massage "安装目录：${install_dir}/${httpd_dir}" "Install Dir：${install_dir}/${httpd_dir}"
-	print_massage "验证：httpd -v" "verification：httpd -v"
+    print_install_ok $1
+	print_massage "验证：apachectl start" "verification：apachectl start"
 }
 
 script_remove() {
-	rm -rf ${install_dir}/${httpd_dir}
+    apachectl stop
+	rm -rf ${install_dir}/${server_dir}
     
     sed -i '/^export HTTPD_HOME=/d' /etc/profile
     sed -i '/^export PATH=${HTTPD_HOME}/d' /etc/profile
     source /etc/profile
     
-    httpd -v
-    [[ $? -eq 0 ]] && print_error "httpd-2.4未成功删除，请联系作者" "httpd-2.4 was not successfully deleted, please contact the author" || print_massage "httpd-2.4卸载完成！" "httpd-2.4 Uninstall completed！"
+    print_remove_ok $1
 }
 
 script_info() {

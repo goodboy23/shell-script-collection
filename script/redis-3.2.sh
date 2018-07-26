@@ -11,7 +11,9 @@
 #log_dir=
 
 #服务目录名
-redis_dir=redis
+server_dir=redis
+
+port=6379
 
 
 
@@ -25,49 +27,42 @@ script_install() {
         exit
     fi
     
-    test_port 6379
-    test_dir $redis_dir
+    test_detection
     
     script_get
     tar -xf package/redis-3.2.9.tar.gz
-    mv redis ${install_dir}/${redis_dir}
+    mv redis ${install_dir}/${server_dir}
 
     #启动脚本
     test_bin man-redis
-    sed -i "2a install_dir=${install_dir}" /usr/local/bin/man-redis
-    sed -i "3a log_dir=${log_dir}" /usr/local/bin/man-redis
-    sed -i "4a redis_dir=${redis_dir}" /usr/local/bin/man-redis
 
     #环境变量
     sed -i '/^REDIS_HOME=/d' /etc/profile
     sed -i '/^PATH=$REDIS_HOME/d' /etc/profile
 
-    echo "REDIS_HOME=${install_dir}/${redis_dir}/bin"  >> /etc/profile
+    echo "REDIS_HOME=${install_dir}/${server_dir}/bin"  >> /etc/profile
     echo 'PATH=$REDIS_HOME:$PATH' >> /etc/profile
     source /etc/profile
 
     #检测
     which redis-cli
-    [[ $? -eq 0 ]] || print_error "redis-3.2安装失败，请联系作者" "redis-3.2 installation failed,  please contact the author"
+    [[ $? -eq 0 ]] || print_error "${1}安装失败" "${1} installation failed"
     
     
-	print_massage "batch安装完成" "The batch is installed"
-	print_massage "安装目录：${install_dir}/${redis_dir}" "Install Dir：${install_dir}/${redis_dir}"
-    print_massage "日志目录：${log_dir}/${redis_dir}" "Log directory: ${log_dir}/${redis_dir}"
+    print_install_ok $1
 	print_massage "使用：man-redis start" "Use：man-redis start"
 }
 
 script_remove() {
     man-redis stop
-    rm -rf ${install_dir}/${redis_dir}
+    rm -rf ${install_dir}/${server_dir}
     rm -rf /usr/local/bin/man-redis
     
     sed -i '/^REDIS_HOME=/d' /etc/profile
     sed -i '/^PATH=$REDIS_HOME/d' /etc/profile
     source /etc/profile
     
-    which redis-cli
-    [ $? -eq 0 ] && print_error "redis-3.2未成功删除，请联系作者" "redis-3.2 unsuccessfully deleted,  please contact the author" || print_massage "redis-3.2卸载完成！" "redis-3.2 Uninstall completed！"
+    print_remove_ok $1
 }
 
 script_info() {

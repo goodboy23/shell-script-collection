@@ -5,7 +5,10 @@
 #[使用设置]
 install_dir=/usr/local
 
-ruby_dir=ruby
+server_dir=ruby
+
+server_yum="gcc make openssl openssl-devel zlib zlib-devel"
+
 
 
 
@@ -25,36 +28,35 @@ script_install() {
         fi
     fi
 
-    test_dir $ruby_dir
-    test_install gcc make openssl openssl-devel zlib zlib-devel
+    test_detection
+
     script_get
     rm -rf ruby-2.4.4/
     tar -xvf package/ruby-2.4.4.tar.gz
     cd ruby-2.4.4/
-    ./configure --prefix=${install_dir}/${ruby_dir}
-    make && make install || print_error "编译失败，请检查脚本" "Compile failed, please check the script"
+    ./configure --prefix=${install_dir}/${server_dir}
+    make && make install || print_error "编译失败" "Compile failed"
 
    #环境变量
     sed -i '/^RUBY_HOME=/d' /etc/profile
     sed -i '/^PATH=$RUBY_HOME/d' /etc/profile
 
-    echo "RUBY_HOME=${install_dir}/${ruby_dir}/bin"  >> /etc/profile
+    echo "RUBY_HOME=${install_dir}/${server_dir}/bin"  >> /etc/profile
     echo 'PATH=$RUBY_HOME:$PATH' >> /etc/profile
-
     source /etc/profile
 
     cd ext/zlib
     ruby extconf.rb 
-    [[ -f Makefile ]] || print_error "生成Makefile失败，请联系作者" "Failed to generate Makefile, please contact author"
+    [[ -f Makefile ]] || print_error "生成Makefile失败" "Failed to generate Makefile"
     sed -i 's,zlib.o: $(top_srcdir)/include/ruby.h,zlib.o: ../../include/ruby.h,g' Makefile
-    make && make install || print_error "zlib构建失败，请联系作者" "Zlib build failed, please contact the author"
+    make && make install || print_error "zlib构建失败" "Zlib build failed"
     cd ..
     
     cd openssl
     ruby extconf.rb
-    [[ -f Makefile ]] || print_error "生成Makefile失败，请联系作者" "Failed to generate Makefile, please contact author"
+    [[ -f Makefile ]] || print_error "生成Makefile失败" "Failed to generate Makefile"
     sed -i 's,$(top_srcdir),../..,g' Makefile
-    make && make install || print_error "openssl构建失败，请联系作者" "openssl build failed, please contact the author"
+    make && make install || print_error "openssl构建失败" "openssl build failed"
 
     cd ..
     cd ..
@@ -62,21 +64,20 @@ script_install() {
 
 	#测试
 	ruby -v | grep 2.4
-	[ $? -eq 0 ] || print_error "ruby安装失败，请联系作者" "Ruby installation failed, please contact the author"
+	[ $? -eq 0 ] || print_error "ruby安装失败" "Ruby installation failed"
     
     
-	print_massage "ruby-2.4安装完成" "ruby-2.4 installation is complete"
+	print_install_ok $1
 	print_massage "使用：ruby" "Use：ruby"
 }
 
 script_remove() {
-    rm -rf /usr/local/ruby
+    rm -rf ${install_dir}/${server_dir}
     sed -i '/^RUBY_HOME=/d' /etc/profile
     sed -i '/^PATH=$RUBY_HOME/d' /etc/profile
     source /etc/profile
     
-    rvm -v | grep 2.4.1
-    [ $? -eq 0 ] && print_error "ruby-2.4卸载失败，请联系作者" "1.ruby-2.4 uninstall failed, please contact the author" || print_massage "rvm-2.4卸载成功" "rvm-2.4 uninstall successfully"
+    print_remove_ok $1
 }
 
 script_info() {

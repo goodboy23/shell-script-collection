@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 
 
+#[使用设置]
+#install_dir=
+
+server_dir=/python-3.6
+
+server_yum="gcc make cmake openssl-devel bzip2-devel expat-devel gdbm-devel readline-devel sqlite-devel"
+
+
 
 script_get() {
 	test_package https://shell-auto-install.oss-cn-zhangjiakou.aliyuncs.com/package/Python-3.6.0.tgz 3f7062ccf8be76491884d0e47ac8b251
@@ -13,35 +21,35 @@ script_install() {
         exit
     fi
     
-	test_install gcc make cmake openssl-devel bzip2-devel expat-devel gdbm-devel readline-devel sqlite-devel
+    test_detection
+    
+    
     script_get
     
     #编译安装
 	tar -xf package/Python-3.6.0.tgz
 	cd Python-3.6.0
-	./configure --prefix=/usr/local/python3.6
+	./configure --prefix=${install_dir}/${server_dir}
 	make
 	make altinstall
 	
-	ln -s /usr/local/python3.6/bin/python3.6 /usr/bin/python3.6
-    ln -s /usr/local/python3.6/bin/python3.6 /usr/bin/python3
+	ln -s ${install_dir}/${server_dir}/bin/python3.6 /usr/bin/python3.6
+    ln -s ${install_dir}/${server_dir}/bin/python3.6 /usr/bin/python3
 	
 	#测试
 	python3.6 --version
-	[ $? -eq 0 ] || print_error "安装失败，请联系作者" "2.Installation failed, please contact the author"
+	[ $? -eq 0 ] || print_error "安装失败" "2.Installation failed"
     
- 	print_massage "python3.6安装完成" "The python3.6 is installed"
-	print_massage "安装目录：/usr/local/python3.6" "Install Dir：/usr/local/python3.6"
+    print_install_ok $1
 	print_massage "使用：python3.6" "Use：python3.6"
 }
 
 script_remove() {
-	rm -rf /usr/local/python3.6
+	rm -rf ${install_dir}/${server_dir}
     rm -rf /usr/bin/python3.6
     rm -rf /usr/bin/python3
 	
-    python3.6 --version
-    [[ $? -eq 0 ]] && print_error "卸载失败，请联系作者" "1.Uninstall failed,  please contact the author"|| print_massage "python卸载完成！" "Python uninstall complete"
+    print_remove_ok $1
 }
 
 script_info() {

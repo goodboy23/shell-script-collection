@@ -12,7 +12,7 @@
 #log_dir=
 
 #服务目录名
-kafka_manager_dir=kafka-manager
+server_dir=kafka-manager
 
 #yes则根据配置执行脚本
 kafka_switch=no
@@ -22,6 +22,10 @@ cluster_ip="192.168.2.108:2181,192.168.2.109:2181"
 
 #启动端口
 port=9000
+
+server_rely="jdk-1.8"
+
+server_yum="unzip"
 
 
 
@@ -39,20 +43,15 @@ script_install() {
         exit
     fi
     
-    test_port ${port}
-    test_rely jdk-1.8
-    
-    
-    test_install unzip
-    test_dir ${kafka_manager_dir}
-	
+    test_detection
+
     #安装包
     script_get
     unzip package/kafka-manager-1.3.3.14.zip
-    mv kafka-manager-1.3.3.14 ${install_dir}/${kafka_manager_dir}
+    mv kafka-manager-1.3.3.14 ${install_dir}/${server_dir}
 
     #修改配置文件
-    conf=${install_dir}/${kafka_manager_dir}/conf/application.conf
+    conf=${install_dir}/${server_dir}/conf/application.conf
     a=kafka-manager.zkhosts='"'${cluster_ip}'"'
     sed -i "23c $a" $conf
 
@@ -60,23 +59,18 @@ script_install() {
     test_bin man-kafka-manager
 
     sed -i "2a port=${port}" $command
-    sed -i "3a dir=${install_dir}/${kafka_manager_dir}" $command
-    sed -i "4a log=${log_dir}/${kafka_manager_dir}" $command
     
     #无效验
-
-    print_massage "kafka-manager安装完成" "The kafka-manager is installed"
-	print_massage "安装目录：${install_dir}/${kafka_manager_dir}" "Install Dir：${install_dir}/${kafka_manager_dir}"
-    print_massage "日志目录：${log_dir}/${kafka_manager_dir}" "Log directory：${log_dir}/${kafka_manager_dir}"
+    print_install_ok $1
 	print_massage "使用：man-kafka-manager start" "Use：man-kafka-manager start"
-	print_massage "访问：curl http://127.0.0.1:${port}" "Access：curl http://127.0.0.1:${port}"
+	print_massage "访问：http://xx.xx.xx.xx:${port}" "Access：http://xx.xx.xx.xx:${port}"
 }
 
 script_remove() {
     man-kafka-manager stop
-	rm -rf ${install_dir}/${kafka_manager_dir}
+	rm -rf ${install_dir}/${server_dir}
 	rm -rf /usr/local/bin/man-kafka-manager
-    print_massage "kafka_manager卸载完成！" "kafka_manager Uninstall completed！"
+    print_remove_ok $1
 }
 
 script_info() {

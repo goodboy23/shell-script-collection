@@ -2,7 +2,7 @@
 
 
 if [[ "$1" == "start" ]];then
-    ${install_dir}/${tomcat_dir}/bin/startup.sh
+    ${install_dir}/${server_dir}/bin/startup.sh
 elif [[ "$1" == "stop" ]];then
     ${install_dir}/${tomcat_dir}/bin/shutdown.sh
 else

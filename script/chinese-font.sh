@@ -33,10 +33,10 @@ script_install() {
     
 	fc-cache
 	fc-list  | grep '/usr/share/fonts/chinese/simsun.ttc'
-    [[ $? -eq 0 ]] || print_error "生成失败，请联系作者" "The build failed, please contact the author"
+    [[ $? -eq 0 ]] || print_error "生成失败" "The build failed"
 
     #完成
-    print_massage "中文字体安装成功" "Chinese font installed successfully"
+    print_install_ok $1
 }
 
 scrip_remove() {

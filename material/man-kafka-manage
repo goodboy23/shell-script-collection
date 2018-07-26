@@ -3,6 +3,8 @@
 
 
 
+dir=${install_dir}/${server_dir}
+
 if [ "$1" == "start" ];then
 	nohup ${dir}/bin/kafka-manager -Dconfig.file=${dir}/conf/application.conf &>> ${log}/kafka-manager.log  &
 elif [ "$1" == "stop" ];then

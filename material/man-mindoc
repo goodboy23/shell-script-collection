@@ -2,20 +2,113 @@
 #mindoc控制脚本
 
 
-a=${install_dir}/${mindoc_dir}/mindoc_linux_amd64
-b=${log_dir}/${mindoc_dir}
 
-if [ "$1" == "start" ];then
-	nohup $a &>> $b/mindoc.log &
-    echo "mindoc starting..."
-elif [ "$1" == "stop" ];then
-    netstat -unltp | grep "mindoc" &> /dev/null
-    if [ $? -eq 0 ];then
-        pid=`netstat -unltp | grep "mindoc" | awk  '{print $7}' | awk -F'/' '{print $1}'`
-	    kill -9 $pid && echo "mindco stop" || echo "mindoc error"
+server_bin=${install_dir}/${server_dir}/mindoc_linux_amd64
+server_log=${log_dir}/${server_dir}
+cha="mindoc_linux"
+server=mindoc
+
+
+
+#[函数部分]
+server_test() {
+    netstat -unltp | grep $cha &> /dev/null
+    [[ $? -eq 0 ]] && return 0 || return 1
+}
+
+server_start() {
+    if server_test ;then
+        echo "$server start ok..."
     else
-        echo "mindoc stoping..." 
+        nohup $server_bin &>> ${server_log}/mindoc.log &
+        server_test && echo "$server start ok..." || echo "$server start error..."
     fi
+}
+
+server_stop() {
+    if server_test ;then
+        pid=`netstat -unltp | grep $cha | awk  '{print $7}' | awk -F'/' '{print $1}'`
+	    kill -9 $pid && echo "$server stop ok..." || echo "$server stop error..."
+    else
+        echo "$server stop ok..." 
+    fi
+}
+
+server_status() {
+    $server_bin version
+    echo
+    if server_test ;then
+        echo "$server start..."
+    else
+        echo "$server stop..."
+    fi
+}
+
+
+server_update() {
+    if [[ -f $2 ]];then
+        echo "please 'man-mindoc update new_package_file'"
+        exit 1
+    else
+        echo $2 | grep .zip &> /dev/null
+        if [[ $? -eq 0 ]];then
+            echo "Not a zip installation package"
+            exit 1
+        fi
+
+        which unzip &> /dev/null
+        if [[ $? -ne 0 ]];then
+            echo "please yum -y install unzip"
+            exit 1
+        fi
+
+        rm -rf 52wiki
+        mkdir 52wiki
+        cd 52wiki
+        unzip $2
+        if [[ ! -f mindoc_linux_amd64 ]];then
+            echo "$2 Not the $server installation package"
+            exit 1
+        fi
+        
+        rm -rf conf/app.conf
+        rm -rf uploads
+        
+        server_stop
+        
+        mv ${install_dir}/${server_dir}/conf/app.conf conf/app.conf
+        rm -rf ${install_dir}/${server_dir}/conf
+        
+        new_file=`ls`
+        for i in `ls ${install_dir}/${server_dir}/`
+        do  
+            echo $new_file |grep -w $i &> /dev/null
+            if [[ $? -ne 0 ]];then
+                mv ${install_dir}/${server_dir}/$i .
+            fi
+        done
+        rm -rf ${install_dir}/${server_dir}
+        cd ..
+        mv 52wiki ${install_dir}/${server_dir}
+
+        server_start
+        netstat -unltp | grep :mindoc_linux &> /dev/null
+        [ $? -eq 0 ] && echo "$server update ok..." || echo "$server update error..."
+    fi
+}
+
+#主体
+if [ "$1" == "start" ];then
+    server_start
+elif [ "$1" == "stop" ];then
+    server_stop
+elif [ "$1" == "status" ];then
+    server_status
+elif [ "$1" == "restart" ];then
+    server_stop
+    server_start
+elif [ "$1" == "update" ];then
+    server_update $2
 else
-	echo "start | stop"
+	echo "start | stop | restart | status | update new_package_file"
 fi

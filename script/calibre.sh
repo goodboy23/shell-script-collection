@@ -22,16 +22,16 @@ script_install() {
 	
 	#测试
 	ebook-convert --version
-	[[ $? -eq 0 ]] || print_error "安装失败，请联系作者" "Installation failed, please contact the author"
+	[[ $? -eq 0 ]] || print_error "安装失败" "Installation failed"
     
     #效验是否工作正常
     echo "a" >> batch.txt
     ebook-convert  batch.txt  batch.pdf
-    [[ -f batch.pdf ]] || print_error "生成pdf失败，请联系作者" "Failed to generate pdf, please contact author"
+    [[ -f batch.pdf ]] || print_error "生成pdf失败" "Failed to generate pdf"
     rm -rf batch.pdf batch.txt index-1.html
     
     #完成
-    print_massage "calibre安装完成" "The calibre is installed"
+    print_install_ok
     print_massage "ebook-convert a.txt a.pdf 方式生成pdf文件" "ebook-convert a.txt a.pdf method to generate pdf file"
 }
 

@@ -14,15 +14,13 @@ script_install() {
     
     test_bin clocks
 
-	print_massage "clocks安装完成" "The clocks is installed"
-	print_massage "安装目录：/usr/local/bin/clocks" "Install Dir：/usr/local/bin/clocks"
-	print_massage "使用：clocks" "Use：clocks"
+	print_install_bin $1
 }
 
 script_remove() {
 	rm -rf /usr/local/bin/clocks
     
-    [ -f /usr/local/bin/clocks ] && print_error "clocks未成功删除，请联系作者" "Clocks was not successfully deleted, please contact the author" || print_massage "clocks卸载完成！" "clocks Uninstall completed！"
+    print_remove_ok $1
 }
 
 script_info() {

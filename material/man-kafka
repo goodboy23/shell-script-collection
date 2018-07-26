@@ -2,7 +2,7 @@
 #kafka cluster
 
 
-
+dir=${install_dir}/${server_dir}
 
 if [ "$1" == "start" ];then
 	$dir/bin/kafka-server-start.sh -daemon $dir/config/server.properties

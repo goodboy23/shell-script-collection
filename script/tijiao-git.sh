@@ -14,15 +14,13 @@ script_install() {
     
     test_bin tijiao-git
 
-	print_massage "tijiao-git安装完成" "The tijiao-git is installed"
-	print_massage "安装目录：/usr/local/bin/tijiao-git" "Install Dir：/usr/local/bin/tijiao-git"
-	print_massage "使用：tijiao-git" "Use：tijiao-git"
+    print_install_bin $1
 }
 
 script_remove() {
 	rm -rf /usr/local/bin/tijiao-git
     
-    [ -f /usr/local/bin/tijiao-git ] && print_error "tijiao-git未成功删除，请联系作者" "tijiao-git unsuccessfully deleted, please contact the author" || print_massage "tijiao-git卸载完成！" "tijiao-git Uninstall completed！"
+    print_remove_ok $1
 }
 
 script_info() {
