@@ -13,8 +13,16 @@ ssc可以对所支持的脚本进行安装，卸载，查看，自定义编辑�
 
 
 ## 二.如何下载ssc！
+其他版本下载地址：https://github.com/goodboy23/shell-script-collection/releases
 
-`yum -y install git  &&  git clone https://github.com/goodboy23/shell-script-collection.git || echo "no no no git no no no"`
+安装最新版本：
+`wget https://github.com/goodboy23/shell-script-collection/archive/v1.1.tar.gz`
+
+`tar -xf v1.1.tar.gz`
+
+`cd shell-script-collection`
+
+`./ssc.sh install batch`
 
 ## 三.如何使用ssc？
 
