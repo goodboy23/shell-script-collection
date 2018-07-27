@@ -92,6 +92,7 @@ bind-address = 0.0.0.0" > /etc/my.cnf #这里改需要的配置
 
     print_install_ok $1
 	print_massage "使用：man-mysql start" "Use：man-mysql start"
+	print_massage "登陆：mysql" "Landing"
 }
 
 
