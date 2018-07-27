@@ -1,5 +1,5 @@
 #!/bin/bash
 
 
-${install_dir}/${server_dir}/support-files/mysql.server $
+${install_dir}/${server_dir}/support-files/mysql.server $1
 
