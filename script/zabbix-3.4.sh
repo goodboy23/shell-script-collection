@@ -37,6 +37,9 @@ script_install() {
     
     #安装依赖
     test_detection
+    	systemctl stop httpd
+	systemctl stop php-fpm
+	systemctl stop mariadb
 	test_start httpd php-fpm mariadb
 
 	useradd zabbix
