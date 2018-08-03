@@ -35,7 +35,7 @@ script_install() {
     tar -xvf package/php-5.6.36.tar.gz
     
     #模块
-    rm -rf 
+        cd php-5.6.3 
 ./configure --prefix=${install_dir}/${server_dir} \
 --with-config-file-path=/etc \
 --enable-inline-optimization --disable-debug \
