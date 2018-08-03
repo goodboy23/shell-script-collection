@@ -99,7 +99,7 @@ script_install() {
     
     rm -rf ${ssc_dir}/php-5.6.36
     print_install_ok $1
-    print_massage "启动：php-fpm" "Start：php-fpm" 6
+    print_massage "启动：man-php start" "Start：man-php start" 6
 }
 
 script_remove() {
