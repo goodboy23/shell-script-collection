@@ -31,7 +31,7 @@ script_install() {
     test_detection
 
     script_get
-    tar -xvf package/php-5.6.36.tar.gz
+    tar -xf package/php-5.6.36.tar.gz
     
     #模块
         cd php-5.6.3 
