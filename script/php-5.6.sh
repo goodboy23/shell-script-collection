@@ -32,10 +32,10 @@ script_install() {
 
     script_get
     tar -xf package/php-5.6.36.tar.gz
-    [ -d php-5.6.3  ] || print_error "解压失败" "Unpacking failed"
+    [ -d php-5.6.36  ] || print_error "解压失败" "Unpacking failed"
     
     #模块
-        cd php-5.6.3 
+    cd php-5.6.36
 ./configure --prefix=${install_dir}/${server_dir} \
 --with-config-file-path=/etc \
 --enable-inline-optimization --disable-debug \
