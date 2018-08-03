@@ -98,6 +98,7 @@ pid-file=${install_dir}/${server_dir}/mysql.pid" > /etc/my.cnf #这里改需要�
 	print_massage "使用：man-mysql start" "Use：man-mysql start"
     print_massage "账号：root" "account number：root"
     print_massage "密码：${mysql_passwd}" "password：${mysql_passwd}"
+    echo "${mysql_passwd}" > /tmp/mysql.log
 }
 
 script_remove() {

@@ -17,7 +17,7 @@ script_get() {
 }
 
 script_install() {
-    java -version 2&> conf/log.txt
+    java -version &> conf/log.txt
     grep 'version "1.7' conf/log.txt
     if [[ $? -eq 0 ]];then
         print_massage "检测到已安装" "Detected installed"

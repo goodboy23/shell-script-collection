@@ -26,6 +26,9 @@ editor=vi
 
 ssc_dir=`pwd`
 
+ssc_log="${ssc_dir}/goodboy.log"
+
+
 
 #########消息函数#########
 
@@ -35,15 +38,9 @@ print_error() {
     echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     [[ "$language" == "cn" ]] && echo "错误：$1" || echo "Error：$2"
     echo
-    [[ "$language" == "cn" ]] && echo "查看日志ssc-operating.log或联系作者" || echo "View the log ssc-operating.log or contact the author"
+    [[ "$language" == "cn" ]] && echo "重新执行或联系作者" || echo "Re-execute or contact the author"
     echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-    
-    echo >> $ssc_dir/ssc-operating.log
-    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" >> $ssc_dir/ssc-operating.log
-    [[ "$language" == "cn" ]] && echo "错误：$1" >> $ssc_dir/ssc-operating.log || echo "Error：$2" >> $ssc_dir/ssc-operating.log
-    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" >> $ssc_dir/ssc-operating.log
-    echo >> $ssc_dir/ssc-operating.log
-    
+
     exit 1
 }
 
@@ -55,41 +52,34 @@ print_massage() {
 		echo "$2"
 	fi
 	echo
-    
-    if [[ "$language" == "cn" ]];then
-		echo "$1" >> $ssc_dir/ssc-operating.log
-	else
-		echo "$2" >> $ssc_dir/ssc-operating.log
-	fi
-	echo >> $ssc_dir/ssc-operating.log
 }
 
 #$1填写服务名
 print_install_ok() {
     clear
-    print_massage "${1}安装完成" "The ${1} is installed"
+    print_massage "${1}安装完成" "The ${1} is installed" 6
     
     if [[ ! $server_dir ]];then
-        print_massage "部署目录：未知" "Deployment directory: Unknown"
+        print_massage "部署目录：未知" "Deployment directory: Unknown" 6
     else
-        print_massage "安装目录：${install_dir}/${server_dir}" "Install Dir：${install_dir}/${server_dir}"
-        print_massage "日志目录：${log_dir}/${server_dir}" "Log directory：${log_dir}/${server_dir}"
+        print_massage "安装目录：${install_dir}/${server_dir}" "Install Dir：${install_dir}/${server_dir}" 6
+        print_massage "日志目录：${log_dir}/${server_dir}" "Log directory：${log_dir}/${server_dir}" 6
     fi
 }
 
 print_install_bin() {
     clear
     
-    print_massage "${1}安装完成" "The ${1} is installed"
-	print_massage "安装目录：/usr/local/bin/${1}" "Install Dir：/usr/local/bin/${1}"
-	print_massage "使用：${1}" "Use：${1}"
+    print_massage "${1}安装完成" "The ${1} is installed" 6
+	print_massage "安装目录：/usr/local/bin/${1}" "Install Dir：/usr/local/bin/${1}" 6
+	print_massage "使用：${1}" "Use：${1}" 6
 }
 
 #$1填写服务名
 print_remove_ok() {
     clear
-    print_massage "$1卸载完成！" "${1} Uninstall completed！"
-    print_massage "依赖均不卸载，可用 './ssc.sh rely 服务名' 来查询有哪些依赖" "Dependencies are not uninstalled, use './ssc.sh rely service name' to query which dependencies"
+    print_massage "$1卸载完成！" "${1} Uninstall completed！" 6
+    print_massage "依赖均不卸载，可用 './ssc.sh rely 服务名' 来查询有哪些依赖" "Dependencies are not uninstalled, use './ssc.sh rely service name' to query which dependencies" 6
 }
 
 
@@ -196,7 +186,7 @@ server() {
     if [[ -f script/${2}.sh ]];then
         source script/${2}.sh
         if [[ "$1" == "install" ]];then
-            print_massage "正在安装${2}" "Installing ${2}"
+            print_massage "正在安装${2}" "Installing ${2}" 6
             print_massage "若中途报错，请按照提示操作，解决后再次安装即可。" "If you report an error in the middle, please follow the prompts, and then install it again."
             print_massage "ssc脚本合集只进行部署，并不修改防火墙等操作。" "The ssc script collection is only deployed, and does not modify the firewall and other operations."
             process_time

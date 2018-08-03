@@ -70,9 +70,11 @@ test_install() {
     else
         for i in `echo $@`
         do
-            yum -y install $i &> /dev/null
-            yum -y install  $i $> /dev/null
-            [ $? -eq 0 ] || print_error "${i}安装包未能用yum安装，请重新执行脚本" "${i} installation package failed to install with yum, please re-execute the script"
+            grep -w "$i" ${ssc_dir}/conf/yum.log
+            if [[ $? -ne 0 ]];then
+                yum -y install $i
+                [ $? -eq 0 ] && echo "$i" >> ${ssc_dir}/conf/yum.log || print_error "${i}安装包未能用yum安装，请重新执行脚本" "${i} installation package failed to install with yum, please re-execute the script" 
+            fi
         done
     fi
 }
@@ -162,7 +164,10 @@ test_package() {
 
 #初始化做的事情
 test_init() {
-    test_install net-tools
+    if [[ ! -f ${ssc_dir}/conf/init.log ]];then
+        test_install net-tools epel-release
+        echo "1" >  ${ssc_dir}/conf/init.log
+    fi
 }
 
 #检测函数

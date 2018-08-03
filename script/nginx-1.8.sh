@@ -22,7 +22,7 @@ script_get() {
 }
 
 script_install() {
-    nginx -v 2&> conf/log.txt
+    nginx -v &> conf/log.txt
     grep "nginx/1.8" conf/log.txt
     if [[ $? -eq 0 ]];then
         print_massage "检测到已安装" "Detected installed"

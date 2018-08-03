@@ -7,9 +7,7 @@ install_dir=/usr/local
 
 server_dir=php
 
-server_yum="libmcrypt libmcrypt-devel autoconf freetype gd jpegsrc libmcrypt libpng libpng-devel libjpeg libxml2 libxml2-devel zlib curl curl-devel"
-
-
+server_yum="gcc bison bison-devel freetype-devel libpng libpng-devel libjpeg-devel zlib-devel libmcrypt-devel mcrypt mhash-devel openssl-devel libxml2-devel libcurl-devel bzip2-devel readline-devel libedit-devel sqlite-devel jemalloc jemalloc-devel"
 
 script_get() {
     test_package "http://shell-auto-install.oss-cn-zhangjiakou.aliyuncs.com/package/php-5.6.36.tar.gz" "57b3b6f44f0d43b25538c85f9b3a32d0"
@@ -27,14 +25,62 @@ script_install() {
         fi
     fi
 
+    groupadd www
+    useradd -g www -s /sbin/nologin www
+
     test_detection
 
     script_get
+    rm -rf php-5.6.36
     tar -xvf package/php-5.6.36.tar.gz
-    cd php-5.6.36/
+    
     #模块
-    ./configure --prefix=${install_dir}/${server_dir} --enable-mbstring --with-curl --with-gd --enable-fpm --enable-mysqlnd --with-pdo-mysql
-    make && make install
+    rm -rf 
+./configure --prefix=${install_dir}/${server_dir} \
+--with-config-file-path=/etc \
+--enable-inline-optimization --disable-debug \
+--disable-rpath --enable-shared --enable-opcache \
+--enable-fpm --with-fpm-user=www \
+--with-fpm-group=www \
+--with-mysql=mysqlnd \
+--with-mysqli=mysqlnd \
+--with-pdo-mysql=mysqlnd \
+--with-gettext \
+--enable-mbstring \
+--with-iconv \
+--with-mcrypt \
+--with-gd \
+--with-mhash \
+--with-openssl \
+--enable-bcmath \
+--enable-soap \
+--with-libxml-dir \
+--enable-pcntl \
+--enable-shmop \
+--enable-sysvmsg \
+--enable-sysvsem \
+--enable-sysvshm \
+--enable-sockets \
+--with-curl --with-zlib \
+--enable-zip \
+--with-bz2 \
+--with-readline \
+--with-png-dir \
+--with-freetype-dir \
+--with-jpeg-dir \
+--with-gd
+    
+    make && make install || print_error "编译错误" "Compile Error"
+
+    #配置文件
+    rm -rf /etc/php.ini
+    cp php.ini-development /etc/php.ini
+    cp  ${install_dir}/${server_dir}/etc/php-fpm.conf.default ${install_dir}/${server_dir}/etc/php-fpm.conf
+    rm -rf /usr/local/bin/php-fpm
+    
+    #启动脚本
+    cp sapi/fpm/init.d.php-fpm /usr/local/bin/php-fpm
+    chmod +x /usr/local/bin/php-fpm
 
    #环境变量
     sed -i '/^PHP_HOME=/d' /etc/profile
@@ -52,13 +98,14 @@ script_install() {
 	php -v | grep 5.6
 	[ $? -eq 0 ] || print_error "${1}安装失败" "${1} installation failed"
     
-    
+    rm -rf ${ssc_dir}/php-5.6.36
     print_install_ok $1
-    print_massage "启动：php-fpm" "Start：php-fpm"
+    print_massage "启动：php-fpm" "Start：php-fpm" 6
 }
 
 script_remove() {
     rm -rf ${install_dir}/${server_dir}
+    rm -rf /etc/php.ini
     sed -i '/^PHP_HOME=/d' /etc/profile
     sed -i '/^FPM_HOME=/d' /etc/profile
     sed -i '/^PATH=$PHP_HOME/d' /etc/profile

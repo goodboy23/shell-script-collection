@@ -1,0 +1,10 @@
+#!/bin/bash
+
+
+if [[ "$1" == "start" ]];then
+    php-fpm
+elif [[ "$1" == "stop" ]];then
+    for i in `ps -aux | grep php-fpm |awk '{print $2}'`;do kill -9 $i ;done
+elif [[ "$1" == "restart" ]];then
+    echo "start | stop | restart"
+fi

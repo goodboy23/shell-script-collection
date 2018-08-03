@@ -13,10 +13,11 @@
 #服务目录名
 server_dir=zabbix
 
-port="80 3306 10050 10051"
+port="80 3306 10050 10051 9000"
 
-server_yum="net-tools httpd php php-mysql php-fpm mariadb-devel gcc gcc-c++ libcurl-devel libevent-devel net-snmp-devel php-bcmath php-mbstring php-gd php-xml  mariadb mariadb-server"
+server_yum="net-tools mariadb-devel gcc gcc-c++ libcurl-devel libevent-devel net-snmp-devel php-xml"
 
+server_rely="nginx-1.8 php-5.6 mysql-5.7"
 
 
 
@@ -34,36 +35,53 @@ script_install() {
 
     cat /etc/redhat-release | awk '{print $4}' |grep ^7
     [[ $? -eq 0 ]] || print_error "当前只支持7版本系统" "Currently only supports 7 version systems"
-    
+   
     #安装依赖
+    
+    nginx -s stop
+    man-mysql stop
+    man-php stop
+  
     test_detection
-    systemctl stop httpd
-	systemctl stop php-fpm
-	systemctl stop mariadb
-	test_start httpd php-fpm mariadb
+    rm -rf /usr/local/nginx/conf/nginx.conf
+    cp -p ${ssc_dir}/material/nginx.conf /usr/local/nginx/conf/
+    nginx
+    man-php start
+    man-mysql start
 
 	useradd zabbix
 	script_get
+    rm -rf zabbix-3.4.1
 	tar -xf package/zabbix-3.4.1.tar.gz
 	cd zabbix-3.4.1
 	./configure --prefix=${install_dir}/${server_dir}  --enable-server --enable-agent --with-mysql && make install || print_error "zabbix安装失败" "Zabbix installation failed"
 
-    rm -rf /var/www/html/*
-	cp -rf frontends/php/*    /var/www/html/
-	chmod -R 777  /var/www/html/*
+    rm -rf /usr/local/nginx/html/*
+	cp -rf frontends/php/*    /usr/local/nginx/html/
+    rm -rf /usr/local/nginx/html/include/classes/setup/CFrontendSetup.php
+    cp -p ${ssc_dir}/material/CFrontendSetup.php /usr/local/nginx/html/include/classes/setup/CFrontendSetup.php
+    chmod -R 777  /usr/local/nginx/html/*
     
-    mysql -e "show databases;" | grep test
+    #增加
+    sed -i 's/skip-grant-tables//g' /etc/my.cnf
+    echo "skip-grant-tables" >> /etc/my.cnf
+    
+    man-mysql restart
+    
+    mysql -e "alter user 'root'@'localhost' identified by '123456';"
+   
+    mysql -e "show databases;"
     [[ $? -eq 0 ]] || print_error "数据库无法登录进去" "Database cannot be logged in"
 
     #删除旧的
-    mysql -e "drop database zabbixdb;"
-    mysql -e "drop user zabbixuser@'localhost';"
+    mysql  -e "drop database zabbixdb;"
+    mysql  -e "drop user zabbixuser@'localhost';"
 
     #创建新的
-	mysql -e "create database zabbixdb character set utf8;"
-	mysql -e 'grant all on  zabbixdb.*  to  zabbixuser@"localhost" identified by "123456"'
-    
-    mysql -uzabbixuser -p123456 -e "show databases;" | grep test
+	mysql  -e "create database zabbixdb character set utf8;"
+	mysql  -e 'grant all on  zabbixdb.*  to  zabbixuser@"localhost" identified by "123456"'
+
+    mysql -uzabbixuser -p123456 -e "show databases;"
     [[ $? -eq 0 ]] || print_error "zabbix用户无法登录数据库" "Zabbix users cannot log in to the database"
 
 	mysql -uzabbixuser -p123456 zabbixdb  < database/mysql/schema.sql
@@ -83,9 +101,17 @@ script_install() {
 	sed -i "s/max_input_time = 60/max_input_time = 300/g" /etc/php.ini
 	sed -i "s/max_input_time = 60/max_input_time = 300/g" /etc/php.ini
 	sed -i "s,;date.timezone =,date.timezone = Asia/Shanghai,g" /etc/php.ini
-	systemctl restart httpd
-    systemctl restart php-fpm
-	
+
+    sed -i 's/skip-grant-tables//g' /etc/my.cnf
+    
+    mysql  -e 'grant all on  zabbixdb.*  to  zabbixuser@"127.0.0.1" identified by "123456"'
+    
+    man-mysql restart
+    nginx -s stop
+    nginx
+    man-php stop
+    php-fpm
+    
     rm -rf /etc/init.d/zabbix_server
 	cp misc/init.d/fedora/core/zabbix_server /etc/init.d/
 	chmod +x /etc/init.d/zabbix_server
@@ -125,7 +151,7 @@ script_install() {
     which zabbix_get
     [[ $? -eq 0 ]] || print_error "环境变量生成失败" "Environment variable generation failed"
     
-    
+    rm -rf ${ssc_dir}/zabbix-3.4.1
     
     
     #应添加防火墙配置
@@ -133,8 +159,12 @@ script_install() {
     print_install_ok $1
     print_massage "使用：/etc/init.d/zabbix_server start" "Use：/etc/init.d/zabbix_server start"
     print_massage "浏览器访问：http://127.0.0.1，请登录填写如下信息" "Browser access: http://127.0.0.1，, Please log in and fill in the following information"
-    print_massage "账号：admin" "Account: admin"
-    print_massage "密码：zabbix" "Password: zabbix"
+    print_massage "zabbix登陆账号：admin" "Zabbix landing Account: admin"
+    print_massage "zabbix登陆密码：zabbix" "Zabbix landing Password: zabbix"
+    echo
+    print_massage "数据库用户名：root" "Database username: root"
+    print_massage "数据库密码：123456" "Database password: 123456"
+    echo
     print_massage "zabbix数据库名：zabbixdb" "Zabbix database name: zabbixdb"
     print_massage "zabbix数据库用户名：zabbixuser" "Zabbix database user name: zabbixuser"
     print_massage "zabbix数据吗密码：123456" "Zabbix data password: 123456"
@@ -145,10 +175,10 @@ script_remove() {
 }
 
 script_info() {
-	print_massage "名字：zabbix-3.4" "Name：zabbix-3.4"
+	print_massage "名字：zabbix-open" "Name：zabbix-open"
 	print_massage "版本：3.4.1" "Version：3.4.1"
 	print_massage "介绍：zabbix是一种图形监控软件" "Introduce：Zabbix is a graphics monitoring software"
     print_massage "作者：日行一善" "do one good deed a day"
     
-    print_massage "使用说明：当前使用yum安装的http,mariadb,php-fpm等，纯净环境" "Instructions for use: Currently using yum to install http, mariadb, php-fpm, etc., pure environment"
+    print_massage "使用说明：当前使用源码安装的nginx-1.8，mysql-5.7，php-5.6，纯净环境" "Instructions for use: currently installed with source code nginx-1.8, mysql-5.7, php-5.6, pure environment"
 }
