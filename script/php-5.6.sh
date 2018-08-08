@@ -31,8 +31,8 @@ script_install() {
     test_detection
 
     script_get
-    tar -xf package/php-5.6.36.tar.gz
-    [ -d php-5.6.36  ] || print_error "解压失败" "Unpacking failed"
+    rm -rf php-5.6.36
+    tar -xvf package/php-5.6.36.tar.gz
     
     #模块
     cd php-5.6.36
@@ -100,7 +100,7 @@ script_install() {
     
     rm -rf ${ssc_dir}/php-5.6.36
     print_install_ok $1
-    print_massage "启动：man-php start" "Start：man-php start" 6
+    print_massage "启动：php-fpm" "Start：php-fpm" 6
 }
 
 script_remove() {
