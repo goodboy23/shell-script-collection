@@ -22,7 +22,7 @@ ssc可以对所支持的脚本进行安装，卸载，查看，自定义编辑�
 
 `cd shell-script-collection`
 
-`./ssc.sh install batch`
+`./ssc.sh`
 
 ## 三.如何使用ssc？
 
