@@ -7,6 +7,8 @@
 #主目录，相当于/usr/local
 #install_dir=
 
+log_dir=no
+
 #服务目录名
 server_dir=pcre
 
@@ -30,15 +32,17 @@ script_install() {
             print_error "当前已有其它版本pcre，请手动卸载" "There are other versions of pcre currently, please uninstall manually"
         fi
     fi
-
-    test_detection
+	
+	#依赖
+	test_detection ${1}
     
     script_get
+	rm -rf pcre-8.42
     tar -xf package/pcre-8.42.tar.gz
     cd  pcre-8.42
     ./configure -prefix=${install_dir}/${server_dir}
     [[ -f Makefile ]] || print_error "Makefile生成失败" "Makefile failed to generate"
-    make && make install
+    make && make install || print_error "make操作失败" "make operation failed"
     
     cd ..
     rm -rf pcre-8.42
@@ -55,7 +59,8 @@ script_install() {
     [[ $? -eq 0 ]] || print_error "${1}安装失败" "${1} installation failed"
 
     print_install_ok
-	print_massage "验证：pcre-config" "verification：pcre-config"
+	print_log "验证：pcre-config" "verification：pcre-config"
+	print_log "########################" "########################"
 }
 
 script_remove() {
@@ -63,7 +68,6 @@ script_remove() {
     
     sed -i '/^export PCRE_HOME=/d' /etc/profile
     sed -i '/^export PATH=${PCRE_HOME}/d' /etc/profile
-    source /etc/profile
 
     print_remove_ok $1
 }

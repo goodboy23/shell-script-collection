@@ -13,6 +13,7 @@
 #服务目录名
 server_dir=redis
 
+#仅用于检测，要修改启动端口，在安装后手动修改
 port=6379
 
 
@@ -26,10 +27,23 @@ script_install() {
         print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
+	
+	redis-server -v |grep v=3
+    if [[ $? -eq 0 ]];then
+        print_massage "检测到已安装" "Detected installed"
+        exit
+    else
+        which redis-server
+        if [[ $? -eq 0 ]];then
+            print_error "当前已有其它版本redis，请手动卸载" "There are other versions of redis currently, please uninstall manually"
+        fi
+    fi
     
-    test_detection
+	#依赖
+	test_detection ${1}
     
     script_get
+	rm -rf redis
     tar -xf package/redis-3.2.9.tar.gz
     mv redis ${install_dir}/${server_dir}
 
@@ -47,10 +61,10 @@ script_install() {
     #检测
     which redis-cli
     [[ $? -eq 0 ]] || print_error "${1}安装失败" "${1} installation failed"
-    
-    
+
     print_install_ok $1
-	print_massage "使用：man-redis start" "Use：man-redis start"
+	print_log "使用：man-redis start" "Use：man-redis start"
+	print_log "########################" "########################"
 }
 
 script_remove() {
@@ -60,7 +74,6 @@ script_remove() {
     
     sed -i '/^REDIS_HOME=/d' /etc/profile
     sed -i '/^PATH=$REDIS_HOME/d' /etc/profile
-    source /etc/profile
     
     print_remove_ok $1
 }

@@ -13,7 +13,7 @@
 #服务目录名
 server_dir=mysql
 
-#启动的端口
+#启动的端口，可更改
 port=3306
 
 server_yum="autoconf libaio bison ncurses-devel"
@@ -40,10 +40,8 @@ script_install() {
         exit
     fi
     
-    test_detection
-    
-    #清理mariadb的东西
-    for i in `rpm -qa | grep mariadb`; do rpm -e --nodeps $i; done
+	#依赖
+	test_detection ${1}
 
     #权限
     groupadd mysql
@@ -51,6 +49,7 @@ script_install() {
     
     #下载解压包
     script_get
+	rm -rf mysql-5.7.21-linux-glibc2.12-x86_64
     tar -xf package/mysql-5.7.21-linux-glibc2.12-x86_64.tar.gz
     mv mysql-5.7.21-linux-glibc2.12-x86_64 ${install_dir}/${server_dir}
     chown -R mysql:mysql ${install_dir}/${server_dir}
@@ -95,10 +94,10 @@ pid-file=${install_dir}/${server_dir}/mysql.pid" > /etc/my.cnf #这里改需要�
     mysql_passwd=`tail -n 1  ${log_dir}/${server_dir}/mysql.log |  awk -F'@' '{print $2}' | cut -b 12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30`
 
     print_install_ok $1
-	print_massage "使用：man-mysql start" "Use：man-mysql start"
-    print_massage "账号：root" "account number：root"
-    print_massage "密码：${mysql_passwd}" "password：${mysql_passwd}"
-    echo "${mysql_passwd}" > /tmp/mysql.log
+	print_log "使用：man-mysql start" "Use：man-mysql start"
+    print_log "账号：root" "account number：root"
+    print_log "密码：${mysql_passwd}" "password：${mysql_passwd}"
+	print_log "########################" "########################"
 }
 
 script_remove() {

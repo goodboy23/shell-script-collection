@@ -13,7 +13,7 @@
 #服务目录名
 server_dir=nginx
 
-server_yum="gcc pcre-devel openssl-devel zlib-devel make"
+server_yum="gcc make pcre pcre-devel openssl openssl-devel zlib zlib-devel"
 
 
 
@@ -33,18 +33,32 @@ script_install() {
             print_error "当前已有其它版本nginx，请手动卸载" "There are other versions of nginx currently, please uninstall manually"
         fi
     fi
-
-    test_detection
+	
+	#依赖
+	test_detection ${1}
     
     #权限
 	useradd -s /sbin/nologin nginx
+	
 	script_get
+	rm -rf nginx-1.8.0
     tar -xf package/nginx-1.8.0.tar.gz
 	cd nginx-1.8.0
     
 	#这里指定模块，请按需求添加
-	./configure --prefix=${install_dir}/${server_dir} --user=nginx --group=nginx --with-http_ssl_module --error-log-path=${log_dir}/${server_dir}/error.log --http-log-path=${log_dir}/${server_dir}/access.log
-	make && make install
+	./configure --prefix=${install_dir}/${server_dir} \
+	--user=nginx \
+	--group=nginx \
+	--with-http_spdy_module \
+	--with-http_stub_status_module \
+	--with-pcre \
+	--with-http_ssl_module \
+	--error-log-path=${log_dir}/${server_dir}/error.log \
+	--http-log-path=${log_dir}/${server_dir}/access.log
+	
+	[[ -f Makefile ]] || print_error "Makefile生成失败" "Makefile failed to generate"
+	make && make install || print_error "make操作失败" "make operation failed"
+
     cd ..
     rm -rf nginx-1.8.0
 
@@ -54,8 +68,9 @@ script_install() {
 	[[ $? -eq 0 ]] || test_exit "安装失败" "2.Installation failed"
 
     print_install_ok $1
-	print_massage "使用：nginx" "Use：nginx"
-	print_massage "访问：http://xx.xx.xx.xx:80" "Visit: http://xx.xx.xx.xx:80"
+	print_log "使用：nginx" "Use：nginx"
+	print_log "访问：http://xx.xx.xx.xx:80" "Visit: http://xx.xx.xx.xx:80"
+	print_log "########################" "########################"
 }
 
 script_remove() {

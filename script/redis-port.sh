@@ -7,12 +7,13 @@
 #填写ok将按如下填写执行脚本
 switch=no
 
-#安装主目录
+#redis主目录
 install_dir=/usr/local
 
+#redis日志目录
 log_dir=/var/log
 
-#redis目录
+#redis目录名
 server_dir=redis
 
 #将安装如下端口实例
@@ -80,10 +81,12 @@ do
 done' >> /usr/local/bin/man-redis-cluster
     chmod +x /usr/local/bin/man-redis-cluster
     
-	print_massage "redis-port配置完成，端口${port[*]}" "Redis-port configuration is complete, port ${port[*]}"
-	print_massage "安装目录：${install_dir}/${server_dir}/cluster" "Install Dir：${install_dir}/${server_dir}/cluster"
-    print_massage "日志目录：${install_dir}/${server_dir}/cluster" "Log directory: ${install_dir}/${server_dir}/cluster"
-	print_massage "使用：man-redis-cluster start" "Use：man-redis-cluster start"  
+	print_install_ok $1
+	print_log "redis-port配置完成，端口${port[*]}" "Redis-port configuration is complete, port ${port[*]}"
+	print_log "安装目录：${install_dir}/${server_dir}/cluster" "Install Dir：${install_dir}/${server_dir}/cluster"
+    print_log "日志目录：${install_dir}/${server_dir}/cluster" "Log directory: ${install_dir}/${server_dir}/cluster"
+	print_log "使用：man-redis-cluster start" "Use：man-redis-cluster start"
+	print_log "########################" "########################"
 }
 
 script_remove() {

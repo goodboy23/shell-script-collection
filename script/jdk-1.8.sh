@@ -29,10 +29,12 @@ script_install() {
         fi
     fi
 
-    test_detection
+   	#依赖
+	test_detection ${1}
 
     #安装服务
     script_get
+	rm -rf jdk1.8.0_152
     tar -xf package/jdk-8u152-linux-x64.tar.gz
     rm -rf ${install_dir}/jdk-1.8
     mv jdk1.8.0_152 ${install_dir}/${server_dir}
@@ -51,7 +53,7 @@ script_install() {
     
     #测试
     java -version
-    [ $? -eq 0 ] || print_error "${1}安装失败" "${1}Installation failed"
+    [[ $? -eq 0 ]] || print_error "${1}安装失败" "${1}Installation failed"
 
     print_install_ok $1
 	print_massage "使用：java -version" "Use：java -version"
@@ -63,8 +65,7 @@ script_remove() {
     sed -i '/^export JRE_HOME=/d'  /etc/profile
     sed -i '/^export CLASSPATH=/d' /etc/profile
     sed -i '/^export PATH=$JAVA_HOME/d' /etc/profile
-    source /etc/profile
-    
+
     print_remove_ok $1
 }
 

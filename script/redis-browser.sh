@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#redis-browser，redis的可视化工具
+
 
 
 #[使用设置]
@@ -25,9 +25,9 @@ port=1212
 #redis_browser监听
 listen=0.0.0.0
 
+server_yum="telnet"
+
 server_rely="nodejs-8.9 ruby-2.4"
-
-
 
 
 
@@ -47,6 +47,9 @@ script_install() {
         exit
     fi
 
+	test_detection ${1}
+	
+	
     for i in `echo $cluster_ip`
     do
         local cl_ip=`echo ${i} | awk -F':' '{print $1}'`
@@ -59,10 +62,13 @@ script_install() {
     #依赖
     script_get
     gem install package/redis-4.0.1.gem
+	gem list | grep -w redis || print_error "gem安装redis失败" "gem failure to install Redis"
     gem install package/redis-browser-0.5.1.gem
-    
+	gem list | grep -w redis-browser || print_error "gem安装redis-browser失败" "gem failure to install redis-browser"
+
+	mkdir ${install_dir}/${server_dir}
     rm -rf ${install_dir}/${server_dir}/config.yml
-    
+
     d=1 #名字，从第2个起
     echo "connections:" >> ${install_dir}/${server_dir}/config.yml
     
@@ -72,9 +78,11 @@ script_install() {
             continue
         fi
         
+		cd ${ssc_dir}
+		rm -rf one
         b=`echo $i | awk -F':' '{print $1}'` 
         c=`echo $i | awk -F':' '{print $2}'`
-        cp material/redis_browser.yuml ./one #复制一份格式文件做修改
+        cp material/redis_browser.yml ./one #复制一份格式文件做修改
         
         sed -i "1s/service3:/${cluster_name[$d]}" one
         sed -i "2s/host: 192.168.1.3/host: $b/g" one
@@ -91,11 +99,12 @@ script_install() {
     sed -i "2a port=${port}" $command
     sed -i "3a listen=${listen}" $command
     sed -i "7a one=${cluster_ip[0]}" $command
-
+	
     #测试
-    print_instll_ok $1
-	print_massage "使用：man-redis-browser start" "Use：man-redis-browser start"
-	print_massage "访问：http://xx.xx.xx.xx:${port}" "Access：http://xx.xx.xx.xx:${port}"
+    print_install_ok $1
+	print_log "使用：man-redis-browser start" "Use：man-redis-browser start"
+	print_log "访问：http://xx.xx.xx.xx:${port}" "Access：http://xx.xx.xx.xx:${port}"
+	print_log "########################" "########################"
 }
 
 script_remove() {

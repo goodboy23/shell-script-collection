@@ -7,11 +7,19 @@
 #主目录，相当于/usr/local
 #install_dir=
 
+log_dir=no
+
 #服务目录名
 server_dir=apr-util
 
 #yum依赖
 server_yum="gcc make expat-devel"
+
+#填写ok将按如下填写执行脚本
+switch=no
+
+#apr目录位置
+apr_dir=
 
 
 
@@ -20,6 +28,13 @@ script_get() {
 }
 
 script_install() {
+	if [[ "$switch" == "no" ]];then
+        print_error "此脚本需要填写，请./ssc.sh edit 服务名 来设置" "This script needs to be filled in. Set the ./ssc.sh edit service name"
+    fi
+
+	#检测apr目录
+	[[ -d $apr_dir ]] || print_error "apr目录${apr_dir} 不存在" "apr directory ${apr_dir} does not exist"
+
     apu-1-config --version | grep 1.6
     if [[ $? -eq 0 ]];then
         print_massage "检测到已安装" "Detected installed"
@@ -31,16 +46,21 @@ script_install() {
         fi
     fi
 
-    test_detection
+    #依赖
+    test_port ${port}
+    test_dir ${server_dir}
+    test_rely ${server_rely}
+    test_install ${server_yum}
     
+	#部署
     script_get
+	rm -rf apr-util-1.6.1
     tar -xf package/apr-util-1.6.1.tar.gz
     cd  apr-util-1.6.1
-    ./configure -prefix=/usr/local/apr-util -with-apr=/usr/local/apr
-    [[ -f Makefile ]] || print_error "Makefile生成失败" "Makefile failed to generate"
-    make && make install
+    ./configure -prefix=${install_dir}/${server_dir} -with-apr=${apr_dir} || print_error "Makefile生成失败" "Makefile failed to generate"
+    make && make install || print_error "make操作失败" "make operation failed"
     
-    cd ..
+    cd $ssc_dir
     rm -rf apr-util-1.6.1
     
     #环境变量
@@ -55,7 +75,8 @@ script_install() {
     [[ $? -eq 0 ]] || print_error "${1}安装失败" "${1} installation failed"
 
 	print_install_ok $1
-	print_massage "验证：apu-1-config" "verification：apu-1-config"
+	print_log "验证：apu-1-config" "verification：apu-1-config"
+	print_log "########################" "########################"
 }
 
 script_remove() {
@@ -63,7 +84,6 @@ script_remove() {
     
     sed -i '/^export UTIL_HOME=/d' /etc/profile
     sed -i '/^export PATH=${UTIL_HOME}/d' /etc/profile
-    source /etc/profile
 
     print_remove_ok $1
 }

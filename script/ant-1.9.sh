@@ -3,14 +3,12 @@
 
 
 #[使用设置]
-
-#主目录，相当于/usr/local
 #install_dir=
 
-#服务目录名
+log_dir=no
+
 server_dir=ant
 
-#内部安装的依赖，不知道效果勿动
 server_rely="jdk-1.8"
 
 
@@ -27,13 +25,16 @@ script_install() {
     else
         ant -version
         if [[ $? -eq 0 ]];then
-            print_error "当前已有其它版本ant，请手动卸载" "There are other versions of ant currently, please uninstall manually"
+            print_error "当前已有其它版本ant" "There are other versions of ant currently"
         fi
     fi
 
-    test_detection
+	#依赖
+	test_detection ${1}
 
+	#部署
     script_get
+	rm -rf apache-ant-1.9.11
     tar -xf package/apache-ant-1.9.11-bin.tar.gz
     mv apache-ant-1.9.11 ${install_dir}/${server_dir}
 
@@ -50,7 +51,8 @@ script_install() {
     [[ $? -eq 0 ]] || print_error "${1}安装失败" "${1} installation failed"
 
 	print_install_ok $1
-	print_massage "验证：ant -version" "verification：ant -version"
+	print_log "验证：ant -version" "verification：ant -version"
+	print_log "########################" "########################"
 }
 
 script_remove() {
@@ -58,7 +60,6 @@ script_remove() {
     
     sed -i '/^export ANT_HOME=/d' /etc/profile
     sed -i '/^export PATH=${ANT_HOME}/d' /etc/profile
-    source /etc/profile
     
     print_remove_ok $1
 }

@@ -5,6 +5,8 @@
 #[使用设置]
 install_dir=/usr/local
 
+log_dir=no
+
 server_dir=sqlite
 
 server_yum="gcc make"
@@ -27,15 +29,19 @@ script_install() {
         fi
     fi
 
-    test_detection
+	#依赖
+	test_detection ${1}
 
     #安装服务
     script_get
+	rm -rf sqlite-snapshot-201803072139
     tar -xf package/sqlite-snapshot-201803072139.tar.gz
     cd sqlite-snapshot-201803072139
     ./configure --prefix=${install_dir}/${server_dir}
-    make && make install
-    cd ..
+	[[ -f Makefile ]] || print_error "Makefile生成失败" "Makefile failed to generate"
+	make && make altinstall || print_error "make操作失败" "make operation failed"
+	
+    cd ${ssc_dir}
     rm -rf sqlite-snapshot-201803072139
     
     #环境变量
@@ -51,14 +57,14 @@ script_install() {
     [ $? -eq 0 ] || print_error "安装错误" "Installation error"
 
     print_install_ok $1
-	print_massage "使用：sqlite3 -version" "Use：sqlite3 -version"
+	print_log "使用：sqlite3 -version" "Use：sqlite3 -version"
+	print_log "########################" "########################"
 }
 
 script_remove() {
     rm -rf ${install_dir}/${server_dir}
     sed -i '/^export SQLITE=/d' /etc/profile
     sed -i '/^export PATH=$SQLITE_HOME/d'  /etc/profile
-    source /etc/profile
     
     print_remove_ok $1
 }

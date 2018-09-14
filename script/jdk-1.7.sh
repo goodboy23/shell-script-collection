@@ -29,10 +29,12 @@ script_install() {
         fi
     fi
 
-    test_detection
+   	#依赖
+	test_detection ${1}
 
     #安装服务
     script_get
+	rm -rf jdk1.7.0
     tar -xf package/jdk-1.7.0.tar.gz
     mv jdk1.7.0 ${install_dir}/${server_dir}
     
@@ -51,10 +53,10 @@ script_install() {
     
     #测试
     java -version
-    [ $? -eq 0 ] || print_error "${1}安装失败" "${1} Installation failed"
+    [[ $? -eq 0 ]] || print_error "${1}安装失败" "${1} Installation failed"
 
     print_install_ok $1
-	print_massage "使用：java -version" "Use：java -version"
+	print_log "使用：java -version" "Use：java -version"
 }
 
 script_remove() {
@@ -63,7 +65,6 @@ script_remove() {
     sed -i '/^export JRE_HOME=/d'  /etc/profile
     sed -i '/^export CLASSPATH=/d' /etc/profile
     sed -i '/^export PATH=$JAVA_HOME/d' /etc/profile
-    source /etc/profile
     
     print_remove_ok $1
 }

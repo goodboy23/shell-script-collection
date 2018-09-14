@@ -39,7 +39,8 @@ script_install() {
         exit
     fi
    
-    test_detection
+	#依赖
+	test_detection ${1}
 
     #权限
     groupadd mysql
@@ -47,6 +48,7 @@ script_install() {
     
     #下载解压包
     script_get
+	rm -rf mysql-5.6.39-linux-glibc2.12-x86_64
     tar -xf package/mysql-5.6.39-linux-glibc2.12-x86_64.tar.gz
     mv mysql-5.6.39-linux-glibc2.12-x86_64 ${install_dir}/${server_dir}
     chown -R mysql:mysql ${install_dir}/${server_dir}
@@ -91,8 +93,11 @@ bind-address = 0.0.0.0" > /etc/my.cnf #这里改需要的配置
     test_bin man-mysql
 
     print_install_ok $1
-	print_massage "使用：man-mysql start" "Use：man-mysql start"
-	print_massage "登陆：mysql" "Landing"
+	print_log "使用：man-mysql start" "Use：man-mysql start"
+	print_log "登录：mysql" "Landing：mysql"
+	print_log "账号：root" "account number：root"
+	print_log "密码：默认无" "Default no"
+	print_log "########################" "########################"
 }
 
 

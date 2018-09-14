@@ -7,6 +7,8 @@
 #主目录，相当于/usr/local
 #install_dir=
 
+log_dir=no
+
 #服务目录名
 server_dir=zookeeper
 
@@ -27,9 +29,10 @@ script_install() {
         exit
     fi
     
-    test_detection
+	test_detection ${1}
 
     script_get
+	rm -rf zookeeper-3.5.2-alpha
     tar -xf   package/zookeeper-3.5.2-alpha.tar.gz
     mv zookeeper-3.5.2-alpha ${install_dir}/${server_dir}
     
@@ -53,7 +56,8 @@ syncLimit=2" >> ${install_dir}/${server_dir}/conf/zoo.cfg
     [ $? -eq 0 ] || print_error "环境变量设置失败" "environment variable settings failed"
     
     print_install_ok $1
-	print_massage "使用：zkServer.sh start" "Use：zkServer.sh start"
+	print_log "使用：zkServer.sh start" "Use：zkServer.sh start"
+	print_log "########################" "########################"
 }
 
 script_remove() {
@@ -61,7 +65,6 @@ script_remove() {
     
     sed -i '/^ZOOKEEPER_HOME=/d' /etc/profile
     sed -i '/^PAHT=ZOOKEEPER_HOME/d'  /etc/profile
-    source /etc/profile
     
     print_remove_ok $1
 }

@@ -41,32 +41,6 @@ server_status() {
     fi
 }
 
-server_update() {
-    if [[ -f $2 ]];then
-        echo "please 'man-jenkins update new_package_file'"
-        exit 1
-    else
-        echo $2 | grep .war &> /dev/null
-        if [[ $? -eq 0 ]];then
-            echo "Not a war installation package"
-            exit 1
-        fi
-
-        server_stop
-        
-        
-        rm -rf $server_bin
-        cp -p $2 $server_bin
-
-        server_start
-
-        sleep 60
-        netstat -unltp | grep $cha &> /dev/null
-        [ $? -eq 0 ] && echo "$server update ok..." || echo "$server update error..."
-    fi
-}
-
-
 
 #主体
 if [ "$1" == "start" ];then
@@ -78,8 +52,6 @@ elif [ "$1" == "status" ];then
 elif [ "$1" == "restart" ];then
     server_stop
     server_start
-elif [ "$1" == "update" ];then
-    server_update $2
 else
-	echo "start | stop | restart | status | update new_package_file"
+	echo "start | stop | restart | status"
 fi

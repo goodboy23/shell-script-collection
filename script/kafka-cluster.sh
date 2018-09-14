@@ -8,7 +8,9 @@
 redis_switch=no
 
 #配置：kafka的目录
-kakfa_dir=/usr/local/kafka
+kafka_dir=/usr/local/kafka
+
+kafka_log_dir=/var/log/kafka
 
 #zookeeper集群的ip，包括他自己
 cluster_ip=(192.168.2.108:2181 192.168.2.109:2181)
@@ -30,19 +32,22 @@ script_install() {
         print_error "此脚本需要填写，请./ssc.sh edit 服务名 来设置" "1.This script needs to be filled in. Set the ./ssc.sh edit service name"
     fi
 
-    if [[ ! -f ${server_dir}/config/server.properties ]];then
+    if [[ ! -d ${kafka_dir} ]];then
         print_error "未安装kafka，请./ssc.sh install kafka-2.12" "kafka is not installed, please./ssc.sh install kafka-2.12"
     fi
 
-    grep "zookeeper.connect=${cluster_dizhi}" /config/server.properties
+    grep "zookeeper.connect=${cluster_dizhi}" ${kafka_dir}/config/server.properties
     if [[ $? -eq 0 ]];then
-        print_error "当前以配置集群，请修改脚本cluster_dizhi" "to configure the cluster, please modify the script cluster_dizhi"
+        print_error "当前已配置集群，请修改脚本cluster_dizhi" "to configure the cluster, please modify the script cluster_dizhi"
     fi
     
-    test_detection
-    
+    test_port ${port}
+    test_dir ${server_dir}
+    test_rely ${server_rely}
+    test_install ${server_yum}
+	
     #修改配置
-    conf=${server_dir}/config/server.properties
+    conf=${kafka_dir}/config/server.properties
     rm -rf $conf
     cp material/server.properties $conf
     
@@ -59,6 +64,7 @@ script_install() {
         fi
     done
 
+	mkdir ${kafka_log_dir}
     sed -i "s/broker.id=1/broker.id=${id}/g" $conf
     sed -i "s/port=9092/port=${port}/g" $conf
     if [ "$listen" == "localhost" ];then
@@ -66,15 +72,17 @@ script_install() {
     else
         sed -i "s/advertised.host.name=192.168.100.11/advertised.host.name=${listen}/g" $conf
     fi
-    sed -i "s,log.dirs=/ops/log/kafka,log.dirs=${log_dir}/${server_dir},g" $conf
+    sed -i "s,log.dirs=/ops/log/kafka,log.dirs=${kafka_log_dir},g" $conf
     sed -i "s/zookeeper.connect=B-S-01:2181/zookeeper.connect=${cluster_dizhi}/g" $conf
 
     #创建脚本
     test_bin man-kafka
     sed -i "2a port=${port}" $command
-
+	sed -i "2a kafka_dir=${kafka_dir}" $command
+	
     print_install_ok $1
-	print_massage "使用：man-kafka start" "Use：man-kafka start"
+	print_log "使用：man-kafka start" "Use：man-kafka start"
+	print_log "########################" "########################"
 }
 
 script_remove() {

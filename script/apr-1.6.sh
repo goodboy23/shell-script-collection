@@ -7,6 +7,8 @@
 #主目录，相当于/usr/local
 #install_dir=
 
+log_dir=no
+
 #服务目录名
 server_dir=apr
 
@@ -31,16 +33,21 @@ script_install() {
         fi
     fi
 
-    test_detection
+	#依赖
+    test_port ${port}
+    test_dir ${server_dir}
+    test_rely ${server_rely}
+    test_install ${server_yum}
 
+	#部署
     script_get
+	rm -rf apr-1.6.3
     tar -xf package/apr-1.6.3.tar.gz
     cd  apr-1.6.3
-    ./configure -prefix=${install_dir}/${server_dir}
-    [[ -f Makefile ]] || print_error "Makefile生成失败" "Makefile failed to generate"
-    make && make install
-    
-    cd ..
+    ./configure -prefix=${install_dir}/${server_dir} || print_error "Makefile生成失败" "Makefile failed to generate"
+    make && make install || print_error "make操作失败" "make operation failed"
+ 
+    cd $ssc_dir
     rm -rf apr-1.6.3
     
     #环境变量
@@ -55,7 +62,8 @@ script_install() {
     [[ $? -eq 0 ]] || print_error "${1}安装失败" "${1} installation failed"
 
 	print_install_ok $1
-	print_massage "验证：apr-1-config" "verification：apr-1-config"
+	print_log "验证：apr-1-config" "verification：apr-1-config"
+	print_log "########################" "########################"
 }
 
 script_remove() {

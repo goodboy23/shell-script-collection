@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+install_dir=no
+log_dir=no
+server_dir=no
+
+server_yum="mesa-libGL qt5-qtquickcontrols qt5-qtdeclarative-devel libXrender libXcomposite"
+server_rely="chinese-font"
+
 
 
 script_get() {
@@ -14,8 +21,7 @@ script_install() {
     fi
 
     #安装依赖
-	test_rely chinese-font
-	test_install mesa-libGL qt5-qtquickcontrols qt5-qtdeclarative-devel libXrender libXcomposite
+	test_detection ${1}
 
 	#安装版本
 	wget -nv -O- https://download.calibre-ebook.com/linux-installer.py |python -c "import sys; main=lambda:sys.stderr.write('Download failed\n'); exec(sys.stdin.read()); main()"
@@ -32,7 +38,8 @@ script_install() {
     
     #完成
     print_install_ok
-    print_massage "ebook-convert a.txt a.pdf 方式生成pdf文件" "ebook-convert a.txt a.pdf method to generate pdf file"
+    print_log "ebook-convert a.txt a.pdf 方式生成pdf文件" "ebook-convert a.txt a.pdf method to generate pdf file"
+	print_log "########################" "########################"
 }
 
 script_remove() {

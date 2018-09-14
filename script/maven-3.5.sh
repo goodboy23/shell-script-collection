@@ -6,6 +6,8 @@
 #主目录，相当于/usr/local
 #install_dir=
 
+log_dir=no
+
 #服务目录名
 server_dir=maven-3.5
 
@@ -29,9 +31,11 @@ script_install() {
         fi
     fi
     
-    test_detection
+    #依赖
+	test_detection ${1}
     
     script_get
+	rm -rf apache-maven-3.5.2
     tar -xf package/apache-maven-3.5.2-bin.tar.gz
     mv apache-maven-3.5.2 ${install_dir}/${server_dir}
     
@@ -47,14 +51,14 @@ script_install() {
     [[ $? -eq 0 ]] || print_error "${1}安装失败" "${1} installation failed"
     
     print_install_ok $1
-	print_massage "使用：mvn -v" "Use：mvn -v"
+	print_log "使用：mvn -v" "Use：mvn -v"
+	print_log "########################" "########################"
 }
 
 script_remove() {
     rm -rf ${install_dir}/${server_dir}
     sed -i '/^export MAVEN_HOME=/d' /etc/profile
     sed -i '/^export PATH=${MAVEN_HOME}/d' /etc/profile
-    source /etc/profile
     
     print_remove_ok $1
 }

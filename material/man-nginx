@@ -1,6 +1,4 @@
 #!/bin/bash
-#mindoc控制脚本
-
 
 
 server_bin=${install_dir}/${server_dir}/mindoc_linux_amd64
@@ -20,7 +18,7 @@ server_start() {
     if server_test ;then
         echo "$server start ok..."
     else
-        nohup $server_bin &>> ${server_log}/mindoc.log &
+        nginx
         server_test && echo "$server start ok..." || echo "$server start error..."
     fi
 }
@@ -35,16 +33,12 @@ server_stop() {
 }
 
 server_status() {
-    $server_bin version
-    echo
     if server_test ;then
         echo "$server start..."
     else
         echo "$server stop..."
     fi
 }
-
-
 
 #主体
 if [ "$1" == "start" ];then
@@ -54,8 +48,7 @@ elif [ "$1" == "stop" ];then
 elif [ "$1" == "status" ];then
     server_status
 elif [ "$1" == "restart" ];then
-    server_stop
-    server_start
+    nginx -s reload
 else
 	echo "start | stop | restart | status"
 fi

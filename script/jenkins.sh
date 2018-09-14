@@ -19,7 +19,8 @@ port=8080
 listen=0.0.0.0
 
 #内部依赖
-server_rely="jdk-1.8 maven-3.5 ant-1.9"
+server_rely="jdk-1.8 maven-3.5 ant-1.9 gradle sbt"
+
 
 
 script_get() {
@@ -32,7 +33,7 @@ script_install() {
         exit
     fi
     
-    test_detection
+	test_detection ${1}
 
     script_get
     mkdir ${install_dir}/${server_dir}
@@ -40,7 +41,6 @@ script_install() {
     
     #配置启动脚本
     test_bin man-jenkins
-
     sed -i "2a port=$port" $command
     sed -i "3a listen=$listen" $command
     
@@ -48,8 +48,9 @@ script_install() {
     [[ -f ${install_dir}/${server_dir}/jenkins.war ]] || print_error "安装失败" "Installation failed"
     
     print_install_ok $1
-	print_massage "使用：man-jenkins start" "Use：man-jenkins start"
-	print_massage "访问：http://xx.xx.xx.xx:${port}" "Access：http://xx.xx.xx.xx:${port}"
+	print_log "使用：man-jenkins start" "Use：man-jenkins start"
+	print_log "访问：http://xx.xx.xx.xx:${port}" "Access：http://xx.xx.xx.xx:${port}"
+	print_log "########################" "########################"
 }
 
 script_remove() {
@@ -65,6 +66,4 @@ script_info() {
 	print_massage "版本：2.104" "Version：2.104"
 	print_massage "介绍：Jenkins是持续与集成服务" "Introduce：Jenkins is a continuous and integrated service"
     print_massage "作者：日行一善" "do one good deed a day"
-    
-    print_massage "使用说明：java-1.8 maven-3.5 ant-1.9环境配置" "Instructions for use：java-1.8 maven-3.5 ant-1.9 Configuration"
 }

@@ -9,21 +9,21 @@ log_dir=no
 
 server_dir=php
 
-server_yum="gcc bison bison-devel freetype-devel libpng libpng-devel libjpeg-devel zlib-devel libmcrypt-devel mcrypt mhash-devel openssl-devel libxml2-devel libcurl-devel bzip2-devel readline-devel libedit-devel sqlite-devel jemalloc jemalloc-devel"
+server_yum="libxml2 libxml2-devel openssl openssl-devel curl-devel libjpeg-devel libpng-devel freetype-devel libmcrypt-devel libxslt libxslt-devel"
 
 
 
 script_get() {
-    test_package "http://shell-auto-install.oss-cn-zhangjiakou.aliyuncs.com/package/php-5.6.36.tar.gz" "57b3b6f44f0d43b25538c85f9b3a32d0"
+    test_package "http://cn2.php.net/distributions/php-7.1.1.tar.gz" "7c565ddf31d69dbc19027e51b6968b79"
 }
 
 script_install() {
-    php -v | grep 5.6
+    php -v | grep 7.*
     if [[ $? -eq 0 ]];then
         print_massage "检测到已安装" "Detected installed"
         exit
     else
-        php -v
+        which php
         if [[ $? -eq 0 ]];then
             print_error "当前已有其它版本php，请手动卸载" "There are other versions of php currently, please uninstall manually"
         fi
@@ -34,60 +34,58 @@ script_install() {
 
   	#依赖
 	test_detection ${1}
-
     script_get
-    rm -rf php-5.6.36
-    tar -xvf package/php-5.6.36.tar.gz
+    rm -rf php-7.1.1
+    tar -xvf package/php-7.1.1.tar.gz
     
     #模块
-    cd php-5.6.36
+    cd php-7.1.1
 ./configure --prefix=${install_dir}/${server_dir} \
---with-config-file-path=/etc \
---enable-inline-optimization --disable-debug \
---disable-rpath --enable-shared --enable-opcache \
---enable-fpm --with-fpm-user=www \
---with-fpm-group=www \
---with-mysql=mysqlnd \
---with-mysqli=mysqlnd \
---with-pdo-mysql=mysqlnd \
---with-gettext \
---enable-mbstring \
---with-iconv \
---with-mcrypt \
+--with-curl \
+--with-freetype-dir \
 --with-gd \
---with-mhash \
---with-openssl \
---enable-bcmath \
---enable-soap \
+--with-gettext \
+--with-iconv-dir \
+--with-kerberos \
+--with-libdir=lib64 \
 --with-libxml-dir \
+--with-mysqli \
+--with-openssl \
+--with-pcre-regex \
+--with-pdo-mysql \
+--with-pdo-sqlite \
+--with-pear \
+--with-png-dir \
+--with-xmlrpc \
+--with-xsl \
+--with-zlib \
+--enable-fpm \
+--with-fpm-user=www \
+--with-fpm-group=www \
+--enable-bcmath \
+--enable-libxml \
+--enable-inline-optimization \
+--enable-gd-native-ttf \
+--enable-mbregex \
+--enable-mbstring \
+--enable-opcache \
 --enable-pcntl \
 --enable-shmop \
---enable-sysvmsg \
---enable-sysvsem \
---enable-sysvshm \
+--enable-soap \
 --enable-sockets \
---with-curl --with-zlib \
---enable-zip \
---with-bz2 \
---with-readline \
---with-png-dir \
---with-freetype-dir \
---with-jpeg-dir \
---with-gd
-
+--enable-sysvsem \
+--enable-xml \
+--enable-zip
 	[[ -f Makefile ]] || print_error "Makefile生成失败" "Makefile failed to generate"
     make && make install || print_error "编译错误" "Compile Error"
-
-	rm -rf ${ssc_dir}/php-5.6.36
+	
+	cd ..
+	rm -rf ${ssc_dir}/php-7.1.1
+	
     #配置文件
-    rm -rf /etc/php.ini
-    cp php.ini-development /etc/php.ini
+    cp php.ini-production  ${install_dir}/${server_dir}/etc/php.ini
     cp  ${install_dir}/${server_dir}/etc/php-fpm.conf.default ${install_dir}/${server_dir}/etc/php-fpm.conf
-    rm -rf /usr/local/bin/php-fpm
-    
-    #启动脚本
-    cp sapi/fpm/init.d.php-fpm /usr/local/bin/php-fpm
-    chmod +x /usr/local/bin/php-fpm
+	cp ${install_dir}/${server_dir}/etc/php-fpm.d/www.conf.default ${install_dir}/${server_dir}/etc/php-fpm.d/www.conf
 
    #环境变量
     sed -i '/^PHP_HOME=/d' /etc/profile
@@ -102,7 +100,7 @@ script_install() {
     source /etc/profile
 
 	#测试
-	php -v | grep 5.6
+	php -v | grep 7.*
 	[ $? -eq 0 ] || print_error "${1}安装失败" "${1} installation failed"
 
     print_install_ok $1
@@ -122,8 +120,8 @@ script_remove() {
 }
 
 script_info() {
-    print_massage "名字：php-5.6" "Name：php-5.6"
-    print_massage "版本：5.6.36" "Version：5.6.36"
+    print_massage "名字：php-7.1" "Name：php-7.1"
+    print_massage "版本：7.1.1" "Version：7.1.1"
     print_massage "介绍：一种创建动态交互性站点的强有力的服务器端脚本语言" "Introduction: A powerful server-side scripting language for creating dynamic interactive sites"
     print_massage "作者：日行一善" "do one good deed a day"
 }

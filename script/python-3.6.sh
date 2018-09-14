@@ -4,7 +4,9 @@
 #[使用设置]
 #install_dir=
 
-server_dir=/python-3.6
+log_dir=no
+
+server_dir=python-3.6
 
 server_yum="gcc make cmake openssl-devel bzip2-devel expat-devel gdbm-devel readline-devel sqlite-devel"
 
@@ -21,17 +23,20 @@ script_install() {
         exit
     fi
     
-    test_detection
-    
-    
-    script_get
+	#依赖
+	test_detection ${1}
     
     #编译安装
+    script_get
+	rm -rf Python-3.6.0
 	tar -xf package/Python-3.6.0.tgz
 	cd Python-3.6.0
 	./configure --prefix=${install_dir}/${server_dir}
-	make
-	make altinstall
+	[[ -f Makefile ]] || print_error "Makefile生成失败" "Makefile failed to generate"
+	make && make altinstall || print_error "make操作失败" "make operation failed"
+	
+	cd ${ssc_dir}
+	rm -rf Python-3.6.0
 	
 	ln -s ${install_dir}/${server_dir}/bin/python3.6 /usr/bin/python3.6
     ln -s ${install_dir}/${server_dir}/bin/python3.6 /usr/bin/python3
@@ -41,7 +46,8 @@ script_install() {
 	[ $? -eq 0 ] || print_error "安装失败" "2.Installation failed"
     
     print_install_ok $1
-	print_massage "使用：python3.6" "Use：python3.6"
+	print_log "使用：python3.6" "Use：python3.6"
+	print_log "########################" "########################"
 }
 
 script_remove() {

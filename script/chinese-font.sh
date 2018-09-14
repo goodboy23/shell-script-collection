@@ -37,6 +37,7 @@ script_install() {
 
     #完成
     print_install_ok $1
+	print_log "########################" "########################"
 }
 
 scrip_remove() {

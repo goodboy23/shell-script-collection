@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 
 
-
-#!/usr/bin/env bash
-#设置完毕后，再每个节点上安装此脚本
-
-
 #[使用设置]
 
 #填写ok将按如下填写执行脚本
@@ -65,7 +60,8 @@ dynamicConfigFile=${server_dir}/conf/zoo.cfg.dynamic" > ${server_dir}/conf/zoo.c
     echo "$id" > ${server_dir}/data/myid
 
     print_install_ok $1
-    print_massage "使用：zkServer.sh start" "Use：zkServer.sh start"
+    print_log "使用：zkServer.sh start" "Use：zkServer.sh start"
+	print_log "########################" "########################"
 }
 
 script_remove() {

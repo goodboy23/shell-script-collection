@@ -7,6 +7,8 @@
 #主目录，相当于/usr/local
 #install_dir=
 
+log_dir=no
+
 #服务目录名
 server_dir=openssl
 
@@ -29,13 +31,17 @@ script_install() {
         fi
     fi
 
-    test_detection
+    #依赖
+	test_detection ${1}
     
     script_get
+	rm -rf openssl-1.0.2o
     tar -xf package/openssl-1.0.2o.tar.gz
     cd openssl-1.0.2o
-    ./config -fPIC --prefix=${install_dir}/${server_dir} enable-shared && make && make install
-    [[ -f ${install_dir}/${server_dir}/bin/openssl ]] || print_error "编译失败" "Compilation failed"
+    ./config -fPIC --prefix=${install_dir}/${server_dir} enable-shared 
+	[[ -f Makefile ]] || print_error "Makefile生成失败" "Makefile failed to generate"
+	make && make install || print_error "make操作失败" "make operation failed"
+
     cd ..
     rm -rf openssl-1.0.2o
  
@@ -51,7 +57,8 @@ script_install() {
     [[ $? -eq 0 ]] || print_error "${1}安装失败" "${1} installation failed"
 
 	print_install_ok $1
-	print_massage "验证：openssl" "verification：openssl"
+	print_log "验证：openssl" "verification：openssl"
+	print_log "########################" "########################"
 }
 
 script_remove() {
@@ -59,7 +66,6 @@ script_remove() {
     
     sed -i '/^export OPENSSL_HOME=/d' /etc/profile
     sed -i '/^export PATH=${OPENSSL_HOME}/d' /etc/profile
-    source /etc/profile
     
     print_remove_ok $1
 }

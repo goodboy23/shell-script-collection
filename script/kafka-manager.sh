@@ -43,7 +43,10 @@ script_install() {
         exit
     fi
     
-    test_detection
+    test_port ${port}
+    test_dir ${server_dir}
+    test_rely ${server_rely}
+    test_install ${server_yum}
 
     #安装包
     script_get
@@ -62,8 +65,9 @@ script_install() {
     
     #无效验
     print_install_ok $1
-	print_massage "使用：man-kafka-manager start" "Use：man-kafka-manager start"
-	print_massage "访问：http://xx.xx.xx.xx:${port}" "Access：http://xx.xx.xx.xx:${port}"
+	print_log "使用：man-kafka-manager start" "Use：man-kafka-manager start"
+	print_log "访问：http://xx.xx.xx.xx:${port}" "Access：http://xx.xx.xx.xx:${port}"
+	print_log "########################" "########################"
 }
 
 script_remove() {

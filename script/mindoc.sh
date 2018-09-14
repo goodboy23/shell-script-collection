@@ -33,13 +33,15 @@ script_install() {
         exit
     fi
  
-    #检测
-    test_detection
+	#依赖
+	test_detection ${1}
     
     #下载和安装安装服务
     script_get
+	rm -rf mindoc
     mkdir mindoc
     cp -p package/mindoc_linux_amd64.zip mindoc/
+	
     cd mindoc
     unzip mindoc_linux_amd64.zip
     rm -rf mindoc_linux_amd64.zip
@@ -71,10 +73,11 @@ script_install() {
     test_bin man-mindoc
 
     print_install_ok $1
-	print_massage "使用：man-mindoc start" "Use：man-mindoc start"
-    print_massage "浏览器访问：http://xx.xx.xx.xx:${port}" "Browser access: http://xx.xx.xx.xx:${port}"
-    print_massage "管理员账号：admin" "Administrator account: admin"
-    print_massage "管理员密码：123456" "Administrator password: 123456"
+	print_log "使用：man-mindoc start" "Use：man-mindoc start"
+    print_log "浏览器访问：http://xx.xx.xx.xx:${port}" "Browser access: http://xx.xx.xx.xx:${port}"
+    print_log "管理员账号：admin" "Administrator account: admin"
+    print_log "管理员密码：123456" "Administrator password: 123456"
+	print_log "########################" "########################"
 }
 
 script_remove() {

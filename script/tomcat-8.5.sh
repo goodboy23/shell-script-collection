@@ -6,11 +6,15 @@
 #主目录，相当于/usr/local
 #install_dir=
 
+#需要安装后自己手动修改
+log_dir=no
+
 #服务目录名
 server_dir=tomcat
 
 server_rely="jdk-1.8"
 
+#检测用，如果要修改启动端口，安装后手动修改
 port=8080
 
 
@@ -24,8 +28,9 @@ script_install() {
         print_massage "检测到当前系统已安装" "Detected that the current system is installed"
         exit
     fi
-
-    test_detection
+	
+	#依赖
+	test_detection ${1}
 
     script_get
     tar -xf package/apache-tomcat-8.5.31-src.tar.gz
@@ -45,7 +50,8 @@ script_install() {
     sed -i "2a prot=${port}" $command
     
     print_install_ok $1
-	print_massage "使用：man-tomcat" "Use：man-tomcat"
+	print_log "使用：man-tomcat" "Use：man-tomcat"
+	print_log "########################" "########################"
 }
 
 script_remove() {

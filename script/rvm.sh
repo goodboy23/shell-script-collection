@@ -13,8 +13,6 @@ script_install() {
         exit
     fi
 
-    test_remove ruby
-    
     gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
     \curl -sSL https://get.rvm.io | bash -s stable
     
@@ -35,7 +33,8 @@ script_install() {
     [ $? -eq 0 ] || print_error "rmv环境变量设置失败" "3The rmv environment variable setting failed"
 
     print_install_ok $1
-	print_massage "使用：rvm list known " "Use：rvm list known"
+	print_log "使用：rvm list known " "Use：rvm list known"
+	print_log "########################" "########################"
 }
 
 script_remove() {
@@ -44,7 +43,6 @@ script_remove() {
     
     sed -i '/^source RVM_HOME=/d' /etc/profile
     sed -i '/^source $RVM_HOME/d' /etc/profile
-    source /etc/profile
     
     print_remove_ok $1
 }

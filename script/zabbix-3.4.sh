@@ -36,7 +36,8 @@ script_install() {
     [[ $? -eq 0 ]] || print_error "当前只支持7版本系统" "Currently only supports 7 version systems"
     
     #安装依赖
-    test_detection
+	test_detection ${1}
+	
     systemctl stop httpd
 	systemctl stop php-fpm
 	systemctl stop mariadb
@@ -98,7 +99,7 @@ script_install() {
     
 	/etc/init.d/zabbix_server start
 	netstat -unltp |grep :10051
-	[ $? -eq 0 ] || test_exit "zabbix服务端安装错误，请联系作者" "Zabbix server installation error,please contact the author"
+	[ $? -eq 0 ] || print_error "zabbix服务端安装错误，请联系作者" "Zabbix server installation error,please contact the author"
 	
 	#安装客户端
     rm -rf /etc/init.d/zabbix_agentd
@@ -109,7 +110,7 @@ script_install() {
 	
 	/etc/init.d/zabbix_agentd start
 	netstat -unltp |grep :10050
-    [ $? -eq 0 ] || test_exit "zabbix客户端安装错误，请联系作者" "Zabbix client installation error, please contact the author"
+    [ $? -eq 0 ] || print_error "zabbix客户端安装错误，请联系作者" "Zabbix client installation error, please contact the author"
 	
 	cd ..
 	rm -rf zabbix-3.4.1 #清理
@@ -131,13 +132,14 @@ script_install() {
     #应添加防火墙配置
     
     print_install_ok $1
-    print_massage "使用：/etc/init.d/zabbix_server start" "Use：/etc/init.d/zabbix_server start"
-    print_massage "浏览器访问：http://127.0.0.1，请登录填写如下信息" "Browser access: http://127.0.0.1，, Please log in and fill in the following information"
-    print_massage "账号：admin" "Account: admin"
-    print_massage "密码：zabbix" "Password: zabbix"
-    print_massage "zabbix数据库名：zabbixdb" "Zabbix database name: zabbixdb"
-    print_massage "zabbix数据库用户名：zabbixuser" "Zabbix database user name: zabbixuser"
-    print_massage "zabbix数据吗密码：123456" "Zabbix data password: 123456"
+    print_log "使用：/etc/init.d/zabbix_server start" "Use：/etc/init.d/zabbix_server start"
+    print_log "浏览器访问：http://127.0.0.1，请登录填写如下信息" "Browser access: http://127.0.0.1，, Please log in and fill in the following information"
+    print_log "账号：admin" "Account: admin"
+    print_log "密码：zabbix" "Password: zabbix"
+    print_log "zabbix数据库名：zabbixdb" "Zabbix database name: zabbixdb"
+    print_log "zabbix数据库用户名：zabbixuser" "Zabbix database user name: zabbixuser"
+    print_log "zabbix数据吗密码：123456" "Zabbix data password: 123456"
+	print_log "########################" "########################"
 }
 
 script_remove() {

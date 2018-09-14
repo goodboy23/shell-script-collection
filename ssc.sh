@@ -21,12 +21,14 @@ install_dir=/usr/local
 #全局日志目录，所有服务默认日志位置
 log_dir=/var/log
 
-#edit选项的编辑器，可选择vim或其他
-editor=vi
+#edit选项的编辑器，可选择vi或其他
+editor=vim
 
+#当前ssc所在路径
 ssc_dir=`pwd`
 
-ssc_log="${ssc_dir}/goodboy.log"
+#安装完成后输出到日志里
+ssc_log="${ssc_dir}/install_ok.log"
 
 
 
@@ -54,32 +56,43 @@ print_massage() {
 	echo
 }
 
+#消息输出，同时输出到日志，用于成功部分
+print_log() {
+	if [[ "$language" == "cn" ]];then
+		echo "$1" 
+		echo "$(date +%F/%H/%M/%S) $1" >> $ssc_log
+	else
+		echo "$2"
+		echo "$(date +%F/%H/%M/%S) $2"  >> $ssc_log
+	fi
+	echo
+	echo  >> $ssc_log
+}
+
 #$1填写服务名
 print_install_ok() {
     clear
-    print_massage "${1}安装完成" "The ${1} is installed" 6
+	print_log "########################" "########################"
+    print_log "${1}安装完成" "The ${1} is installed"
     
-    if [[ ! $server_dir ]];then
-        print_massage "部署目录：未知" "Deployment directory: Unknown" 6
-    else
-        print_massage "安装目录：${install_dir}/${server_dir}" "Install Dir：${install_dir}/${server_dir}" 6
-        print_massage "日志目录：${log_dir}/${server_dir}" "Log directory：${log_dir}/${server_dir}" 6
-    fi
+	[[ "$install_dir" != "no" ]] && [[ "server_dir" != "no" ]] && print_log "安装目录：${install_dir}/${server_dir}" "Install Dir：${install_dir}/${server_dir}"
+	[[ "$log_dir" != "no" ]] && [[ "server_dir" != "no" ]] && print_log "日志目录：${log_dir}/${server_dir}" "Log directory：${log_dir}/${server_dir}"
 }
 
 print_install_bin() {
     clear
-    
-    print_massage "${1}安装完成" "The ${1} is installed" 6
-	print_massage "安装目录：/usr/local/bin/${1}" "Install Dir：/usr/local/bin/${1}" 6
-	print_massage "使用：${1}" "Use：${1}" 6
+    print_log "########################" "########################"
+    print_log "${1}安装完成" "The ${1} is installed"
+	print_log "安装目录：/usr/local/bin/${1}" "Install Dir：/usr/local/bin/${1}"
+	print_log "使用：${1}" "Use：${1}"
+	print_log "########################" "########################"
 }
 
 #$1填写服务名
 print_remove_ok() {
     clear
-    print_massage "$1卸载完成！" "${1} Uninstall completed！" 6
-    print_massage "依赖均不卸载，可用 './ssc.sh rely 服务名' 来查询有哪些依赖" "Dependencies are not uninstalled, use './ssc.sh rely service name' to query which dependencies" 6
+    print_massage "$1卸载完成！" "${1} Uninstall completed！"
+    print_massage "依赖均不卸载，可用 './ssc.sh rely 服务名' 来查询有哪些依赖" "Dependencies are not uninstalled, use './ssc.sh rely service name' to query which dependencies"
 }
 
 
@@ -88,8 +101,8 @@ print_remove_ok() {
 
 #中文帮助
 help_cn() {
-	echo "速度与激情小组---Linnux部旗下项目，如有使用问题，请加qq群762696893
-当前版本：1.1
+	echo "作者：日行一善，如果有使用问题或者想参与编写，请加qq群762696893
+当前版本：1.2
 
 install httpd        安装 httpd
 remove  httpd        卸载 httpd
@@ -106,8 +119,8 @@ list    httpd        列出 httpd 相关脚本"
 
 #英文帮助
 help_en() {
-    echo "Speed and passion team---Projects of Linnux Department, if there are any questions, please add qq group 762696893
-current version：1.1
+    echo "Author: Rixingyishan, if you have questions or would like to use in the preparation of, please add qq group 762696893
+current version：1.2
 
 install httpd      installation httpd
 remove  httpd      Uninstall    httpd
@@ -192,11 +205,15 @@ server() {
             process_time
             test_init
             script_install ${2}
-            print_massage "请source /etc/profile来加载环境变量" "Please source /etc/profile to load environment variables"
+            print_massage "请'source /etc/profile;source ~/.bashrc' 来加载环境变量" "Please 'source /etc/profile;source ~/.bashrc' to load environment variables"
 		elif [[ "$1" == "remove" ]];then
 			script_remove ${2}
         elif [[ "$1" == "get" ]];then
+			yum_get ${2}
+			rely_get
             script_get
+			echo
+			print_massage "脚本：${2} 依赖包下载完成！" "Script: ${2} Dependency package download is complete!"
         elif [[ "$1" == "rely" ]];then
             print_massage "yum依赖：$server_yum" "Yum dependency: $server_yum"
             print_massage "内部依赖：$server_rely" "Internal dependencies: $server_rely"
@@ -204,6 +221,7 @@ server() {
             script_info
             print_massage "警告：当前一切配置默认，若有其他需求，请 './ssc.sh edit 服务' 来修改脚本" "Warning: All current configuration defaults, if there are other requirements, please './ssc.sh edit server' to modify the script"
         elif [[ "$1" == "edit" ]];then
+			which $editor &> /dev/null || print_error "编辑器${editor}不存在" "Editor ${editor} does not exist"
             $editor script/${2}.sh
         else
             [[ "$language" == "cn" ]] && help_cn || help_en
@@ -233,6 +251,9 @@ elif [[ $# -eq 1 ]];then
         update_ssc
 	elif [[ "$1" == "installed" ]];then
 		cat conf/installed.txt
+	elif [[ "$1" == "init" ]];then
+		rm -rf conf/list_*
+		rm -rf conf/yum.log
     else
         [[ "$language" == "cn" ]] && help_cn || help_en
     fi

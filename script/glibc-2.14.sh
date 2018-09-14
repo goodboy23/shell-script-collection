@@ -5,6 +5,8 @@
 #[使用设置]
 install_dir=/usr/local
 
+log_dir=no
+
 server_dir=glibc
 
 server_yum="gcc cmake"
@@ -23,29 +25,29 @@ script_install() {
         exit
     fi
     
-    test_detection
-    
+	#依赖
+	test_detection ${1}
+	
     #安装服务
     script_get
+	rm -rf glibc-2.14
     tar -xf package/glibc-2.14.tar.gz
     cd glibc-2.14
     mkdir build
     cd build
-    ../configure --prefix=${install_dir}/${server_dir}
-    make && make install
-    cd ..
-    cd ..
+    ../configure --prefix=${install_dir}/${server_dir} --disable-profile --enable-add-ons --with-headers=/usr/include --with-binutils=/usr/bin
+	[[ -f Makefile ]] || print_error "Makefile生成失败" "Makefile failed to generate"
+	make && make altinstall || print_error "make操作失败" "make operation failed"
+
+	cd ${ssc_dir}
     rm -rf glibc-2.14
     
     #测试
-    [[ -f ${install_dir}/${server_dir}/lib/libc-2.14.so ]] || print_error "glibc-2.14安装失败" "Glibc-2.14 installation failed"
-    
-    #清除软连接
-    rm -rf /lib64/libc.so.6
-    ln -s /usr/local/glibc-2.14/lib/libc-2.14.so /lib64/libc.so.6
+	strings /lib64/libc.so.6 |grep ^GLIBC_2.14 || print_error "glibc-2.14安装失败" "Glibc-2.14 installation failed"
 
     #完成
     print_install_ok $1
+	print_log "########################" "########################"
 }
 
 script_remove() {

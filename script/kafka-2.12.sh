@@ -6,6 +6,8 @@
 #主目录，相当于/usr/local
 #install_dir=
 
+log_dir=no
+
 #服务目录名
 server_dir=kafka
 
@@ -36,18 +38,19 @@ script_install() {
         exit
     fi
 
-    test_detection
+	test_detection ${1}
     
     script_get
+	rm -rf afka_2.12-0.10.2.1
     tar -xf package/kafka_2.12-0.10.2.1.tgz
     mv kafka_2.12-0.10.2.1 ${install_dir}/${server_dir}
     
     test_bin man-kafka
-
     sed -i "2a port=${port}" $command
 
     print_install_ok $1
-	print_massage "使用：man-kafka start" "Use：man-kafka start"
+	print_log "使用：man-kafka start" "Use：man-kafka start"
+	print_log "########################" "########################"
 }
 
 script_remove() {

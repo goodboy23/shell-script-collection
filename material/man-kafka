@@ -2,12 +2,11 @@
 #kafka cluster
 
 
-dir=${install_dir}/${server_dir}
 
 if [ "$1" == "start" ];then
-	$dir/bin/kafka-server-start.sh -daemon $dir/config/server.properties
+	${kafka_dir}/bin/kafka-server-start.sh -daemon ${kafka_dir}/config/server.properties
 elif [ "$1" == "stop" ];then
-	$dir/bin/kafka-server-stop.sh -daemon $dir/config/server.properties
+	${kafka_dir}/bin/kafka-server-stop.sh -daemon ${kafka_dir}/config/server.properties
 elif [ "$1" == "status" ];then
     netstat -unltp | grep :${port} &> /dev/null
     [ $? -eq 0 ] && echo ok || echo no

@@ -42,7 +42,8 @@ script_install() {
     man-mysql stop
     man-php stop
   
-    test_detection
+	test_detection ${1}
+	
     rm -rf /usr/local/nginx/conf/nginx.conf
     cp -p ${ssc_dir}/material/nginx.conf /usr/local/nginx/conf/
     nginx
@@ -157,17 +158,17 @@ script_install() {
     #应添加防火墙配置
     
     print_install_ok $1
-    print_massage "使用：/etc/init.d/zabbix_server start" "Use：/etc/init.d/zabbix_server start"
-    print_massage "浏览器访问：http://127.0.0.1，请登录填写如下信息" "Browser access: http://127.0.0.1，, Please log in and fill in the following information"
-    print_massage "zabbix登陆账号：admin" "Zabbix landing Account: admin"
-    print_massage "zabbix登陆密码：zabbix" "Zabbix landing Password: zabbix"
-    echo
-    print_massage "数据库用户名：root" "Database username: root"
-    print_massage "数据库密码：123456" "Database password: 123456"
-    echo
-    print_massage "zabbix数据库名：zabbixdb" "Zabbix database name: zabbixdb"
-    print_massage "zabbix数据库用户名：zabbixuser" "Zabbix database user name: zabbixuser"
-    print_massage "zabbix数据吗密码：123456" "Zabbix data password: 123456"
+    print_log "使用：/etc/init.d/zabbix_server start" "Use：/etc/init.d/zabbix_server start"
+    print_log "浏览器访问：http://127.0.0.1，请登录填写如下信息" "Browser access: http://127.0.0.1，, Please log in and fill in the following information"
+    print_log "zabbix登陆账号：admin" "Zabbix landing Account: admin"
+    print_log "zabbix登陆密码：zabbix" "Zabbix landing Password: zabbix"
+    print_log "" ""
+    print_log "数据库用户名：root" "Database username: root"
+    print_log "数据库密码：123456" "Database password: 123456"
+    print_log "" ""
+    print_log "zabbix数据库名：zabbixdb" "Zabbix database name: zabbixdb"
+    print_log "zabbix数据库用户名：zabbixuser" "Zabbix database user name: zabbixuser"
+    print_log "zabbix数据吗密码：123456" "Zabbix data password: 123456"
 }
 
 script_remove() {

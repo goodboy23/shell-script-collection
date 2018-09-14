@@ -7,6 +7,8 @@
 #主目录，相当于/usr/local
 #install_dir=
 
+log_dir=no
+
 #服务目录名
 server_dir=httpd2
 
@@ -14,6 +16,14 @@ server_rely="apr-1.6 apr-util-1.6 pcre-8"
 
 server_yum="gcc make expat-devel gcc-c++"
 
+#填写ok将按如下填写执行脚本
+redis_switch=no
+
+apr_dir=
+
+apr_util_dir=
+
+pcre_dir=
 
 
 
@@ -22,6 +32,10 @@ script_get() {
 }
 
 script_install() {
+	if [[ "$redis_switch" == "no" ]];then
+        print_error "此脚本需要填写，请./ssc.sh edit 服务名 来设置" "1.This script needs to be filled in. Set the ./ssc.sh edit service name"
+    fi
+
     httpd -v | grep 2.4
     if [[ $? -eq 0 ]];then
         print_massage "检测到已安装" "Detected installed"
@@ -33,16 +47,27 @@ script_install() {
         fi
     fi
 
-    test_detection
+	#依赖
+	test_detection ${1}
+	
+	[[ -d $apr_dir ]] || print_error "apr_dir变量设置错误" "apr_dir variable setting error"
+	[[ -d $apr_util_dir ]] || print_error "apr_util_dir变量设置错误" "apr_util_dir variable setting error"	
+	[[ -d $pcre_dir ]] || print_error "pcre_dir变量设置错误" "pcre_dir variable setting error"	
+	
     
     script_get
+	rm -rf httpd-2.4.33
     tar -xf package/httpd-2.4.33.tar.gz
     cd  httpd-2.4.33
-    ./configure -prefix=${install_dir}/${server_dir} -enable-so -enable-rewrite -with-apr=/usr/local/apr -with-apr-util=/usr/local/apr-util -with-pcre=/usr/local/pcre
-    [[ -f Makefile ]] || print_error "Makefile生成失败" "Makefile failed to generate"
-    make && make install
-    
-    cd ..
+    ./configure -prefix=${install_dir}/${server_dir} \
+-enable-so \
+-enable-rewrite \
+-with-apr=${apr_dir} \
+-with-apr-util=${apr_util_dir} \
+-with-pcre=${pcre_dir} || print_error "Makefile生成失败" "Makefile failed to generate"
+    make && make install || print_error "make操作失败" "make operation failed"
+
+    cd ${ssc_dir}
     rm -rf httpd-2.4.33
     
     #环境变量
@@ -57,7 +82,8 @@ script_install() {
     [[ $? -eq 0 ]] || print_error "${1}安装失败" "${1} installation failed"
 
     print_install_ok $1
-	print_massage "验证：apachectl start" "verification：apachectl start"
+	print_log "验证：apachectl start" "verification：apachectl start"
+	print_log "########################" "########################"
 }
 
 script_remove() {
@@ -66,7 +92,6 @@ script_remove() {
     
     sed -i '/^export HTTPD_HOME=/d' /etc/profile
     sed -i '/^export PATH=${HTTPD_HOME}/d' /etc/profile
-    source /etc/profile
     
     print_remove_ok $1
 }

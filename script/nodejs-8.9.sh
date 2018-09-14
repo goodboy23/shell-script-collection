@@ -5,6 +5,8 @@
 #安装目录
 #install_dir=
 
+log_dir=no
+
 #服务目录
 server_dir=nodejs
 
@@ -25,13 +27,13 @@ script_install() {
             print_error "当前已有其它版本nodejs，请手动卸载" "There are other versions of nodejs currently, please uninstall manually"
         fi
     fi
-    
-    test_detection
-    
+	
+	#依赖
+	test_detection ${1}
     
     script_get
+	rm -rf node-v8.9.3-linux-x64
     tar -xf package/node-v8.9.3-linux-x64.tar.xz
-    rm -rf /usr/local/nodejs-8.9
     mv node-v8.9.3-linux-x64 ${install_dir}/${server_dir}
     
     #链接
@@ -45,7 +47,8 @@ script_install() {
     [ $? -eq 0 ] || print_error "安装失败" "2.Installation failed"
     
     print_install_ok $1
-	print_massage "使用：node -v" "Use：node -v"
+	print_log "使用：node -v" "Use：node -v"
+	print_log "########################" "########################"
 }
 
 script_remove() {

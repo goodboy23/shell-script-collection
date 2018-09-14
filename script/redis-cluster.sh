@@ -38,7 +38,7 @@ script_install() {
 
     [[ -d ${redis_dir} ]] || print_error "${redis_dir}目录不存在" "${redis_dir} directory does not exist"
     
-    test_detection
+	test_detection ${1}
     
     #检测端口是否可以连接成功
     for i in `echo $cluster_ip`

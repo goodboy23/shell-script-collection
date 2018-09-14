@@ -5,10 +5,11 @@
 #[使用设置]
 install_dir=/usr/local
 
+log_dir=no
+
 server_dir=ruby
 
 server_yum="gcc make openssl openssl-devel zlib zlib-devel"
-
 
 
 
@@ -28,13 +29,15 @@ script_install() {
         fi
     fi
 
-    test_detection
+	#依赖
+	test_detection ${1}
 
     script_get
     rm -rf ruby-2.4.4/
     tar -xvf package/ruby-2.4.4.tar.gz
     cd ruby-2.4.4/
     ./configure --prefix=${install_dir}/${server_dir}
+	[[ -f Makefile ]] || print_error "Makefile生成失败" "Makefile failed to generate"
     make && make install || print_error "编译失败" "Compile failed"
 
    #环境变量
@@ -58,8 +61,7 @@ script_install() {
     sed -i 's,$(top_srcdir),../..,g' Makefile
     make && make install || print_error "openssl构建失败" "openssl build failed"
 
-    cd ..
-    cd ..
+	cd ${ssc_dir}
     rm -rf ruby-2.4.4/
 
 	#测试
@@ -68,14 +70,14 @@ script_install() {
     
     
 	print_install_ok $1
-	print_massage "使用：ruby" "Use：ruby"
+	print_log "使用：ruby" "Use：ruby"
+	print_log "########################" "########################"
 }
 
 script_remove() {
     rm -rf ${install_dir}/${server_dir}
     sed -i '/^RUBY_HOME=/d' /etc/profile
     sed -i '/^PATH=$RUBY_HOME/d' /etc/profile
-    source /etc/profile
     
     print_remove_ok $1
 }
