@@ -9,7 +9,7 @@ log_dir=no
 
 server_dir=php
 
-server_yum="gcc make gcc-c++ cmake libxml2 libxml2-devel openssl openssl-devel curl-devel libjpeg-devel libpng-devel freetype-devel libmcrypt-devel libxslt libxslt-devel"
+server_yum="gcc make gcc-c++ cmake libxml2  m4 autoconf libxml2-devel openssl openssl-devel curl-devel libjpeg-devel libpng-devel freetype-devel libmcrypt-devel libxslt libxslt-devel"
 
 
 
