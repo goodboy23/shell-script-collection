@@ -83,7 +83,7 @@ script_install() {
 	rm -rf ${ssc_dir}/php-7.1.1
 	
     #配置文件
-    cp php.ini-production  ${install_dir}/${server_dir}/etc/php.ini
+    cp php.ini-production  ${install_dir}/${server_dir}/lib/php.ini
     cp  ${install_dir}/${server_dir}/etc/php-fpm.conf.default ${install_dir}/${server_dir}/etc/php-fpm.conf
 	cp ${install_dir}/${server_dir}/etc/php-fpm.d/www.conf.default ${install_dir}/${server_dir}/etc/php-fpm.d/www.conf
 
