@@ -45,7 +45,7 @@ script_install() {
     sed -i '/^export PATH=${SBT_HOME}/d' /etc/profile
     
     echo "export SBT_HOME=${install_dir}/${server_dir}" >> /etc/profile
-    echo 'export PATH=${SBT_HOME}/:${PATH}' >> /etc/profile
+    echo 'export PATH=${SBT_HOME}/bin:${PATH}' >> /etc/profile
     source /etc/profile
     
     which sbt
