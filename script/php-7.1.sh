@@ -3,7 +3,7 @@
 
 
 #[使用设置]
-install_dir=/usr/local
+#install_dir=/usr/local
 
 log_dir=no
 
