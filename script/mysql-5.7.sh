@@ -70,8 +70,9 @@ socket = ${install_dir}/${server_dir}/mysql.sock
 [mysqld]
 port = ${port}
 bind-address = 0.0.0.0
-character_set_server=utf8
-init_connect='SET NAMES utf8'
+max_connections=5000
+character_set_server= utf8mb4
+lower_case_table_names=1
 basedir=${install_dir}/${server_dir}
 datadir=${install_dir}/${server_dir}/data
 socket=${install_dir}/${server_dir}/mysql.sock
