@@ -16,9 +16,9 @@ ssc可以对所支持的脚本进行安装，卸载，查看，自定义编辑�
 [所有版本下载地址](https://github.com/goodboy23/shell-script-collection/releases "所有版本下载地址")
 
 如下为安装最新版本：
-`wget https://github.com/goodboy23/shell-script-collection/archive/v1.2.tar.gz`
+`yum -y install git`
 
-`tar -xf v1.2.tar.gz`
+`git clone https://github.com/goodboy23/shell-script-collection`
 
 `cd shell-script-collection`
 
