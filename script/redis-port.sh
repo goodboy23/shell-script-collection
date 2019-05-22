@@ -17,7 +17,7 @@ log_dir=/var/log
 server_dir=redis
 
 #将安装如下端口实例
-port=(6379)
+port=(6379 7000)
 
 #监听ip
 listen=0.0.0.0
