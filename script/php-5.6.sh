@@ -78,12 +78,12 @@ script_install() {
 	[[ -f Makefile ]] || print_error "Makefile生成失败" "Makefile failed to generate"
     make && make install || print_error "编译错误" "Compile Error"
 
-	rm -rf ${ssc_dir}/php-5.6.36
     #配置文件
     rm -rf /etc/php.ini
     cp php.ini-development /etc/php.ini
     cp  ${install_dir}/${server_dir}/etc/php-fpm.conf.default ${install_dir}/${server_dir}/etc/php-fpm.conf
     rm -rf /usr/local/bin/php-fpm
+    rm -rf ${ssc_dir}/php-5.6.36
     
     #启动脚本
     cp sapi/fpm/init.d.php-fpm /usr/local/bin/php-fpm
