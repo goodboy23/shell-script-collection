@@ -3,18 +3,16 @@
 
 
 #[使用设置]
-install_dir=/usr/local
+install_dir=no
 
 log_dir=no
 
-server_dir=glibc
-
-server_yum="gcc cmake"
+server_dir=no
 
 
 
 script_get() {
-    test_package http://shell-auto-install.oss-cn-zhangjiakou.aliyuncs.com/package/glibc-2.14.tar.gz 4657de6717293806442f4fdf72be821b
+    test_package https://shell-auto-install.oss-cn-zhangjiakou.aliyuncs.com/package/glibc-2.14.1-rpm.tar.gz 1a68d013875737b9b9da1ff5f02c8581
 }
 
 script_install() {
@@ -30,16 +28,13 @@ script_install() {
 	
     #安装服务
     script_get
-	rm -rf glibc-2.14
-    tar -xf package/glibc-2.14.tar.gz
+    mkdir glibc-2.14
+    cp -rf package/glibc-2.14.1-rpm.tar.gz glibc-2.14/
     cd glibc-2.14
-    mkdir build
-    cd build
-    ../configure --prefix=${install_dir}/${server_dir} --disable-profile --enable-add-ons --with-headers=/usr/include --with-binutils=/usr/bin
-	[[ -f Makefile ]] || print_error "Makefile生成失败" "Makefile failed to generate"
-	make && make altinstall || print_error "make操作失败" "make operation failed"
+    tar -xf glibc-2.14.1-rpm.tar.gz
+    rpm -Uvh *.rpm
 
-	cd ${ssc_dir}
+    cd ${ssc_dir}
     rm -rf glibc-2.14
     
     #测试
