@@ -32,8 +32,10 @@ script_install() {
     cp -rf package/glibc-2.14.1-rpm.tar.gz glibc-2.14/
     cd glibc-2.14
     tar -xf glibc-2.14.1-rpm.tar.gz
+    
     #必须这个顺序才行
     rpm -Uvh glibc-2.14.1-6.x86_64.rpm glibc-common-2.14.1-6.x86_64.rpm glibc-headers-2.14.1-6.x86_64.rpm glibc-devel-2.14.1-6.x86_64.rpm nscd-2.14.1-6.x86_64.rpm
+
     cd ${ssc_dir}
     rm -rf glibc-2.14
     
