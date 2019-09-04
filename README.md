@@ -40,11 +40,13 @@ ssc是shell的服务部署小框架，内涵大量函数，按照例子编写，
 ### 查看帮助
 
 `./ssc.sh`
+
 ![](http://52wiki.oss-cn-beijing.aliyuncs.com/doc/0f37d3b8a541a4f4a83b226bad42d90e66cb58b9.png)
 
 ### 查看列表
 
 `./ssc.sh list`
+
 ![](http://52wiki.oss-cn-beijing.aliyuncs.com/doc/67ad2f3b5c713937f4bc218322f6792e282c6d3d.png)
 
 ### 四.如何参与本项目？
