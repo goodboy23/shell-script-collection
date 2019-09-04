@@ -36,15 +36,12 @@ ssc可以对所支持的脚本进行安装，卸载，查看，自定义编辑�
 ### 2.查看帮助
 
 ./ssc.sh
-
-![](http://www.52wiki.cn/uploads/201807/shell/attach_154254ea770b255b.png)
-
+![](http://52wiki.oss-cn-beijing.aliyuncs.com/doc/0f37d3b8a541a4f4a83b226bad42d90e66cb58b9.png)
 
 ### 3.查看列表
 
 ./ssc.sh list
-
-![](http://www.52wiki.cn/uploads/201807/shell/attach_154254f4ea9af71c.png)
+![](http://52wiki.oss-cn-beijing.aliyuncs.com/doc/67ad2f3b5c713937f4bc218322f6792e282c6d3d.png)
 
 ## 四.如何参与本项目？
 直接修改再提交即可，也可以加qq1969679546，一起讨论。
