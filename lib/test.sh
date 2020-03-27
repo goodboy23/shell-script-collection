@@ -147,6 +147,7 @@ test_install() {
 }
 
 yum_get() {
+	test_install  yum-plugin-downloadonly
 	if [[ ! $server_yum ]];then
 		return 1
 	else
@@ -181,7 +182,7 @@ rely_get() {
 #初始化做的事情
 test_init() {
     if [[ ! -f ${ssc_dir}/conf/init.log ]];then
-        test_install net-tools epel-release wget yum-plugin-downloadonly
+        test_install net-tools epel-release wget
     fi
 }
 
