@@ -1,12 +1,14 @@
-#!/usr/bin/env bash
-# 作者：日行一善（qq群762696893）
-# 有任何问题或想一起编写，加qq群联系管理。
+#!/bin/bash
+# 作者：日行一善 <qq：1969679546> <email：1969679546@qq.com>
+# 官网：www.linkops.cn
 #
-# 功能：shell脚本合集
-# 支持：redhat与centos系列
+# 日期：2018/6/23
+# 介绍：shell小框架，也可以用于一键部署多种服务
 #
-# 地址：github https://github.com/goodboy23/shell-script-collection
-#       官网   http://www.52wiki.cn/docs/shell/741
+# 适用：centos6+
+# 语言：中文
+#
+# 注意：无
 
 
 
