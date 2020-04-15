@@ -1,6 +1,6 @@
 #!/bin/bash
 # 作者：日行一善 <qq：1969679546> <email：1969679546@qq.com>
-# 官网：www.linkops.cn
+# 官网：http://www.linkops.cn/363.htm
 #
 # 日期：2018/6/23
 # 介绍：shell小框架，也可以用于一键部署多种服务
