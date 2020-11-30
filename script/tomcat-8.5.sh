@@ -20,7 +20,7 @@ port=8080
 
 
 script_get() {
-    test_package https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.31/src/apache-tomcat-8.5.31-src.tar.gz fc5294448b52c371b270421193fc7d47
+    test_package https://mirrors.tuna.tsinghua.edu.cn/apache/tomcat/tomcat-8/v8.5.60/bin/apache-tomcat-8.5.60.tar.gz fb436f33d9aec6be5a7db6108adfe40e
 }
 
 script_install() {
@@ -33,8 +33,8 @@ script_install() {
 	test_detection ${1}
 
     script_get
-    tar -xf package/apache-tomcat-8.5.31-src.tar.gz
-    mv apache-tomcat-8.5.31-src ${install_dir}/${server_dir}
+    tar -xf package/apache-tomcat-8.5.60.tar.gz
+    mv apache-tomcat-8.5.60 ${install_dir}/${server_dir}
 
     chmod +x ${install_dir}/${server_dir}/bin/*
     
