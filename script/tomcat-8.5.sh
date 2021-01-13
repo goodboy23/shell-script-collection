@@ -20,7 +20,7 @@ port=8080
 
 
 script_get() {
-    test_package https://mirrors.tuna.tsinghua.edu.cn/apache/tomcat/tomcat-8/v8.5.60/bin/apache-tomcat-8.5.60.tar.gz fb436f33d9aec6be5a7db6108adfe40e
+    test_package https://shell-auto-install.oss-cn-zhangjiakou.aliyuncs.com/package/apache-tomcat-8.5.60.tar.gz fb436f33d9aec6be5a7db6108adfe40e
 }
 
 script_install() {
